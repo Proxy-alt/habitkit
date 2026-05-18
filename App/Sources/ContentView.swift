@@ -11,23 +11,23 @@ struct ContentView: View {
     var body: some View {
         TabView(selection: $selectedTab) {
             TodayView()
-                .tabItem { Label("Today", systemImage: "checkmark.circle.fill") }
+                .tabItem { Label("Today", systemImage: HKSymbol.checkmark) }
                 .tag(Tab.today)
 
             HabitsView()
-                .tabItem { Label("Habits", systemImage: "list.bullet") }
+                .tabItem { Label("Habits", systemImage: HKSymbol.list) }
                 .tag(Tab.habits)
 
             AnalyticsView()
-                .tabItem { Label("Analytics", systemImage: "chart.bar.fill") }
+                .tabItem { Label("Analytics", systemImage: HKSymbol.chartBar) }
                 .tag(Tab.analytics)
 
             LiveSessionView()
-                .tabItem { Label("Live", systemImage: "timer") }
+                .tabItem { Label("Live", systemImage: HKSymbol.timer) }
                 .tag(Tab.live)
 
             SettingsView()
-                .tabItem { Label("Settings", systemImage: "gear") }
+                .tabItem { Label("Settings", systemImage: HKSymbol.gear) }
                 .tag(Tab.settings)
         }
         .tint(themes.current.primaryColor)

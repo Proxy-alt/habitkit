@@ -21,6 +21,7 @@ public enum HKButtonVariant: Sendable {
 /// Usage:
 /// ```swift
 /// HKButton("Save", variant: .primary) { save() }
+/// HKButton("Delete", variant: .danger, fullWidth: true) { delete() }
 /// ```
 public struct HKButton: View {
 
@@ -37,6 +38,13 @@ public struct HKButton: View {
 
     // MARK: Init
 
+    /// Creates a new button.
+    ///
+    /// - Parameters:
+    ///   - label: The text displayed inside the button.
+    ///   - variant: The visual style. Defaults to ``HKButtonVariant/primary``.
+    ///   - fullWidth: When `true` the button stretches to fill available width. Defaults to `false`.
+    ///   - action: The closure invoked when the button is tapped.
     public init(
         _ label: String,
         variant: HKButtonVariant = .primary,
@@ -54,18 +62,19 @@ public struct HKButton: View {
     public var body: some View {
         Button(action: action) {
             Text(label)
-                .font(.hkHeadline)
+                .font(HKFont.headline)
                 .foregroundStyle(foregroundColor)
                 .padding(.vertical, HKSpacing.sm)
                 .padding(.horizontal, HKSpacing.md)
                 .frame(maxWidth: isFullWidth ? .infinity : nil)
-                .background(backgroundColor, in: RoundedRectangle(cornerRadius: 12, style: .continuous))
+                .background(backgroundColor, in: RoundedRectangle(cornerRadius: HKRadius.card, style: .continuous))
                 .overlay(
-                    RoundedRectangle(cornerRadius: 12, style: .continuous)
+                    RoundedRectangle(cornerRadius: HKRadius.card, style: .continuous)
                         .stroke(borderColor, lineWidth: borderWidth)
                 )
         }
         .buttonStyle(.plain)
+        .accessibilityLabel(label)
     }
 
     // MARK: Computed colours
@@ -109,6 +118,8 @@ public struct HKButton: View {
 
 private struct HKButtonDisabledModifier: ViewModifier {
     @Environment(HKThemeManager.self) private var themeManager
+
+    /// When `true` the button is visually dimmed and interaction is blocked.
     let isDisabled: Bool
 
     func body(content: Content) -> some View {
@@ -116,7 +127,7 @@ private struct HKButtonDisabledModifier: ViewModifier {
             .disabled(isDisabled)
             .overlay(
                 isDisabled
-                    ? RoundedRectangle(cornerRadius: 12, style: .continuous)
+                    ? RoundedRectangle(cornerRadius: HKRadius.card, style: .continuous)
                         .fill(themeManager.current.overlay0Color.opacity(0.5))
                     : nil
             )
@@ -126,7 +137,28 @@ private struct HKButtonDisabledModifier: ViewModifier {
 
 public extension HKButton {
     /// Applies the standard disabled overlay and blocks interaction.
+    ///
+    /// - Parameter disabled: Pass `true` to disable the button. Defaults to `true`.
     func hkDisabled(_ disabled: Bool = true) -> some View {
         self.modifier(HKButtonDisabledModifier(isDisabled: disabled))
     }
+}
+
+// MARK: - Preview
+
+#Preview("HKButton — all variants") {
+    @Previewable @State var themeManager = HKThemeManager()
+
+    VStack(spacing: HKSpacing.md) {
+        HKButton("Primary Action", variant: .primary) {}
+        HKButton("Secondary Action", variant: .secondary) {}
+        HKButton("Danger Action", variant: .danger) {}
+        HKButton("Ghost Action", variant: .ghost) {}
+        HKButton("Full Width Primary", variant: .primary, fullWidth: true) {}
+        HKButton("Disabled", variant: .primary) {}
+            .hkDisabled()
+    }
+    .padding(HKSpacing.md)
+    .background(themeManager.current.baseColor)
+    .environment(themeManager)
 }

@@ -9,7 +9,7 @@ public enum AnalyticsPeriod: Sendable {
     case ninetyDays
 
     /// The number of calendar days in this period.
-    var days: Int {
+    public var days: Int {
         switch self {
         case .sevenDays: return 7
         case .thirtyDays: return 30

@@ -62,7 +62,7 @@ struct AddHabitView: View {
                                             selectedIcon == icon
                                             ? themes.current.primaryColor.opacity(0.15)
                                             : Color.clear,
-                                            in: RoundedRectangle(cornerRadius: 8)
+                                            in: RoundedRectangle(cornerRadius: HKRadius.sm)
                                         )
                                 }
                                 .buttonStyle(.plain)
@@ -152,7 +152,7 @@ struct AddHabitView: View {
                             selectedDays.contains(i)
                             ? themes.current.primaryColor
                             : themes.current.surface1Color,
-                            in: RoundedRectangle(cornerRadius: 6)
+                            in: RoundedRectangle(cornerRadius: HKRadius.sm)
                         )
                 }
                 .buttonStyle(.plain)

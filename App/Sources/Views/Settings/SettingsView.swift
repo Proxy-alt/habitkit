@@ -21,92 +21,102 @@ struct SettingsView: View {
                             showThemePicker = true
                         } label: {
                             HStack {
-                                Label("Theme", systemImage: "paintpalette.fill")
+                                Label("Theme", systemImage: HKSymbol.paintpalette)
                                     .foregroundStyle(themes.current.textColor)
                                 Spacer()
                                 Text(themes.current.name)
                                     .font(.hkBody)
                                     .foregroundStyle(themes.current.subtextColor)
-                                Image(systemName: "chevron.right")
+                                Image(systemName: HKSymbol.chevronRight)
                                     .font(.hkCaption)
                                     .foregroundStyle(themes.current.overlay0Color)
                             }
                         }
+                        .accessibilityLabel("Theme, current: \(themes.current.name)")
                     }
 
                     Section("Sync") {
                         Toggle(isOn: $icloudSync) {
-                            Label("iCloud Sync", systemImage: "icloud.fill")
+                            Label("iCloud Sync", systemImage: HKSymbol.icloud)
                                 .foregroundStyle(themes.current.textColor)
                         }
                         .tint(themes.current.primaryColor)
+                        .accessibilityLabel("iCloud Sync")
                     }
 
                     Section("Feedback") {
                         Toggle(isOn: $hapticsEnabled) {
-                            Label("Haptics", systemImage: "hand.tap.fill")
+                            Label("Haptics", systemImage: HKSymbol.handTap)
                                 .foregroundStyle(themes.current.textColor)
                         }
                         .tint(themes.current.primaryColor)
+                        .accessibilityLabel("Haptics")
                     }
 
                     Section("Notifications") {
                         NavigationLink {
                             NotificationSettingsView()
                         } label: {
-                            Label("Notification Settings", systemImage: "bell.fill")
+                            Label("Notification Settings", systemImage: HKSymbol.bell)
                                 .foregroundStyle(themes.current.textColor)
                         }
+                        .accessibilityLabel("Notification Settings")
                     }
 
                     Section("Data") {
                         NavigationLink {
                             DataExportView()
                         } label: {
-                            Label("Export Data", systemImage: "square.and.arrow.up")
+                            Label("Export Data", systemImage: HKSymbol.squareArrowUp)
                                 .foregroundStyle(themes.current.textColor)
                         }
+                        .accessibilityLabel("Export Data")
 
                         NavigationLink {
                             HealthKitSettingsView()
                         } label: {
-                            Label("HealthKit", systemImage: "heart.fill")
+                            Label("HealthKit", systemImage: HKSymbol.heart)
                                 .foregroundStyle(themes.current.textColor)
                         }
+                        .accessibilityLabel("HealthKit")
                     }
 
                     Section("Community") {
                         NavigationLink {
                             CommunityThemeGalleryView()
                         } label: {
-                            Label("Theme Gallery", systemImage: "sparkles")
+                            Label("Theme Gallery", systemImage: HKSymbol.sparkles)
                                 .foregroundStyle(themes.current.textColor)
                         }
+                        .accessibilityLabel("Theme Gallery")
                     }
 
                     Section("About") {
                         HStack {
-                            Label("Version", systemImage: "info.circle")
+                            Label("Version", systemImage: HKSymbol.infoCircle)
                                 .foregroundStyle(themes.current.textColor)
                             Spacer()
                             Text(appVersion)
                                 .font(.hkMono)
                                 .foregroundStyle(themes.current.subtextColor)
                         }
+                        .accessibilityLabel("Version \(appVersion)")
 
                         Link(destination: URL(string: "https://github.com/habitkit/habitkit")!) {
-                            Label("GitHub", systemImage: "link")
+                            Label("GitHub", systemImage: HKSymbol.link)
                                 .foregroundStyle(themes.current.primaryColor)
                         }
+                        .accessibilityLabel("GitHub repository")
                     }
 
                     Section {
                         Button(role: .destructive) {
                             showResetConfirm = true
                         } label: {
-                            Label("Reset All Data", systemImage: "trash.fill")
+                            Label("Reset All Data", systemImage: HKSymbol.trash)
                                 .foregroundStyle(themes.current.dangerColor)
                         }
+                        .accessibilityLabel("Reset All Data")
                     }
                 }
                 .scrollContentBackground(.hidden)
@@ -154,6 +164,7 @@ private struct NotificationSettingsView: View {
                 }
                 .buttonStyle(.borderedProminent)
                 .tint(themes.current.primaryColor)
+                .accessibilityLabel("Open iOS Settings")
             }
         }
         .navigationTitle("Notifications")
@@ -184,7 +195,7 @@ private struct HealthKitSettingsView: View {
         ZStack {
             themes.current.baseColor.ignoresSafeArea()
             VStack(spacing: HKSpacing.md) {
-                Image(systemName: "heart.fill")
+                Image(systemName: HKSymbol.heart)
                     .font(.system(size: 48))
                     .foregroundStyle(themes.current.dangerColor)
                 Text("HealthKit permissions are managed per-habit when you create or edit a habit.")

@@ -7,69 +7,58 @@ struct TodayView: View {
     @Environment(HKThemeManager.self) private var themes
     @Query private var habits: [Habit]
     @State private var showAddHabit = false
-
-    private var todayHabits: [Habit] {
-        let today = Date()
-        return habits.filter { !$0.isArchived && $0.schedule.isDue(on: today) }
-    }
-
-    private var incomplete: [Habit] {
-        todayHabits.filter { habit in
-            !habit.completions.contains { Calendar.current.isDateInToday($0.completedAt) }
-        }
-    }
-
-    private var complete: [Habit] {
-        todayHabits.filter { habit in
-            habit.completions.contains { Calendar.current.isDateInToday($0.completedAt) }
-        }
-    }
-
-    private var allComplete: Bool { incomplete.isEmpty && !todayHabits.isEmpty }
+    @State private var viewModel = TodayViewModel()
 
     var body: some View {
         NavigationStack {
             ZStack {
                 themes.current.baseColor.ignoresSafeArea()
 
-                if todayHabits.isEmpty {
+                if viewModel.todayHabits.isEmpty {
                     EmptyTodayView(showAddHabit: $showAddHabit)
-                } else if allComplete {
+                } else if viewModel.isAllComplete {
                     AllCompleteView()
                 } else {
                     habitList
                 }
             }
-            .navigationTitle(todayTitle)
+            .navigationTitle(viewModel.todayTitle)
             .navigationBarTitleDisplayMode(.large)
             .toolbar {
                 ToolbarItem(placement: .topBarTrailing) {
                     Button {
                         showAddHabit = true
                     } label: {
-                        Image(systemName: "plus")
+                        Image(systemName: HKSymbol.plus)
                             .foregroundStyle(themes.current.primaryColor)
                     }
+                    .accessibilityLabel("Add habit")
                 }
             }
             .sheet(isPresented: $showAddHabit) {
                 AddHabitView()
+            }
+            .onAppear {
+                viewModel.load(from: habits)
+            }
+            .onChange(of: habits) { _, newHabits in
+                viewModel.load(from: newHabits)
             }
         }
     }
 
     private var habitList: some View {
         List {
-            if !incomplete.isEmpty {
+            if !viewModel.incompleteHabits.isEmpty {
                 Section("Remaining") {
-                    ForEach(incomplete) { habit in
+                    ForEach(viewModel.incompleteHabits) { habit in
                         HabitRow(habit: habit)
                     }
                 }
             }
-            if !complete.isEmpty {
+            if !viewModel.completeHabits.isEmpty {
                 Section("Completed") {
-                    ForEach(complete) { habit in
+                    ForEach(viewModel.completeHabits) { habit in
                         HabitRow(habit: habit, muted: true)
                     }
                 }
@@ -77,12 +66,6 @@ struct TodayView: View {
         }
         .scrollContentBackground(.hidden)
         .listStyle(.insetGrouped)
-    }
-
-    private var todayTitle: String {
-        let formatter = DateFormatter()
-        formatter.dateFormat = "EEEE"
-        return formatter.string(from: Date())
     }
 }
 
@@ -92,7 +75,7 @@ private struct EmptyTodayView: View {
 
     var body: some View {
         VStack(spacing: HKSpacing.lg) {
-            Image(systemName: "sparkles")
+            Image(systemName: HKSymbol.sparkles)
                 .font(.system(size: 64))
                 .foregroundStyle(themes.current.primaryColor)
 
@@ -115,13 +98,19 @@ private struct EmptyTodayView: View {
 
 private struct AllCompleteView: View {
     @Environment(HKThemeManager.self) private var themes
+    @State private var animating = false
 
     var body: some View {
         VStack(spacing: HKSpacing.lg) {
-            Image(systemName: "checkmark.seal.fill")
+            Image(systemName: HKSymbol.checkmarkSeal)
                 .font(.system(size: 72))
                 .foregroundStyle(themes.current.successColor)
-                .symbolEffect(.bounce)
+                .scaleEffect(animating ? 1.05 : 1.0)
+                .onAppear {
+                    withAnimation(HKAnimation.slow.repeatForever(autoreverses: true)) {
+                        animating = true
+                    }
+                }
 
             Text("All done!")
                 .font(.hkLargeTitle)

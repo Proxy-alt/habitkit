@@ -1,6 +1,11 @@
 import AppIntents
 import Foundation
 
+/// Brings HabitKit to the foreground and starts a Live Activity timer for a timed habit.
+///
+/// Because `openAppWhenRun` is `true`, the system foregrounds the app before
+/// `perform()` is called. The app observes the result and starts the
+/// `ActivityKit` Live Activity for the given habit.
 public struct StartTimerIntent: AppIntent {
     public static let title: LocalizedStringResource = "Start Habit Timer"
     public static let description = IntentDescription(

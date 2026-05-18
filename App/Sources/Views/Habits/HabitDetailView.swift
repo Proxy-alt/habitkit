@@ -88,9 +88,9 @@ struct HabitDetailView: View {
 
     private var statsRow: some View {
         HStack(spacing: HKSpacing.md) {
-            statCell(value: "\(currentStreak)", label: "Current Streak", icon: "flame.fill", color: themes.current.warningColor)
-            statCell(value: "\(longestStreak)", label: "Longest Streak", icon: "trophy.fill", color: themes.current.primaryColor)
-            statCell(value: "\(Int(completionRate30Days * 100))%", label: "30-Day Rate", icon: "chart.bar.fill", color: themes.current.successColor)
+            statCell(value: "\(currentStreak)", label: "Current Streak", icon: HKSymbol.flame, color: themes.current.warningColor)
+            statCell(value: "\(longestStreak)", label: "Longest Streak", icon: HKSymbol.trophy, color: themes.current.primaryColor)
+            statCell(value: "\(Int(completionRate30Days * 100))%", label: "30-Day Rate", icon: HKSymbol.chartBar, color: themes.current.successColor)
         }
     }
 
@@ -179,7 +179,7 @@ private struct CompletionRow: View {
 
     var body: some View {
         HStack {
-            Image(systemName: "checkmark.circle.fill")
+            Image(systemName: HKSymbol.checkmark)
                 .foregroundStyle(themes.current.successColor)
 
             Text(completion.completedAt, style: .date)

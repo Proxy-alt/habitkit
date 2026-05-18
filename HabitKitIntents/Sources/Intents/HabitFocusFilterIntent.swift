@@ -1,6 +1,12 @@
 import AppIntents
 import Foundation
 
+/// A Focus Filter intent that controls which habits are visible during a Focus mode.
+///
+/// Users configure this in the Focus settings screen. The selected habit IDs
+/// are written to the shared App Group `UserDefaults` so the main app, widgets,
+/// and notification extensions all read the same filtered set without an
+/// inter-process round trip.
 public struct HabitFocusFilterIntent: SetFocusFilterIntent {
     public static var title: LocalizedStringResource = "Filter Habits by Focus"
     public static var description: LocalizedStringResource =

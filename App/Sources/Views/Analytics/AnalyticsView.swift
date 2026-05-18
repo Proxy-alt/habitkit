@@ -6,10 +6,16 @@ import HabitKitUI
 struct AnalyticsView: View {
     @Environment(HKThemeManager.self) private var themes
     @Query(sort: \Habit.sortOrder) private var habits: [Habit]
-    @State private var selectedHabit: Habit?
-    @State private var selectedPeriod: AnalyticsPeriod = .thirtyDays
+    @State private var viewModel = AnalyticsViewModel()
 
     private var activeHabits: [Habit] { habits.filter { !$0.isArchived } }
+
+    private var selectedHabit: Habit? {
+        if let id = viewModel.selectedHabitID {
+            return activeHabits.first { $0.id == id }
+        }
+        return nil
+    }
 
     var body: some View {
         NavigationStack {
@@ -39,7 +45,7 @@ struct AnalyticsView: View {
 
     private var emptyState: some View {
         VStack(spacing: HKSpacing.lg) {
-            Image(systemName: "chart.bar.xaxis")
+            Image(systemName: HKSymbol.chartBarX)
                 .font(.system(size: 56))
                 .foregroundStyle(themes.current.subtextColor)
             Text("No data yet")
@@ -54,7 +60,7 @@ struct AnalyticsView: View {
     }
 
     private var periodPicker: some View {
-        Picker("Period", selection: $selectedPeriod) {
+        Picker("Period", selection: $viewModel.selectedPeriod) {
             Text("7 Days").tag(AnalyticsPeriod.sevenDays)
             Text("30 Days").tag(AnalyticsPeriod.thirtyDays)
             Text("90 Days").tag(AnalyticsPeriod.ninetyDays)
@@ -73,7 +79,7 @@ struct AnalyticsView: View {
                     ForEach(activeHabits.prefix(4)) { habit in
                         VStack(spacing: HKSpacing.xs) {
                             HKProgressRing(
-                                progress: completionRate(for: habit),
+                                progress: viewModel.completionRate(for: habit, period: viewModel.selectedPeriod),
                                 lineWidth: 6,
                                 size: 52
                             )
@@ -95,7 +101,7 @@ struct AnalyticsView: View {
             HStack(spacing: HKSpacing.sm) {
                 ForEach(activeHabits) { habit in
                     Button {
-                        selectedHabit = habit
+                        viewModel.selectedHabitID = habit.id
                     } label: {
                         HStack(spacing: HKSpacing.xs) {
                             Image(systemName: habit.icon)
@@ -103,20 +109,21 @@ struct AnalyticsView: View {
                                 .font(.hkBody)
                         }
                         .foregroundStyle(
-                            (selectedHabit?.id ?? activeHabits.first?.id) == habit.id
+                            (viewModel.selectedHabitID ?? activeHabits.first?.id) == habit.id
                             ? themes.current.baseColor
                             : themes.current.textColor
                         )
                         .padding(.horizontal, HKSpacing.md)
                         .padding(.vertical, HKSpacing.sm)
                         .background(
-                            (selectedHabit?.id ?? activeHabits.first?.id) == habit.id
+                            (viewModel.selectedHabitID ?? activeHabits.first?.id) == habit.id
                             ? themes.current.primaryColor
                             : themes.current.surface1Color,
                             in: Capsule()
                         )
                     }
                     .buttonStyle(.plain)
+                    .accessibilityLabel("View analytics for \(habit.name)")
                 }
             }
         }
@@ -152,7 +159,7 @@ struct AnalyticsView: View {
                                 .foregroundStyle(themes.current.subtextColor)
                         }
                         VStack {
-                            Text("\(Int(completionRate(for: habit) * 100))%")
+                            Text("\(Int(viewModel.completionRate(for: habit, period: viewModel.selectedPeriod) * 100))%")
                                 .font(.hkLargeTitle)
                                 .foregroundStyle(themes.current.successColor)
                             Text("Rate")
@@ -186,72 +193,21 @@ struct AnalyticsView: View {
                             .font(.hkCaption)
                             .foregroundStyle(themes.current.subtextColor)
 
-                        ForEach(correlationPairs.prefix(5), id: \.0) { pair in
+                        ForEach(viewModel.correlationPairs(from: activeHabits).prefix(5), id: \.nameA) { pair in
                             HStack {
-                                Text("\(pair.1) & \(pair.2)")
+                                Text("\(pair.nameA) & \(pair.nameB)")
                                     .font(.hkBody)
                                     .foregroundStyle(themes.current.textColor)
                                 Spacer()
-                                Text(String(format: "%.0f%%", pair.0 * 100))
+                                Text(String(format: "%.0f%%", pair.correlation * 100))
                                     .font(.hkMono)
-                                    .foregroundStyle(correlationColor(pair.0))
+                                    .foregroundStyle(correlationColor(pair.correlation))
                             }
                         }
                     }
                 }
             }
         }
-    }
-
-    private func completionRate(for habit: Habit) -> Double {
-        let days: Int
-        switch selectedPeriod {
-        case .sevenDays: days = 7
-        case .thirtyDays: days = 30
-        case .ninetyDays: days = 90
-        }
-        let calendar = Calendar.current
-        let now = Date()
-        let targetDays = (0..<days).compactMap { calendar.date(byAdding: .day, value: -$0, to: now) }
-        let completed = targetDays.filter { day in
-            habit.completions.contains { calendar.isDate($0.completedAt, inSameDayAs: day) }
-        }
-        return Double(completed.count) / Double(max(days, 1))
-    }
-
-    private var correlationPairs: [(Double, String, String)] {
-        var pairs: [(Double, String, String)] = []
-        let h = activeHabits
-        for i in 0..<h.count {
-            for j in (i + 1)..<h.count {
-                let r = pearsonCorrelation(h[i], h[j])
-                if r > 0.2 {
-                    pairs.append((r, h[i].name, h[j].name))
-                }
-            }
-        }
-        return pairs.sorted { $0.0 > $1.0 }
-    }
-
-    private func pearsonCorrelation(_ a: Habit, _ b: Habit) -> Double {
-        let calendar = Calendar.current
-        let now = Date()
-        let days = (0..<30).compactMap { calendar.date(byAdding: .day, value: -$0, to: now) }
-        let xVals = days.map { day -> Double in
-            a.completions.contains { calendar.isDate($0.completedAt, inSameDayAs: day) } ? 1.0 : 0.0
-        }
-        let yVals = days.map { day -> Double in
-            b.completions.contains { calendar.isDate($0.completedAt, inSameDayAs: day) } ? 1.0 : 0.0
-        }
-        let n = Double(days.count)
-        let xMean = xVals.reduce(0, +) / n
-        let yMean = yVals.reduce(0, +) / n
-        let num = zip(xVals, yVals).reduce(0.0) { $0 + ($1.0 - xMean) * ($1.1 - yMean) }
-        let xVar = xVals.reduce(0.0) { $0 + pow($1 - xMean, 2) }
-        let yVar = yVals.reduce(0.0) { $0 + pow($1 - yMean, 2) }
-        let denom = sqrt(xVar * yVar)
-        guard denom > 0 else { return 0 }
-        return num / denom
     }
 
     private func correlationColor(_ r: Double) -> Color {

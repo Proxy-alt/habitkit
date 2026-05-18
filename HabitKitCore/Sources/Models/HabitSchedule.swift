@@ -11,13 +11,14 @@ public class HabitSchedule {
     /// Only the hour and minute components of each Date are meaningful.
     public var reminderTimes: [Date]
 
-    /// The habit this schedule belongs to.
-    public var habit: Habit
+    /// The habit this schedule belongs to. `nil` only during object-graph
+    /// construction (e.g. previews and tests); always non-`nil` in production.
+    public var habit: Habit?
 
     public init(
         frequency: ScheduleFrequency,
         reminderTimes: [Date] = [],
-        habit: Habit
+        habit: Habit? = nil
     ) {
         self.frequency = frequency
         self.reminderTimes = reminderTimes
@@ -42,7 +43,7 @@ public class HabitSchedule {
 
         case .interval(let every):
             guard every > 0 else { return false }
-            let createdAt = habit.createdAt
+            guard let createdAt = habit?.createdAt else { return false }
             let startOfCreation = calendar.startOfDay(for: createdAt)
             let startOfTarget = calendar.startOfDay(for: date)
             let components = calendar.dateComponents([.day], from: startOfCreation, to: startOfTarget)

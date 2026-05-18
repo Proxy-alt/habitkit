@@ -19,12 +19,23 @@ public struct HKCompletionBadge: View {
 
     // MARK: Properties
 
+    /// Whether the habit is currently marked as complete.
     private let isCompleted: Bool
+
+    /// The diameter of the badge in points.
     private let size: CGFloat
+
+    /// The closure invoked when the badge is tapped.
     private let onTap: () -> Void
 
     // MARK: Init
 
+    /// Creates a new completion badge.
+    ///
+    /// - Parameters:
+    ///   - isCompleted: The current completion state.
+    ///   - size: Diameter of the badge in points. Defaults to `28`.
+    ///   - onTap: The closure invoked when the badge is tapped.
     public init(
         isCompleted: Bool,
         size: CGFloat = 28,
@@ -39,7 +50,9 @@ public struct HKCompletionBadge: View {
 
     public var body: some View {
         Button(action: {
-            onTap()
+            withAnimation(HKAnimation.quick) {
+                onTap()
+            }
         }) {
             ZStack {
                 Circle()
@@ -59,18 +72,54 @@ public struct HKCompletionBadge: View {
 
                 if isCompleted {
                     Image(systemName: "checkmark")
-                        .font(.system(size: size * 0.45, weight: .bold))
+                        .font(.system(.body, weight: .bold))
+                        .scaleEffect(size / 28)
                         .foregroundStyle(themeManager.current.baseColor)
                         .transition(.scale.combined(with: .opacity))
                 }
             }
-            .animation(.spring(response: 0.3, dampingFraction: 0.6), value: isCompleted)
+            .animation(HKAnimation.quick, value: isCompleted)
         }
         .buttonStyle(.plain)
         .scaleEffect(isCompleted ? 1.0 : 0.95)
-        .animation(.spring(response: 0.3, dampingFraction: 0.6), value: isCompleted)
+        .animation(HKAnimation.quick, value: isCompleted)
         .accessibilityLabel(isCompleted ? "Completed" : "Not completed")
         .accessibilityHint("Double tap to toggle")
         .accessibilityAddTraits(.isButton)
     }
+}
+
+// MARK: - Preview
+
+#Preview("HKCompletionBadge — complete and incomplete") {
+    @Previewable @State var themeManager = HKThemeManager()
+    @Previewable @State var isCompleted = false
+
+    HStack(spacing: HKSpacing.xl) {
+        VStack(spacing: HKSpacing.sm) {
+            HKCompletionBadge(isCompleted: false, size: 36) {}
+            Text("Incomplete")
+                .font(HKFont.caption)
+                .foregroundStyle(themeManager.current.subtextColor)
+        }
+
+        VStack(spacing: HKSpacing.sm) {
+            HKCompletionBadge(isCompleted: true, size: 36) {}
+            Text("Complete")
+                .font(HKFont.caption)
+                .foregroundStyle(themeManager.current.subtextColor)
+        }
+
+        VStack(spacing: HKSpacing.sm) {
+            HKCompletionBadge(isCompleted: isCompleted, size: 36) {
+                isCompleted.toggle()
+            }
+            Text("Tap me")
+                .font(HKFont.caption)
+                .foregroundStyle(themeManager.current.subtextColor)
+        }
+    }
+    .padding(HKSpacing.lg)
+    .background(themeManager.current.baseColor)
+    .environment(themeManager)
 }

@@ -18,6 +18,7 @@ struct HabitRow: View {
             HKCompletionBadge(isComplete: isCompletedToday) {
                 toggleCompletion()
             }
+            .accessibilityLabel(isCompletedToday ? "Mark \(habit.name) incomplete" : "Mark \(habit.name) complete")
 
             Image(systemName: habit.icon)
                 .font(.hkHeadline)
@@ -39,11 +40,12 @@ struct HabitRow: View {
                 Button {
                     // Start timer via StartTimerIntent
                 } label: {
-                    Image(systemName: "play.circle.fill")
+                    Image(systemName: HKSymbol.play)
                         .font(.title2)
                         .foregroundStyle(themes.current.primaryColor)
                 }
                 .buttonStyle(.plain)
+                .accessibilityLabel("Start \(habit.name) timer")
             }
         }
         .padding(.vertical, HKSpacing.xs)
@@ -55,7 +57,7 @@ struct HabitRow: View {
         if streak > 0 {
             return AnyView(
                 HStack(spacing: 2) {
-                    Image(systemName: "flame.fill")
+                    Image(systemName: HKSymbol.flame)
                         .font(.hkCaption)
                         .foregroundStyle(themes.current.warningColor)
                     Text("\(streak) day streak")

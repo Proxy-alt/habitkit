@@ -1,6 +1,9 @@
 import AppIntents
 import Foundation
 
+/// Returns the current consecutive-day streak count for a habit as an `Int`.
+///
+/// The returned value can be used as an input in multi-step Shortcuts.
 public struct GetStreakIntent: AppIntent {
     public static let title: LocalizedStringResource = "Get Habit Streak"
     public static let description = IntentDescription("Returns the current consecutive-day streak for a habit.")

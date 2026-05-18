@@ -3,8 +3,19 @@ import SwiftUI
 // MARK: - HKThemeManager
 
 /// Observable manager that owns the list of available themes and the currently
-/// selected theme. Themes are loaded from the bundled catppuccin.json and an
-/// optional community themes.json resource.
+/// selected theme.
+///
+/// Themes are loaded from the bundled `catppuccin.json` and an optional
+/// community `themes.json` resource. Inject an instance at the app root:
+/// ```swift
+/// @State private var themeManager = HKThemeManager()
+///
+/// WindowGroup {
+///     ContentView()
+///         .environment(themeManager)
+///         .environment(\.hkTheme, themeManager.current)
+/// }
+/// ```
 @Observable
 public final class HKThemeManager {
 
@@ -24,6 +35,8 @@ public final class HKThemeManager {
 
     // MARK: Init
 
+    /// Creates a new manager, loads all bundled themes, and restores any
+    /// previously persisted theme selection.
     public init() {
         let themes = Self.loadThemes()
         self.available = themes
@@ -41,7 +54,9 @@ public final class HKThemeManager {
 
     // MARK: Public API
 
-    /// Make `theme` the active theme and persist the choice.
+    /// Makes `theme` the active theme and persists the choice to `UserDefaults`.
+    ///
+    /// - Parameter theme: The ``HKTheme`` to activate.
     public func select(_ theme: HKTheme) {
         current = theme
         UserDefaults.standard.set(theme.id, forKey: Self.userDefaultsKey)
@@ -53,6 +68,9 @@ public final class HKThemeManager {
     /// returns the Catppuccin Latte (light) variant for `.light` and the
     /// current dark theme for `.dark`. Once the user has explicitly picked a
     /// theme that selection is honoured regardless of colour scheme.
+    ///
+    /// - Parameter colorScheme: The current `ColorScheme` from the environment.
+    /// - Returns: The ``HKTheme`` appropriate for `colorScheme`.
     public func theme(for colorScheme: ColorScheme) -> HKTheme {
         let hasManualSelection =
             UserDefaults.standard.string(forKey: Self.userDefaultsKey) != nil
@@ -95,24 +113,6 @@ public final class HKThemeManager {
 
     /// A safe fallback used only when the bundle contains no theme data at all.
     private static func placeholderTheme() -> HKTheme {
-        HKTheme(
-            id: "catppuccin-mocha",
-            name: "Mocha",
-            author: nil,
-            isDark: true,
-            colors: HKThemeColors(
-                base:     "#1e1e2e",
-                surface0: "#313244",
-                surface1: "#45475a",
-                surface2: "#585b70",
-                overlay0: "#6c7086",
-                text:     "#cdd6f4",
-                subtext:  "#bac2de",
-                primary:  "#cba6f7",
-                danger:   "#f38ba8",
-                success:  "#a6e3a1",
-                warning:  "#fab387"
-            )
-        )
+        HKTheme.mocha
     }
 }

@@ -7,6 +7,7 @@ on:
     branches: [main]
 
 jobs:
+  # ── Theme JSON validation ───────────────────────────────────────────────────
   validate-themes:
     name: Validate Community Themes
     runs-on: ubuntu-latest
@@ -16,56 +17,158 @@ jobs:
       - name: Install ajv-cli
         run: npm install -g ajv-cli ajv-formats
 
-      - name: Validate themes.json schema
+      - name: Validate themes.json
         run: |
           ajv validate \
             -s .github/theme-schema.json \
             -d HabitKitUI/Sources/Themes/Community/themes.json
 
+  # ── Hardcoded color enforcement ─────────────────────────────────────────────
   lint-colors:
-    name: Enforce No Hardcoded Colors
+    name: No Hardcoded Colors
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
 
       - name: Check for raw hex strings in Swift files
         run: |
-          # Fail if any Swift file outside of test targets contains a raw hex color literal
-          # Allow the hex parser itself in HKTheme.swift (Color init?(hex:))
-          VIOLATIONS=$(grep -rn '"#[0-9a-fA-F]\{3,8\}"' \
+          VIOLATIONS=$(grep -rn \
+            -e 'Color(red:' \
+            -e 'Color(\.sRGB' \
+            -e 'UIColor(red:' \
+            -e '"#[0-9a-fA-F]\{3,8\}"' \
             --include="*.swift" \
             --exclude-dir=".build" \
-            . | grep -v "HKTheme.swift" | grep -v "Tests" || true)
+            --exclude-dir="Tests" \
+            . | grep -v "HKTheme.swift" || true)
           if [ -n "$VIOLATIONS" ]; then
-            echo "ERROR: Hardcoded hex colors found in Swift files:"
+            echo "❌ Hardcoded color literals found:"
             echo "$VIOLATIONS"
             echo ""
-            echo "Use HKTheme color tokens instead (e.g. themes.current.primaryColor)"
+            echo "Use HKTheme tokens (theme.colors.primary etc.) instead."
             exit 1
           fi
-          echo "No hardcoded hex colors found."
+          echo "✅ No hardcoded colors."
 
+  # ── Hardcoded font enforcement ──────────────────────────────────────────────
   lint-fonts:
-    name: Enforce No Hardcoded Fonts
+    name: No Hardcoded Font Sizes
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
 
       - name: Check for hardcoded font sizes
         run: |
-          VIOLATIONS=$(grep -rn "\.font(\.system(size:" \
+          VIOLATIONS=$(grep -rn '\.font(\.system(size:' \
             --include="*.swift" \
             --exclude-dir=".build" \
-            . | grep -v "Tests" || true)
+            --exclude-dir="Tests" \
+            . || true)
           if [ -n "$VIOLATIONS" ]; then
-            echo "ERROR: Hardcoded font sizes found:"
+            echo "❌ Hardcoded font sizes found:"
             echo "$VIOLATIONS"
             echo ""
-            echo "Use HKTypography extensions (Font.hkBody, Font.hkHeadline, etc.)"
+            echo "Use HKFont constants (HKFont.body, HKFont.headline, etc.)."
             exit 1
           fi
-          echo "No hardcoded font sizes found."
+          echo "✅ No hardcoded font sizes."
 
+  # ── Force-unwrap enforcement ─────────────────────────────────────────────────
+  lint-force-unwrap:
+    name: No Force Unwrap / Force Try
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Check for try! in production code
+        run: |
+          VIOLATIONS=$(grep -rn 'try!' \
+            --include="*.swift" \
+            --exclude-dir=".build" \
+            --exclude-dir="Tests" \
+            . || true)
+          if [ -n "$VIOLATIONS" ]; then
+            echo "❌ Force-try (try!) found in production code:"
+            echo "$VIOLATIONS"
+            exit 1
+          fi
+          echo "✅ No try! found."
+
+      - name: Check for force-unwrap in production code
+        run: |
+          # Match trailing ! that is not a logical-not operator.
+          # Exclude: comments, string literals, fatalError lines (documented exception).
+          VIOLATIONS=$(grep -rn '[a-zA-Z0-9_)]!' \
+            --include="*.swift" \
+            --exclude-dir=".build" \
+            --exclude-dir="Tests" \
+            . | grep -v '// ' | grep -v 'fatalError' | grep -v 'precondition' || true)
+          if [ -n "$VIOLATIONS" ]; then
+            echo "❌ Force-unwrap (!) found in production code:"
+            echo "$VIOLATIONS"
+            echo ""
+            echo "Use guard-let, if-let, or explicit error handling instead."
+            exit 1
+          fi
+          echo "✅ No force-unwrap found."
+
+  # ── Package graph / import boundary check ───────────────────────────────────
+  lint-imports:
+    name: Package Import Boundaries
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: HabitKitCore must not import SwiftUI
+        run: |
+          VIOLATIONS=$(grep -rn '^import SwiftUI' \
+            HabitKitCore/Sources/ || true)
+          if [ -n "$VIOLATIONS" ]; then
+            echo "❌ HabitKitCore imports SwiftUI (forbidden):"
+            echo "$VIOLATIONS"
+            exit 1
+          fi
+          echo "✅ HabitKitCore has no SwiftUI imports."
+
+      - name: HabitKitCore must not import HabitKitUI or HabitKitIntents
+        run: |
+          VIOLATIONS=$(grep -rn -e '^import HabitKitUI' -e '^import HabitKitIntents' \
+            HabitKitCore/Sources/ || true)
+          if [ -n "$VIOLATIONS" ]; then
+            echo "❌ HabitKitCore imports a downstream package:"
+            echo "$VIOLATIONS"
+            exit 1
+          fi
+          echo "✅ HabitKitCore has no downstream package imports."
+
+      - name: HabitKitIntents must not import SwiftUI or HabitKitUI
+        run: |
+          VIOLATIONS=$(grep -rn -e '^import SwiftUI' -e '^import HabitKitUI' \
+            HabitKitIntents/Sources/ || true)
+          if [ -n "$VIOLATIONS" ]; then
+            echo "❌ HabitKitIntents imports a forbidden package:"
+            echo "$VIOLATIONS"
+            exit 1
+          fi
+          echo "✅ HabitKitIntents import boundaries clean."
+
+  # ── swift-format ─────────────────────────────────────────────────────────────
+  swift-format:
+    name: swift-format Lint
+    runs-on: macos-15
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Select Xcode
+        run: sudo xcode-select -s /Applications/Xcode_26.app
+
+      - name: Install swift-format
+        run: brew install swift-format
+
+      - name: Run swift-format lint
+        run: swift-format lint --recursive --strict .
+
+  # ── Swift package builds ─────────────────────────────────────────────────────
   build:
     name: Build Swift Packages
     runs-on: macos-15
@@ -76,10 +179,66 @@ jobs:
         run: sudo xcode-select -s /Applications/Xcode_26.app
 
       - name: Build HabitKitCore
-        run: swift build --package-path HabitKitCore
+        run: swift build --package-path HabitKitCore -Xswiftc -strict-concurrency=complete
 
       - name: Build HabitKitUI
-        run: swift build --package-path HabitKitUI
+        run: swift build --package-path HabitKitUI -Xswiftc -strict-concurrency=complete
 
       - name: Build HabitKitIntents
-        run: swift build --package-path HabitKitIntents
+        run: swift build --package-path HabitKitIntents -Xswiftc -strict-concurrency=complete
+
+  # ── Swift tests ───────────────────────────────────────────────────────────────
+  test:
+    name: Run Tests
+    runs-on: macos-15
+    needs: build
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Select Xcode
+        run: sudo xcode-select -s /Applications/Xcode_26.app
+
+      - name: Test HabitKitCore
+        run: |
+          swift test \
+            --package-path HabitKitCore \
+            --enable-code-coverage \
+            -Xswiftc -strict-concurrency=complete
+
+      - name: Check coverage thresholds
+        run: |
+          # Extract line coverage for HabitKitCore and fail if below 80%
+          COVERAGE=$(xcrun xccov view --report --json \
+            .build/debug/codecov/HabitKitCore.xcresult 2>/dev/null | \
+            python3 -c "import sys,json; d=json.load(sys.stdin); \
+              targets=[t for t in d.get('targets',[]) if 'HabitKitCore' in t.get('name','')]; \
+              print(int(targets[0]['lineCoverage']*100)) if targets else print(0)" \
+            2>/dev/null || echo "0")
+          echo "HabitKitCore line coverage: ${COVERAGE}%"
+          if [ "$COVERAGE" -lt 80 ]; then
+            echo "❌ HabitKitCore coverage ${COVERAGE}% is below the 80% minimum."
+            exit 1
+          fi
+          echo "✅ Coverage threshold met."
+
+  # ── Preview presence check ────────────────────────────────────────────────────
+  check-previews:
+    name: Previews on All UI Views
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Verify #Preview in HabitKitUI component files
+        run: |
+          MISSING=""
+          for f in HabitKitUI/Sources/Components/*.swift; do
+            if ! grep -q '#Preview' "$f"; then
+              MISSING="$MISSING\n  $f"
+            fi
+          done
+          if [ -n "$MISSING" ]; then
+            echo "❌ These component files are missing #Preview blocks:"
+            echo -e "$MISSING"
+            exit 1
+          fi
+          echo "✅ All component files have #Preview blocks."

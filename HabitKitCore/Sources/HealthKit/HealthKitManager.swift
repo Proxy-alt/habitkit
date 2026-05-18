@@ -23,22 +23,32 @@ public enum HabitHealthType: Sendable {
 
 /// Manages all interactions with HealthKit on behalf of HabitKit.
 ///
-/// Obtain the shared instance via `HealthKitManager.shared`.
+/// Obtain the shared live instance via `HealthKitManager.live`, or supply a
+/// custom ``HealthStore`` for testing.
 public actor HealthKitManager {
 
-    // MARK: - Singleton
+    // MARK: - Shared instance
 
-    public static let shared = HealthKitManager()
+    /// The shared live `HealthKitManager` backed by `HKHealthStore`.
+    public static let live = HealthKitManager(store: HKHealthStore())
 
     // MARK: - Private state
 
-    private let store = HKHealthStore()
+    private let store: any HealthStore
 
     /// Active query handles keyed by `HabitHealthType` so we can avoid
     /// installing duplicate background observers.
     private var activeQueries: [HabitHealthTypeCodable: HKObserverQuery] = [:]
 
-    private init() {}
+    // MARK: - Initialisation
+
+    /// Creates a `HealthKitManager` backed by the given ``HealthStore``.
+    ///
+    /// - Parameter store: The store to use for all HealthKit operations.
+    ///   Pass `HKHealthStore()` for production; pass a fake for tests.
+    public init(store: some HealthStore) {
+        self.store = store
+    }
 
     // MARK: - Authorization
 
@@ -73,7 +83,9 @@ public actor HealthKitManager {
         guard !samples.isEmpty else {
             throw HealthKitError.noSampleData
         }
-        try await store.save(samples)
+        for sample in samples {
+            try await store.save(sample)
+        }
     }
 
     // MARK: - Auto-completion observation
@@ -153,7 +165,7 @@ public actor HealthKitManager {
                 quantityType: quantityType,
                 quantitySamplePredicate: predicate,
                 options: .cumulativeSum
-            ) { _, stats, error in
+            ) { [self] _, stats, error in
                 if let error {
                     continuation.resume(throwing: error)
                     return
@@ -169,20 +181,32 @@ public actor HealthKitManager {
     // MARK: - Type resolution
 
     private func sampleTypes(for habitType: HabitHealthType) -> Set<HKSampleType> {
+        var types = Set<HKSampleType>()
         switch habitType {
         case .meditation:
-            return [HKObjectType.categoryType(forIdentifier: .mindfulSession)!]
+            if let type = HKObjectType.categoryType(forIdentifier: .mindfulSession) {
+                types.insert(type)
+            }
         case .workout:
-            return [HKObjectType.workoutType()]
+            types.insert(HKObjectType.workoutType())
         case .waterIntake:
-            return [HKObjectType.quantityType(forIdentifier: .dietaryWater)!]
+            if let type = HKObjectType.quantityType(forIdentifier: .dietaryWater) {
+                types.insert(type)
+            }
         case .sleep:
-            return [HKObjectType.categoryType(forIdentifier: .sleepAnalysis)!]
+            if let type = HKObjectType.categoryType(forIdentifier: .sleepAnalysis) {
+                types.insert(type)
+            }
         case .standing:
-            return [HKObjectType.quantityType(forIdentifier: .appleStandTime)!]
+            if let type = HKObjectType.quantityType(forIdentifier: .appleStandTime) {
+                types.insert(type)
+            }
         case .stepGoal:
-            return [HKObjectType.quantityType(forIdentifier: .stepCount)!]
+            if let type = HKObjectType.quantityType(forIdentifier: .stepCount) {
+                types.insert(type)
+            }
         }
+        return types
     }
 
     private func primaryQuantityType(for habitType: HabitHealthType) -> HKQuantityType? {
@@ -237,7 +261,9 @@ public actor HealthKitManager {
             if let duration = completion.durationSeconds {
                 end = start.addingTimeInterval(TimeInterval(duration))
             }
-            guard let type = HKObjectType.categoryType(forIdentifier: .mindfulSession) else { break }
+            guard let type = HKObjectType.categoryType(forIdentifier: .mindfulSession) else {
+                throw HealthKitError.unsupportedType
+            }
             let sample = HKCategorySample(
                 type: type,
                 value: HKCategoryValue.notApplicable.rawValue,
@@ -257,7 +283,9 @@ public actor HealthKitManager {
             return [workout]
 
         case .waterIntake:
-            guard let type = HKObjectType.quantityType(forIdentifier: .dietaryWater) else { break }
+            guard let type = HKObjectType.quantityType(forIdentifier: .dietaryWater) else {
+                throw HealthKitError.unsupportedType
+            }
             let ml = completion.value ?? 250
             let quantity = HKQuantity(unit: HKUnit.literUnit(with: .milli), doubleValue: ml)
             let sample = HKQuantitySample(type: type, quantity: quantity, start: start, end: start)
@@ -266,7 +294,9 @@ public actor HealthKitManager {
         case .sleep:
             let duration = completion.durationSeconds.map { TimeInterval($0) } ?? 3600 * 8
             end = start.addingTimeInterval(duration)
-            guard let type = HKObjectType.categoryType(forIdentifier: .sleepAnalysis) else { break }
+            guard let type = HKObjectType.categoryType(forIdentifier: .sleepAnalysis) else {
+                throw HealthKitError.unsupportedType
+            }
             let sample = HKCategorySample(
                 type: type,
                 value: HKCategoryValueSleepAnalysis.asleepUnspecified.rawValue,
@@ -276,21 +306,23 @@ public actor HealthKitManager {
             return [sample]
 
         case .standing:
-            guard let type = HKObjectType.quantityType(forIdentifier: .appleStandTime) else { break }
+            guard let type = HKObjectType.quantityType(forIdentifier: .appleStandTime) else {
+                throw HealthKitError.unsupportedType
+            }
             let minutes = completion.value ?? 1
             let quantity = HKQuantity(unit: HKUnit.minute(), doubleValue: minutes)
             let sample = HKQuantitySample(type: type, quantity: quantity, start: start, end: start)
             return [sample]
 
         case .stepGoal:
-            guard let type = HKObjectType.quantityType(forIdentifier: .stepCount) else { break }
+            guard let type = HKObjectType.quantityType(forIdentifier: .stepCount) else {
+                throw HealthKitError.unsupportedType
+            }
             let steps = completion.value ?? 10_000
             let quantity = HKQuantity(unit: HKUnit.count(), doubleValue: steps)
             let sample = HKQuantitySample(type: type, quantity: quantity, start: start, end: start)
             return [sample]
         }
-
-        throw HealthKitError.unsupportedType
     }
 }
 

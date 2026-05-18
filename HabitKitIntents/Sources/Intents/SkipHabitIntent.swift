@@ -1,6 +1,9 @@
 import AppIntents
 import Foundation
 
+/// Skips a habit for the current day without counting it as a missed completion.
+///
+/// Skipped days are excluded from streak calculations.
 public struct SkipHabitIntent: AppIntent {
     public static let title: LocalizedStringResource = "Skip Habit"
     public static let description = IntentDescription("Skip a habit for today without marking it as a failure.")

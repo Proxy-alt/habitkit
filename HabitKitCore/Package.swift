@@ -22,6 +22,11 @@ let package = Package(
             swiftSettings: [
                 .enableExperimentalFeature("StrictConcurrency")
             ]
+        ),
+        .testTarget(
+            name: "HabitKitCoreTests",
+            dependencies: ["HabitKitCore"],
+            path: "Tests/HabitKitCoreTests"
         )
     ]
 )

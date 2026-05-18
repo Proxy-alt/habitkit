@@ -91,7 +91,7 @@ struct LiveSessionView: View {
         VStack(spacing: HKSpacing.lg) {
             if activeTimedHabits.isEmpty {
                 VStack(spacing: HKSpacing.md) {
-                    Image(systemName: "timer")
+                    Image(systemName: HKSymbol.timer)
                         .font(.system(size: 56))
                         .foregroundStyle(themes.current.subtextColor)
                     Text("No Timed Habits")
@@ -128,13 +128,14 @@ struct LiveSessionView: View {
                                                 .foregroundStyle(themes.current.subtextColor)
                                         }
                                         Spacer()
-                                        Image(systemName: "play.circle.fill")
+                                        Image(systemName: HKSymbol.play)
                                             .font(.title)
                                             .foregroundStyle(themes.current.primaryColor)
                                     }
                                 }
                             }
                             .buttonStyle(.plain)
+                            .accessibilityLabel("Start \(habit.name) session, \(habit.targetDurationSeconds / 60) minutes")
                         }
                     }
                     .padding(HKSpacing.md)

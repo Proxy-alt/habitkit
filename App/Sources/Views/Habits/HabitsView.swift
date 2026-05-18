@@ -8,10 +8,10 @@ struct HabitsView: View {
     @Environment(\.modelContext) private var modelContext
     @Query(sort: \Habit.sortOrder) private var habits: [Habit]
     @State private var showAddHabit = false
-    @State private var showArchived = false
+    @State private var viewModel = HabitsViewModel()
 
-    private var activeHabits: [Habit] { habits.filter { !$0.isArchived } }
-    private var archivedHabits: [Habit] { habits.filter { $0.isArchived } }
+    private var activeHabits: [Habit] { viewModel.activeHabits(from: habits) }
+    private var archivedHabits: [Habit] { viewModel.archivedHabits(from: habits) }
 
     var body: some View {
         NavigationStack {
@@ -21,7 +21,7 @@ struct HabitsView: View {
                 List {
                     ForEach(activeHabits) { habit in
                         NavigationLink(destination: HabitDetailView(habit: habit)) {
-                            HabitListRow(habit: habit)
+                            HabitListRow(habit: habit, viewModel: viewModel)
                         }
                     }
                     .onMove(perform: moveHabits)
@@ -30,18 +30,27 @@ struct HabitsView: View {
                     if !archivedHabits.isEmpty {
                         Section {
                             Button {
-                                showArchived.toggle()
+                                viewModel.showArchived.toggle()
                             } label: {
-                                Label(showArchived ? "Hide Archived" : "Show Archived (\(archivedHabits.count))",
-                                      systemImage: "archivebox")
-                                    .foregroundStyle(themes.current.subtextColor)
-                                    .font(.hkBody)
+                                Label(
+                                    viewModel.showArchived
+                                        ? "Hide Archived"
+                                        : "Show Archived (\(archivedHabits.count))",
+                                    systemImage: HKSymbol.archivebox
+                                )
+                                .foregroundStyle(themes.current.subtextColor)
+                                .font(.hkBody)
                             }
+                            .accessibilityLabel(
+                                viewModel.showArchived
+                                    ? "Hide archived habits"
+                                    : "Show \(archivedHabits.count) archived habits"
+                            )
 
-                            if showArchived {
+                            if viewModel.showArchived {
                                 ForEach(archivedHabits) { habit in
                                     NavigationLink(destination: HabitDetailView(habit: habit)) {
-                                        HabitListRow(habit: habit, archived: true)
+                                        HabitListRow(habit: habit, viewModel: viewModel, archived: true)
                                     }
                                 }
                             }
@@ -55,13 +64,15 @@ struct HabitsView: View {
             .toolbar {
                 ToolbarItem(placement: .topBarTrailing) {
                     Button { showAddHabit = true } label: {
-                        Image(systemName: "plus")
+                        Image(systemName: HKSymbol.plus)
                             .foregroundStyle(themes.current.primaryColor)
                     }
+                    .accessibilityLabel("Add habit")
                 }
                 ToolbarItem(placement: .topBarLeading) {
                     EditButton()
                         .foregroundStyle(themes.current.primaryColor)
+                        .accessibilityLabel("Edit habits")
                 }
             }
             .sheet(isPresented: $showAddHabit) {
@@ -88,12 +99,13 @@ struct HabitsView: View {
 private struct HabitListRow: View {
     @Environment(HKThemeManager.self) private var themes
     let habit: Habit
+    let viewModel: HabitsViewModel
     var archived: Bool = false
 
     var body: some View {
         HStack(spacing: HKSpacing.md) {
             ZStack {
-                RoundedRectangle(cornerRadius: 8)
+                RoundedRectangle(cornerRadius: HKRadius.sm)
                     .fill(accentColor.opacity(0.15))
                     .frame(width: 36, height: 36)
                 Image(systemName: habit.icon)
@@ -105,7 +117,7 @@ private struct HabitListRow: View {
                     .font(.hkHeadline)
                     .foregroundStyle(archived ? themes.current.subtextColor : themes.current.textColor)
 
-                Text(scheduleDescription)
+                Text(viewModel.scheduleDescription(for: habit))
                     .font(.hkCaption)
                     .foregroundStyle(themes.current.subtextColor)
             }
@@ -113,7 +125,7 @@ private struct HabitListRow: View {
             Spacer()
 
             if archived {
-                Image(systemName: "archivebox")
+                Image(systemName: HKSymbol.archivebox)
                     .font(.hkCaption)
                     .foregroundStyle(themes.current.overlay0Color)
             }
@@ -123,23 +135,5 @@ private struct HabitListRow: View {
 
     private var accentColor: Color {
         Color(hex: habit.colorHex) ?? themes.current.primaryColor
-    }
-
-    private var scheduleDescription: String {
-        switch habit.schedule.frequency {
-        case .daily: return "Every day"
-        case .weekly(let days):
-            let names = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"]
-            let sorted = days.sorted().compactMap { names[safe: $0] }
-            return sorted.joined(separator: ", ")
-        case .interval(let n): return "Every \(n) days"
-        case .xTimesPerWeek(let x): return "\(x)× per week"
-        }
-    }
-}
-
-private extension Array {
-    subscript(safe index: Int) -> Element? {
-        indices.contains(index) ? self[index] : nil
     }
 }

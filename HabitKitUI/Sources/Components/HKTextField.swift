@@ -24,6 +24,12 @@ public struct HKTextField: View {
 
     // MARK: Init
 
+    /// Creates a new themed text field.
+    ///
+    /// - Parameters:
+    ///   - placeholder: The placeholder string shown when the field is empty.
+    ///   - text: A binding to the field's string value.
+    ///   - label: An optional caption label rendered above the field.
     public init(
         _ placeholder: String,
         text: Binding<String>,
@@ -40,23 +46,23 @@ public struct HKTextField: View {
         VStack(alignment: .leading, spacing: HKSpacing.xs) {
             if let label {
                 Text(label)
-                    .font(.hkCaption)
+                    .font(HKFont.caption)
                     .foregroundStyle(themeManager.current.subtextColor)
             }
 
             TextField(placeholder, text: $text)
-                .font(.hkBody)
+                .font(HKFont.body)
                 .foregroundStyle(themeManager.current.textColor)
                 .tint(themeManager.current.primaryColor)
                 .focused($isFocused)
                 .padding(.vertical, HKSpacing.sm)
                 .padding(.horizontal, HKSpacing.md)
                 .background(
-                    RoundedRectangle(cornerRadius: 10, style: .continuous)
+                    RoundedRectangle(cornerRadius: HKRadius.md, style: .continuous)
                         .fill(themeManager.current.surface2Color)
                 )
                 .overlay(
-                    RoundedRectangle(cornerRadius: 10, style: .continuous)
+                    RoundedRectangle(cornerRadius: HKRadius.md, style: .continuous)
                         .stroke(
                             isFocused
                                 ? themeManager.current.primaryColor
@@ -64,7 +70,24 @@ public struct HKTextField: View {
                             lineWidth: isFocused ? 2 : 1
                         )
                 )
-                .animation(.easeInOut(duration: 0.15), value: isFocused)
+                .animation(HKAnimation.quick, value: isFocused)
         }
     }
+}
+
+// MARK: - Preview
+
+#Preview("HKTextField — empty and filled") {
+    @Previewable @State var themeManager = HKThemeManager()
+    @Previewable @State var emptyText = ""
+    @Previewable @State var filledText = "Morning Run"
+
+    VStack(spacing: HKSpacing.lg) {
+        HKTextField("Enter habit name…", text: $emptyText, label: "Habit Name")
+        HKTextField("No label, empty", text: $emptyText)
+        HKTextField("Enter habit name…", text: $filledText, label: "Filled Field")
+    }
+    .padding(HKSpacing.md)
+    .background(themeManager.current.baseColor)
+    .environment(themeManager)
 }

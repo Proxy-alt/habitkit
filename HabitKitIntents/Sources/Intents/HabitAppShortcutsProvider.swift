@@ -1,5 +1,9 @@
 import AppIntents
 
+/// Registers HabitKit's built-in App Shortcuts with Siri and Shortcuts.app.
+///
+/// Phrases defined here appear in Siri suggestions and can be triggered
+/// without opening the app.
 public struct HabitAppShortcutsProvider: AppShortcutsProvider {
     public static var appShortcuts: [AppShortcut] {
         AppShortcut(

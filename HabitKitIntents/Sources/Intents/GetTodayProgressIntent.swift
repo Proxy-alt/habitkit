@@ -1,6 +1,10 @@
 import AppIntents
 import Foundation
 
+/// Returns today's overall habit completion as a `Double` in the range 0.0–1.0.
+///
+/// The value is the number of completed habits divided by the total number of
+/// habits scheduled for today. Returns 0.0 if no habits are scheduled.
 public struct GetTodayProgressIntent: AppIntent {
     public static let title: LocalizedStringResource = "Get Today's Progress"
     public static let description = IntentDescription(

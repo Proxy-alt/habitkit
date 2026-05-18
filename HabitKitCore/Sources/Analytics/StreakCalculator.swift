@@ -106,7 +106,7 @@ public struct StreakCalculator: Sendable {
         while cursor < today {
             if schedule.isDue(on: cursor) && !completedDays.contains(cursor) {
                 // Keep the latest break date found.
-                if breakDate == nil || cursor > breakDate! {
+                if breakDate.map({ cursor > $0 }) ?? true {
                     breakDate = cursor
                 }
             }

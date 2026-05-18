@@ -27,6 +27,7 @@ struct ThemePickerView: View {
                 ToolbarItem(placement: .confirmationAction) {
                     Button("Done") { dismiss() }
                         .foregroundStyle(themes.current.primaryColor)
+                        .accessibilityLabel("Dismiss theme picker")
                 }
             }
         }
@@ -44,14 +45,14 @@ private struct ThemeCard: View {
             HStack(spacing: HKSpacing.md) {
                 ThemePreview(theme: theme)
                     .frame(width: 80, height: 60)
-                    .clipShape(RoundedRectangle(cornerRadius: 8))
+                    .clipShape(RoundedRectangle(cornerRadius: HKRadius.sm))
 
                 VStack(alignment: .leading, spacing: HKSpacing.xs) {
                     Text(theme.name)
                         .font(.hkHeadline)
                         .foregroundStyle(themes.current.textColor)
                     HStack(spacing: 4) {
-                        Image(systemName: theme.isDark ? "moon.fill" : "sun.max.fill")
+                        Image(systemName: theme.isDark ? HKSymbol.moon : HKSymbol.sun)
                             .font(.hkCaption)
                         Text(theme.isDark ? "Dark" : "Light")
                             .font(.hkCaption)
@@ -68,17 +69,17 @@ private struct ThemeCard: View {
                 Spacer()
 
                 if isSelected {
-                    Image(systemName: "checkmark.circle.fill")
+                    Image(systemName: HKSymbol.checkmark)
                         .foregroundStyle(themes.current.primaryColor)
                         .font(.title2)
                 }
             }
             .padding(HKSpacing.md)
             .background(
-                RoundedRectangle(cornerRadius: 12)
+                RoundedRectangle(cornerRadius: HKRadius.card)
                     .fill(themes.current.surface0Color)
                     .overlay(
-                        RoundedRectangle(cornerRadius: 12)
+                        RoundedRectangle(cornerRadius: HKRadius.card)
                             .strokeBorder(
                                 isSelected ? themes.current.primaryColor : Color.clear,
                                 lineWidth: 2
@@ -87,6 +88,7 @@ private struct ThemeCard: View {
             )
         }
         .buttonStyle(.plain)
+        .accessibilityLabel("Select \(theme.name) theme\(isSelected ? ", currently selected" : "")")
     }
 }
 

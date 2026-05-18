@@ -9,10 +9,13 @@ struct HabitKitApp: App {
     @AppStorage(DefaultsKeys.icloudSync) private var icloudSyncEnabled = true
 
     private let modelContainer: ModelContainer = {
-        guard let container = try? ModelContainerConfiguration.makeContainer(cloudKitEnabled: true) else {
-            fatalError("Failed to create ModelContainer")
+        do {
+            return try ModelContainerConfiguration.makeContainer(cloudKitEnabled: true)
+        } catch {
+            // ModelContainer creation failure is unrecoverable at launch.
+            // Log the error before terminating so crash reports include context.
+            fatalError("Failed to create ModelContainer: \(error)")
         }
-        return container
     }()
 
     var body: some Scene {

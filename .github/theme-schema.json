@@ -1,0 +1,62 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "HabitKit Community Themes",
+  "type": "object",
+  "required": ["themes"],
+  "properties": {
+    "themes": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "name", "author", "isDark", "colors"],
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^[a-z0-9-]+$",
+            "description": "Unique kebab-case identifier"
+          },
+          "name": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 50
+          },
+          "author": {
+            "type": "string",
+            "pattern": "^[a-zA-Z0-9-]+$",
+            "description": "GitHub handle (no @ prefix)"
+          },
+          "isDark": {
+            "type": "boolean"
+          },
+          "colors": {
+            "type": "object",
+            "required": ["base", "surface0", "surface1", "surface2", "overlay0", "text", "subtext", "primary", "danger", "success", "warning"],
+            "properties": {
+              "base":     { "$ref": "#/$defs/hexColor" },
+              "surface0": { "$ref": "#/$defs/hexColor" },
+              "surface1": { "$ref": "#/$defs/hexColor" },
+              "surface2": { "$ref": "#/$defs/hexColor" },
+              "overlay0": { "$ref": "#/$defs/hexColor" },
+              "text":     { "$ref": "#/$defs/hexColor" },
+              "subtext":  { "$ref": "#/$defs/hexColor" },
+              "primary":  { "$ref": "#/$defs/hexColor" },
+              "danger":   { "$ref": "#/$defs/hexColor" },
+              "success":  { "$ref": "#/$defs/hexColor" },
+              "warning":  { "$ref": "#/$defs/hexColor" }
+            },
+            "additionalProperties": false
+          }
+        },
+        "additionalProperties": false
+      }
+    }
+  }
+,
+  "$defs": {
+    "hexColor": {
+      "type": "string",
+      "pattern": "^#[0-9a-fA-F]{6}$",
+      "description": "6-digit hex color with # prefix"
+    }
+  }
+}

@@ -1,0 +1,23 @@
+{
+  "themes": [
+    {
+      "id": "nord",
+      "name": "Nord",
+      "author": "exampleuser",
+      "isDark": true,
+      "colors": {
+        "base":     "#2e3440",
+        "surface0": "#3b4252",
+        "surface1": "#434c5e",
+        "surface2": "#4c566a",
+        "overlay0": "#616e88",
+        "text":     "#eceff4",
+        "subtext":  "#d8dee9",
+        "primary":  "#88c0d0",
+        "danger":   "#bf616a",
+        "success":  "#a3be8c",
+        "warning":  "#ebcb8b"
+      }
+    }
+  ]
+}

@@ -1,0 +1,85 @@
+name: CI
+
+on:
+  push:
+    branches: [main, "claude/**"]
+  pull_request:
+    branches: [main]
+
+jobs:
+  validate-themes:
+    name: Validate Community Themes
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install ajv-cli
+        run: npm install -g ajv-cli ajv-formats
+
+      - name: Validate themes.json schema
+        run: |
+          ajv validate \
+            -s .github/theme-schema.json \
+            -d HabitKitUI/Sources/Themes/Community/themes.json
+
+  lint-colors:
+    name: Enforce No Hardcoded Colors
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Check for raw hex strings in Swift files
+        run: |
+          # Fail if any Swift file outside of test targets contains a raw hex color literal
+          # Allow the hex parser itself in HKTheme.swift (Color init?(hex:))
+          VIOLATIONS=$(grep -rn '"#[0-9a-fA-F]\{3,8\}"' \
+            --include="*.swift" \
+            --exclude-dir=".build" \
+            . | grep -v "HKTheme.swift" | grep -v "Tests" || true)
+          if [ -n "$VIOLATIONS" ]; then
+            echo "ERROR: Hardcoded hex colors found in Swift files:"
+            echo "$VIOLATIONS"
+            echo ""
+            echo "Use HKTheme color tokens instead (e.g. themes.current.primaryColor)"
+            exit 1
+          fi
+          echo "No hardcoded hex colors found."
+
+  lint-fonts:
+    name: Enforce No Hardcoded Fonts
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Check for hardcoded font sizes
+        run: |
+          VIOLATIONS=$(grep -rn "\.font(\.system(size:" \
+            --include="*.swift" \
+            --exclude-dir=".build" \
+            . | grep -v "Tests" || true)
+          if [ -n "$VIOLATIONS" ]; then
+            echo "ERROR: Hardcoded font sizes found:"
+            echo "$VIOLATIONS"
+            echo ""
+            echo "Use HKTypography extensions (Font.hkBody, Font.hkHeadline, etc.)"
+            exit 1
+          fi
+          echo "No hardcoded font sizes found."
+
+  build:
+    name: Build Swift Packages
+    runs-on: macos-15
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Select Xcode
+        run: sudo xcode-select -s /Applications/Xcode_26.app
+
+      - name: Build HabitKitCore
+        run: swift build --package-path HabitKitCore
+
+      - name: Build HabitKitUI
+        run: swift build --package-path HabitKitUI
+
+      - name: Build HabitKitIntents
+        run: swift build --package-path HabitKitIntents

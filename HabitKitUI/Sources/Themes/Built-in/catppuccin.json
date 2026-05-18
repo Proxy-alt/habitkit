@@ -1,0 +1,78 @@
+[
+  {
+    "id": "catppuccin-latte",
+    "name": "Latte",
+    "author": null,
+    "isDark": false,
+    "colors": {
+      "base":     "#eff1f5",
+      "surface0": "#ccd0da",
+      "surface1": "#bcc0cc",
+      "surface2": "#acb0be",
+      "overlay0": "#9ca0b0",
+      "text":     "#4c4f69",
+      "subtext":  "#5c5f77",
+      "primary":  "#8839ef",
+      "danger":   "#d20f39",
+      "success":  "#40a02b",
+      "warning":  "#fe640b"
+    }
+  },
+  {
+    "id": "catppuccin-frappe",
+    "name": "Frappé",
+    "author": null,
+    "isDark": true,
+    "colors": {
+      "base":     "#303446",
+      "surface0": "#414559",
+      "surface1": "#51576d",
+      "surface2": "#626880",
+      "overlay0": "#737994",
+      "text":     "#c6d0f5",
+      "subtext":  "#b5bfe2",
+      "primary":  "#ca9ee6",
+      "danger":   "#e78284",
+      "success":  "#a6d189",
+      "warning":  "#ef9f76"
+    }
+  },
+  {
+    "id": "catppuccin-macchiato",
+    "name": "Macchiato",
+    "author": null,
+    "isDark": true,
+    "colors": {
+      "base":     "#24273a",
+      "surface0": "#363a4f",
+      "surface1": "#494d64",
+      "surface2": "#5b6078",
+      "overlay0": "#6e738d",
+      "text":     "#cad3f5",
+      "subtext":  "#b8c0e0",
+      "primary":  "#c6a0f6",
+      "danger":   "#ed8796",
+      "success":  "#a6da95",
+      "warning":  "#f5a97f"
+    }
+  },
+  {
+    "id": "catppuccin-mocha",
+    "name": "Mocha",
+    "author": null,
+    "isDark": true,
+    "colors": {
+      "base":     "#1e1e2e",
+      "surface0": "#313244",
+      "surface1": "#45475a",
+      "surface2": "#585b70",
+      "overlay0": "#6c7086",
+      "text":     "#cdd6f4",
+      "subtext":  "#bac2de",
+      "primary":  "#cba6f7",
+      "danger":   "#f38ba8",
+      "success":  "#a6e3a1",
+      "warning":  "#fab387"
+    }
+  }
+]

@@ -161,9 +161,6 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Select Xcode
-        run: sudo xcode-select -s /Applications/Xcode_26.app
-
       - name: Install swift-format
         run: brew install swift-format
 
@@ -176,9 +173,6 @@ jobs:
     runs-on: macos-15
     steps:
       - uses: actions/checkout@v4
-
-      - name: Select Xcode
-        run: sudo xcode-select -s /Applications/Xcode_26.app
 
       - name: Build HabitKitCore
         run: swift build --package-path HabitKitCore -Xswiftc -strict-concurrency=complete
@@ -196,9 +190,6 @@ jobs:
     needs: build
     steps:
       - uses: actions/checkout@v4
-
-      - name: Select Xcode
-        run: sudo xcode-select -s /Applications/Xcode_26.app
 
       - name: Test HabitKitCore
         run: |

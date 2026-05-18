@@ -46,7 +46,7 @@ struct AnalyticsView: View {
     private var emptyState: some View {
         VStack(spacing: HKSpacing.lg) {
             Image(systemName: HKSymbol.chartBarX)
-                .font(.system(size: 56))
+                .font(HKIconSize.xl)
                 .foregroundStyle(themes.current.subtextColor)
             Text("No data yet")
                 .font(.hkTitle)

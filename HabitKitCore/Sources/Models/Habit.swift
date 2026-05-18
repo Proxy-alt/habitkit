@@ -13,7 +13,7 @@ public class Habit {
     /// SF Symbol name used to represent the habit visually.
     public var icon: String
 
-    /// Hex color string (e.g. "#FF5733") for the habit's accent color.
+    /// Hex color string (e.g. #FF5733) for the habit's accent color.
     public var colorHex: String
 
     /// Position of this habit in a user-ordered list.

@@ -66,7 +66,7 @@ struct HabitDetailView: View {
                         .fill(accentColor.opacity(0.2))
                         .frame(width: 64, height: 64)
                     Image(systemName: habit.icon)
-                        .font(.system(size: 28))
+                        .font(HKIconSize.md)
                         .foregroundStyle(accentColor)
                 }
 

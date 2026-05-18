@@ -102,11 +102,13 @@ struct SettingsView: View {
                         }
                         .accessibilityLabel("Version \(appVersion)")
 
-                        Link(destination: URL(string: "https://github.com/habitkit/habitkit")!) {
-                            Label("GitHub", systemImage: HKSymbol.link)
-                                .foregroundStyle(themes.current.primaryColor)
+                        if let githubURL = URL(string: "https://github.com/habitkit/habitkit") {
+                            Link(destination: githubURL) {
+                                Label("GitHub", systemImage: HKSymbol.link)
+                                    .foregroundStyle(themes.current.primaryColor)
+                            }
+                            .accessibilityLabel("GitHub repository")
                         }
-                        .accessibilityLabel("GitHub repository")
                     }
 
                     Section {
@@ -196,7 +198,7 @@ private struct HealthKitSettingsView: View {
             themes.current.baseColor.ignoresSafeArea()
             VStack(spacing: HKSpacing.md) {
                 Image(systemName: HKSymbol.heart)
-                    .font(.system(size: 48))
+                    .font(HKIconSize.lg)
                     .foregroundStyle(themes.current.dangerColor)
                 Text("HealthKit permissions are managed per-habit when you create or edit a habit.")
                     .font(.hkBody)

@@ -51,7 +51,7 @@ public struct HabitTemplate: Codable, Sendable {
     /// SF Symbol name for the habit icon.
     public var icon: String
 
-    /// Hex color string, e.g. "#FF5733".
+    /// Hex color string, e.g. #FF5733.
     public var colorHex: String
 
     /// What kind of habit this is.

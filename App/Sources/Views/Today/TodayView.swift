@@ -76,7 +76,7 @@ private struct EmptyTodayView: View {
     var body: some View {
         VStack(spacing: HKSpacing.lg) {
             Image(systemName: HKSymbol.sparkles)
-                .font(.system(size: 64))
+                .font(HKIconSize.xxl)
                 .foregroundStyle(themes.current.primaryColor)
 
             Text("No habits yet")
@@ -103,7 +103,7 @@ private struct AllCompleteView: View {
     var body: some View {
         VStack(spacing: HKSpacing.lg) {
             Image(systemName: HKSymbol.checkmarkSeal)
-                .font(.system(size: 72))
+                .font(HKIconSize.hero)
                 .foregroundStyle(themes.current.successColor)
                 .scaleEffect(animating ? 1.05 : 1.0)
                 .onAppear {

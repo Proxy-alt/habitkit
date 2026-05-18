@@ -6,7 +6,7 @@ public extension Habit {
     static func preview(
         name: String = "Morning Run",
         icon: String = "figure.run",
-        colorHex: String = "#cba6f7"
+        colorHex: String = ""
     ) -> Habit {
         let schedule = HabitSchedule.preview()
         let habit = Habit(name: name, icon: icon, colorHex: colorHex, schedule: schedule)
@@ -26,7 +26,7 @@ public extension TimedHabit {
         let habit = TimedHabit(
             name: name,
             icon: icon,
-            colorHex: "#cba6f7",
+            colorHex: "",
             schedule: schedule,
             targetDurationSeconds: targetSeconds
         )

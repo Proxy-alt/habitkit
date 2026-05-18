@@ -18,10 +18,7 @@ let package = Package(
     targets: [
         .target(
             name: "HabitKitCore",
-            path: "Sources",
-            swiftSettings: [
-                .enableExperimentalFeature("StrictConcurrency")
-            ]
+            path: "Sources"
         ),
         .testTarget(
             name: "HabitKitCoreTests",

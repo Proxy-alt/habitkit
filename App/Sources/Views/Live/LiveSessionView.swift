@@ -92,7 +92,7 @@ struct LiveSessionView: View {
             if activeTimedHabits.isEmpty {
                 VStack(spacing: HKSpacing.md) {
                     Image(systemName: HKSymbol.timer)
-                        .font(.system(size: 56))
+                        .font(HKIconSize.xl)
                         .foregroundStyle(themes.current.subtextColor)
                     Text("No Timed Habits")
                         .font(.hkTitle)

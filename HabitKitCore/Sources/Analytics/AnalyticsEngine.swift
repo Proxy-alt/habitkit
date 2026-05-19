@@ -21,7 +21,9 @@ public enum AnalyticsPeriod: Sendable {
 // MARK: - AnalyticsEngine
 
 /// Computes statistics about a user's habit performance.
-public actor AnalyticsEngine {
+public struct AnalyticsEngine {
+
+    public init() {}
 
     // MARK: - Completion rate
 

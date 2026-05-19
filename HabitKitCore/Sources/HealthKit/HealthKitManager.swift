@@ -127,8 +127,8 @@ public actor HealthKitManager {
                     threshold: threshold,
                     onMet: onMet
                 )
-                completionHandler()
             }
+            completionHandler()
         }
 
         activeQueries[key] = query

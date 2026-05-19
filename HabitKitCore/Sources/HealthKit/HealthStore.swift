@@ -30,7 +30,7 @@ public protocol HealthStore: Sendable {
 /// `requestAuthorization(toShare:read:)`, `execute(_:)`, and `stop(_:)` are
 /// already provided by HealthKit; only the async wrappers for `save` and
 /// `enableBackgroundDelivery` need to be added.
-extension HKHealthStore: @retroactive HealthStore {
+extension HKHealthStore: HealthStore {
     /// Saves a single HealthKit sample using a checked throwing continuation.
     public func save(_ sample: HKSample) async throws {
         try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<Void, Error>) in

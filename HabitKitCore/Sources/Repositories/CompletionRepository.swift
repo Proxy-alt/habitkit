@@ -1,7 +1,8 @@
 import Foundation
 
 /// Abstraction over the persistence layer for `HabitCompletion` records.
-public protocol CompletionRepository: Sendable {
+@MainActor
+public protocol CompletionRepository {
     /// Returns all completions for a habit, newest first.
     func fetchCompletions(for habit: Habit) async throws -> [HabitCompletion]
     /// Records a new completion.

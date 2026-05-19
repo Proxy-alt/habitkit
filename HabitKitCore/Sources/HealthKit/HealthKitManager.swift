@@ -160,17 +160,17 @@ public actor HealthKitManager {
         let startOfDay = calendar.startOfDay(for: Date())
         let predicate = HKQuery.predicateForSamples(withStart: startOfDay, end: Date())
 
+        let unit = preferredUnit(for: habitType)
         return try await withCheckedThrowingContinuation { continuation in
             let statsQuery = HKStatisticsQuery(
                 quantityType: quantityType,
                 quantitySamplePredicate: predicate,
                 options: .cumulativeSum
-            ) { [self] _, stats, error in
+            ) { _, stats, error in
                 if let error {
                     continuation.resume(throwing: error)
                     return
                 }
-                let unit = self.preferredUnit(for: habitType)
                 let sum = stats?.sumQuantity()?.doubleValue(for: unit) ?? 0
                 continuation.resume(returning: sum)
             }

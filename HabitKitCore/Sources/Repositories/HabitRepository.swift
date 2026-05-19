@@ -4,7 +4,8 @@ import Foundation
 ///
 /// All UI layer code interacts with habits through this protocol, never via
 /// `ModelContext` directly. This enables testing with a fake implementation.
-public protocol HabitRepository: Sendable {
+@MainActor
+public protocol HabitRepository {
     /// Returns all non-archived habits, sorted by `sortOrder`.
     func fetchAll() async throws -> [Habit]
     /// Returns all habits due on the given date, sorted by `sortOrder`.

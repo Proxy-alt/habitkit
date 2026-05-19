@@ -9,10 +9,6 @@ public actor ModelContainerConfiguration {
     /// All `PersistentModel` types that make up the HabitKitCore schema.
     private static let allModelTypes: [any PersistentModel.Type] = [
         Habit.self,
-        TimedHabit.self,
-        QuantityHabit.self,
-        ChecklistHabit.self,
-        NegativeHabit.self,
         HabitCompletion.self,
         HabitSchedule.self
     ]
@@ -34,7 +30,7 @@ public actor ModelContainerConfiguration {
             configuration = ModelConfiguration(
                 schema: schema,
                 isStoredInMemoryOnly: false,
-                cloudKitContainerIdentifier: "iCloud.com.habitkit.app"
+                cloudKitDatabase: .private("iCloud.com.habitkit.app")
             )
         } else {
             configuration = ModelConfiguration(

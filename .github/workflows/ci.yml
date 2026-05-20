@@ -200,13 +200,35 @@ jobs:
 
       - name: Check coverage thresholds
         run: |
-          # Extract line coverage for HabitKitCore and fail if below 80%
-          COVERAGE=$(xcrun xccov view --report --json \
-            .build/debug/codecov/HabitKitCore.xcresult 2>/dev/null | \
-            python3 -c "import sys,json; d=json.load(sys.stdin); \
-              targets=[t for t in d.get('targets',[]) if 'HabitKitCore' in t.get('name','')]; \
-              print(int(targets[0]['lineCoverage']*100)) if targets else print(0)" \
-            2>/dev/null || echo "0")
+          # swift test --package-path writes build artifacts to HabitKitCore/.build/
+          PROFDATA="HabitKitCore/.build/debug/codecov/default.profdata"
+          # On macOS the test binary lives inside an .xctest bundle
+          TEST_BINARY=$(find HabitKitCore/.build/debug \
+            -name "HabitKitCorePackageTests" \
+            -path "*/Contents/MacOS/*" 2>/dev/null | head -1)
+          if [ -z "$TEST_BINARY" ]; then
+            TEST_BINARY=$(find HabitKitCore/.build/debug -maxdepth 1 \
+              -name "HabitKitCorePackageTests" -type f 2>/dev/null | head -1)
+          fi
+
+          COVERAGE=0
+          if [ -f "$PROFDATA" ] && [ -n "$TEST_BINARY" ]; then
+            COVERAGE=$(xcrun llvm-cov export \
+              --instr-profile="$PROFDATA" \
+              "$TEST_BINARY" \
+              --ignore-filename-regex=".*Tests.*" \
+              --format=json 2>/dev/null | \
+              python3 -c "
+import sys, json
+d = json.load(sys.stdin)
+totals = d.get('data', [{}])[0].get('totals', {})
+lines = totals.get('lines', {})
+count = lines.get('count', 0)
+covered = lines.get('covered', 0)
+print(int(covered * 100 / count) if count > 0 else 0)
+" 2>/dev/null || echo "0")
+          fi
+
           echo "HabitKitCore line coverage: ${COVERAGE}%"
           if [ "$COVERAGE" -lt 80 ]; then
             echo "❌ HabitKitCore coverage ${COVERAGE}% is below the 80% minimum."

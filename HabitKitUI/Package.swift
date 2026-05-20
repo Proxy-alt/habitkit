@@ -19,7 +19,8 @@ let package = Package(
             name: "HabitKitUI",
             path: "Sources",
             resources: [
-                .process("Themes/"),
+                .process("Themes/Built-in/"),
+                .process("Themes/Community/"),
             ]
         ),
     ]

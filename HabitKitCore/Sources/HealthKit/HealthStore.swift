@@ -21,6 +21,12 @@ public protocol HealthStore: Sendable {
         for type: HKObjectType,
         frequency: HKUpdateFrequency
     ) async throws
+    /// Creates and saves a workout sample using the modern `HKWorkoutBuilder` API.
+    func saveWorkout(
+        activityType: HKWorkoutActivityType,
+        start: Date,
+        end: Date
+    ) async throws
 }
 
 // MARK: - Live conformance
@@ -58,5 +64,19 @@ extension HKHealthStore: HealthStore {
                 }
             }
         }
+    }
+
+    /// Creates and saves a workout using `HKWorkoutBuilder`.
+    public func saveWorkout(
+        activityType: HKWorkoutActivityType,
+        start: Date,
+        end: Date
+    ) async throws {
+        let config = HKWorkoutConfiguration()
+        config.activityType = activityType
+        let builder = HKWorkoutBuilder(healthStore: self, configuration: config, device: nil)
+        try await builder.beginCollection(at: start)
+        try await builder.endCollection(at: end)
+        _ = try await builder.finishWorkout()
     }
 }

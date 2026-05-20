@@ -8,9 +8,13 @@ import Foundation
 /// and notification extensions all read the same filtered set without an
 /// inter-process round trip.
 public struct HabitFocusFilterIntent: SetFocusFilterIntent {
-    public static var title: LocalizedStringResource = "Filter Habits by Focus"
-    public static var description: LocalizedStringResource =
+    public static let title: LocalizedStringResource = "Filter Habits by Focus"
+    public static let description: LocalizedStringResource =
         "Show only habits tagged for this Focus mode."
+
+    public var displayRepresentation: DisplayRepresentation {
+        DisplayRepresentation(title: "Filter by Focus")
+    }
 
     @Parameter(title: "Visible Habits")
     public var habits: [HabitEntity]

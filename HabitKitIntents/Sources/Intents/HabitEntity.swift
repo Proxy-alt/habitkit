@@ -7,8 +7,8 @@ import Foundation
 /// `HabitEntity` is a lightweight projection — it carries only the fields
 /// needed for display and identification. Full model data lives in SwiftData.
 public struct HabitEntity: AppEntity, Identifiable, Sendable {
-    public static var typeDisplayRepresentation = TypeDisplayRepresentation(name: "Habit")
-    public static var defaultQuery = HabitEntityQuery()
+    public static let typeDisplayRepresentation = TypeDisplayRepresentation(name: "Habit")
+    public static let defaultQuery = HabitEntityQuery()
 
     public let id: UUID
     public let name: String

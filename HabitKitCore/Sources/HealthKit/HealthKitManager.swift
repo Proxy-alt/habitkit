@@ -79,6 +79,14 @@ public actor HealthKitManager {
             throw HealthKitError.notAvailable
         }
 
+        if habitType == .workout {
+            let duration = completion.durationSeconds.map { TimeInterval($0) } ?? 60
+            let start = completion.completedAt
+            let end = max(start, start.addingTimeInterval(duration))
+            try await store.saveWorkout(activityType: .other, start: start, end: end)
+            return
+        }
+
         let samples = try buildSamples(from: completion, for: habitType)
         guard !samples.isEmpty else {
             throw HealthKitError.noSampleData
@@ -273,14 +281,7 @@ public actor HealthKitManager {
             return [sample]
 
         case .workout:
-            let duration = completion.durationSeconds.map { TimeInterval($0) } ?? 60
-            end = start.addingTimeInterval(duration)
-            let workout = HKWorkout(
-                activityType: .other,
-                start: start,
-                end: max(start, end)
-            )
-            return [workout]
+            throw HealthKitError.unsupportedType
 
         case .waterIntake:
             guard let type = HKObjectType.quantityType(forIdentifier: .dietaryWater) else {

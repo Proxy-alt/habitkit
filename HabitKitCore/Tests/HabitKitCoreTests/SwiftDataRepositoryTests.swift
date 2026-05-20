@@ -111,8 +111,10 @@ struct SwiftDataRepositoryTests {
 
         // Pick a known Monday
         var comps = DateComponents()
-        comps.year = 2024; comps.month = 1; comps.day = 1  // Monday
-        let monday = Calendar.current.date(from: comps)!
+        comps.year = 2024
+        comps.month = 1
+        comps.day = 1  // Monday
+        let monday = Calendar.current.date(from: comps) ?? Date()
 
         let due = try await repo.fetchDue(on: monday)
         #expect(due.contains { $0.id == daily.id })

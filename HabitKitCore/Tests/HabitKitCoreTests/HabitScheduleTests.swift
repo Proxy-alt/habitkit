@@ -13,8 +13,10 @@ struct HabitScheduleTests {
 
     private func date(year: Int, month: Int, day: Int) -> Date {
         var c = DateComponents()
-        c.year = year; c.month = month; c.day = day
-        return Calendar.current.date(from: c)!
+        c.year = year
+        c.month = month
+        c.day = day
+        return Calendar.current.date(from: c) ?? Date()
     }
 
     // MARK: - daily
@@ -87,9 +89,9 @@ struct HabitScheduleTests {
         ctx.insert(habit)
 
         let day0 = createdAt
-        let day1 = calendar.date(byAdding: .day, value: 1, to: createdAt)!
-        let day3 = calendar.date(byAdding: .day, value: 3, to: createdAt)!
-        let day6 = calendar.date(byAdding: .day, value: 6, to: createdAt)!
+        let day1 = calendar.date(byAdding: .day, value: 1, to: createdAt) ?? Date()
+        let day3 = calendar.date(byAdding: .day, value: 3, to: createdAt) ?? Date()
+        let day6 = calendar.date(byAdding: .day, value: 6, to: createdAt) ?? Date()
 
         #expect(schedule.isDue(on: day0))
         #expect(!schedule.isDue(on: day1))

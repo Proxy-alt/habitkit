@@ -92,9 +92,12 @@ struct AnalyticsEngineTests {
         ctx.insert(habit)
 
         var comps = DateComponents()
-        comps.year = 2024; comps.month = 1; comps.day = 1
-        comps.hour = 9; comps.minute = 30
-        let date = Calendar.current.date(from: comps)!
+        comps.year = 2024
+        comps.month = 1
+        comps.day = 1
+        comps.hour = 9
+        comps.minute = 30
+        let date = Calendar.current.date(from: comps) ?? Date()
         let c = HabitCompletion(completedAt: date, habit: habit)
         ctx.insert(c)
         habit.completions.append(c)
@@ -117,9 +120,12 @@ struct AnalyticsEngineTests {
         // 7am twice, 9am once — 7am should win
         for hour in [7, 7, 9] {
             var comps = DateComponents()
-            comps.year = 2024; comps.month = 1; comps.day = 1
-            comps.hour = hour; comps.minute = 0
-            let date = calendar.date(from: comps)!
+            comps.year = 2024
+            comps.month = 1
+            comps.day = 1
+            comps.hour = hour
+            comps.minute = 0
+            let date = calendar.date(from: comps) ?? Date()
             let c = HabitCompletion(completedAt: date, habit: habit)
             ctx.insert(c)
             habit.completions.append(c)
@@ -188,7 +194,7 @@ struct AnalyticsEngineTests {
             ctx.insert(c)
             habit.completions.append(c)
         }
-        let yesterday = calendar.date(byAdding: .day, value: -1, to: today)!
+        let yesterday = calendar.date(byAdding: .day, value: -1, to: today) ?? today
         let c = HabitCompletion(completedAt: yesterday.addingTimeInterval(3600), habit: habit)
         ctx.insert(c)
         habit.completions.append(c)
@@ -207,7 +213,7 @@ struct AnalyticsEngineTests {
         schedule.habit = habit
         ctx.insert(habit)
 
-        let ancient = Calendar.current.date(byAdding: .day, value: -400, to: Date())!
+        let ancient = Calendar.current.date(byAdding: .day, value: -400, to: Date()) ?? Date()
         let c = HabitCompletion(completedAt: ancient, habit: habit)
         ctx.insert(c)
         habit.completions.append(c)

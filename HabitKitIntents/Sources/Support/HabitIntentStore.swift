@@ -31,6 +31,40 @@ actor HabitIntentStore {
             .map { HabitEntity(id: $0.id, name: $0.name, icon: $0.icon) }
     }
 
+    // MARK: - Filtered habit list
+
+    /// Returns today's scheduled habits filtered by the supplied options.
+    ///
+    /// - Parameters:
+    ///   - incompleteOnly: When `true`, omit habits already completed or skipped today.
+    ///   - minimumCompletionPct: 0–100. Omit habits whose 30-day completion rate is
+    ///     below this threshold. Pass `0` to skip the filter.
+    ///   - skippedIDs: Set of habit ID strings marked as skipped today (from `SkipStore`).
+    func fetchHabits(
+        incompleteOnly: Bool,
+        minimumCompletionPct: Int,
+        skippedIDs: Set<String>
+    ) throws -> [HabitEntity] {
+        let today = Calendar.current.startOfDay(for: Date())
+        var habits = try fetchHabitsScheduledToday()
+
+        if incompleteOnly {
+            habits = habits.filter {
+                !hasCompletion($0, on: today) && !skippedIDs.contains($0.id.uuidString)
+            }
+        }
+
+        if minimumCompletionPct > 0 {
+            let threshold = Double(min(minimumCompletionPct, 100)) / 100.0
+            let analytics = AnalyticsEngine()
+            habits = habits.filter {
+                analytics.completionRate(for: $0, over: .thirtyDays) >= threshold
+            }
+        }
+
+        return habits.map { HabitEntity(id: $0.id, name: $0.name, icon: $0.icon) }
+    }
+
     // MARK: - Streak
 
     func currentStreak(for habitID: UUID) throws -> Int {
@@ -49,15 +83,6 @@ actor HabitIntentStore {
         guard !habits.isEmpty else { return 0.0 }
         let completedCount = habits.filter { hasCompletion($0, on: today) }.count
         return Double(completedCount) / Double(habits.count)
-    }
-
-    // MARK: - Incomplete habits
-
-    func incompleteHabitsToday(skippedIDs: Set<String>) throws -> [HabitEntity] {
-        let today = Calendar.current.startOfDay(for: Date())
-        return try fetchHabitsScheduledToday()
-            .filter { !hasCompletion($0, on: today) && !skippedIDs.contains($0.id.uuidString) }
-            .map { HabitEntity(id: $0.id, name: $0.name, icon: $0.icon) }
     }
 
     // MARK: - Log completion

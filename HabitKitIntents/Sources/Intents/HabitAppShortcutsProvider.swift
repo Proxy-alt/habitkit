@@ -7,6 +7,16 @@ import AppIntents
 public struct HabitAppShortcutsProvider: AppShortcutsProvider {
     public static var appShortcuts: [AppShortcut] {
         AppShortcut(
+            intent: GetHabitsIntent(incompleteOnly: true),
+            phrases: [
+                "Show my incomplete habits in \(.applicationName)",
+                "What habits do I still have today in \(.applicationName)",
+            ],
+            shortTitle: "Incomplete Habits",
+            systemImageName: "list.bullet.circle"
+        )
+
+        AppShortcut(
             intent: LogHabitIntent(),
             phrases: [
                 "Log \(\.$habit) in \(.applicationName)",

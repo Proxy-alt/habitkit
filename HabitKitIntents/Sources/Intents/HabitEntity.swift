@@ -29,15 +29,13 @@ public struct HabitEntity: AppEntity, Identifiable, Sendable {
 public struct HabitEntityQuery: EntityQuery {
     public init() {}
 
-    /// Returns the entities that match the given identifiers.
-    ///
-    /// The real implementation queries SwiftData via the shared `ModelContainer`.
     public func entities(for identifiers: [UUID]) async throws -> [HabitEntity] {
-        []
+        let store = HabitIntentStore(modelContainer: IntentModelContainer.shared)
+        return try await store.fetchEntities(for: identifiers)
     }
 
-    /// Returns a list of habits to suggest when no query has been typed.
     public func suggestedEntities() async throws -> [HabitEntity] {
-        []
+        let store = HabitIntentStore(modelContainer: IntentModelContainer.shared)
+        return try await store.fetchAllEntities()
     }
 }

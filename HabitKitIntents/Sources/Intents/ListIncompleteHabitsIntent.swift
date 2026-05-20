@@ -15,9 +15,9 @@ public struct ListIncompleteHabitsIntent: AppIntent {
     public init() {}
 
     public func perform() async throws -> some IntentResult & ReturnsValue<[HabitEntity]> {
-        // In a real app, this would query SwiftData for habits scheduled today
-        // that have no completion or skip record for the current calendar day.
-        let incompleteHabits: [HabitEntity] = []
-        return .result(value: incompleteHabits)
+        let store = HabitIntentStore(modelContainer: IntentModelContainer.shared)
+        let skipped = SkipStore.skippedTodayIDs()
+        let incomplete = try await store.incompleteHabitsToday(skippedIDs: skipped)
+        return .result(value: incomplete)
     }
 }

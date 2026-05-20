@@ -15,9 +15,13 @@ let package = Package(
             targets: ["HabitKitIntents"]
         ),
     ],
+    dependencies: [
+        .package(path: "../HabitKitCore"),
+    ],
     targets: [
         .target(
             name: "HabitKitIntents",
+            dependencies: ["HabitKitCore"],
             path: "Sources"
         ),
     ]

@@ -20,7 +20,8 @@ public struct LogHabitIntent: AppIntent {
     }
 
     public func perform() async throws -> some IntentResult & ProvidesDialog {
-        // In a real app, this would write a completion record to SwiftData.
+        let store = HabitIntentStore(modelContainer: IntentModelContainer.shared)
+        try await store.logCompletion(for: habit.id)
         return .result(dialog: "Marked \(habit.name) as complete.")
     }
 }

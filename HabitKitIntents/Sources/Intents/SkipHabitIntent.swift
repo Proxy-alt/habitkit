@@ -19,8 +19,7 @@ public struct SkipHabitIntent: AppIntent {
     }
 
     public func perform() async throws -> some IntentResult & ProvidesDialog {
-        // In a real app, this would write a skip record to SwiftData so the
-        // habit does not count against the streak for today.
+        SkipStore.skip(habitID: habit.id)
         return .result(dialog: "Skipped \(habit.name) for today.")
     }
 }

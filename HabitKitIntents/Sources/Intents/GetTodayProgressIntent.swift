@@ -15,9 +15,8 @@ public struct GetTodayProgressIntent: AppIntent {
     public init() {}
 
     public func perform() async throws -> some IntentResult & ReturnsValue<Double> {
-        // In a real app, this would query SwiftData for all habits scheduled
-        // for today and divide the completed count by the total count.
-        let progress: Double = 0.0
+        let store = HabitIntentStore(modelContainer: IntentModelContainer.shared)
+        let progress = try await store.todayProgress()
         return .result(value: progress)
     }
 }

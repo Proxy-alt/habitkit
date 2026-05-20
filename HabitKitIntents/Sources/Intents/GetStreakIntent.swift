@@ -19,9 +19,8 @@ public struct GetStreakIntent: AppIntent {
     }
 
     public func perform() async throws -> some IntentResult & ReturnsValue<Int> {
-        // In a real app, this would query SwiftData for consecutive completion
-        // records ending today and return the count.
-        let streak: Int = 0
+        let store = HabitIntentStore(modelContainer: IntentModelContainer.shared)
+        let streak = try await store.currentStreak(for: habit.id)
         return .result(value: streak)
     }
 }

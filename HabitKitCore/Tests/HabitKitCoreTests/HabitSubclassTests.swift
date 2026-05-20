@@ -217,7 +217,7 @@ struct HabitSubclassTests {
 
     @Test("TimedHabit.preview() creates a valid timed habit")
     func timedHabitPreview() {
-        let habit = TimedHabit.preview()
+        let habit = TimedHabit.preview(targetSeconds: 600)
         #expect(habit.name == "Meditation")
         #expect(habit.targetDurationSeconds == 600)
     }

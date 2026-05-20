@@ -239,7 +239,6 @@ struct HabitSubclassTests {
 
     @Test("HabitCompletion.preview() creates a completion for today")
     func habitCompletionPreview() {
-        let schedule = HabitSchedule(frequency: .daily)
         let habit = Habit.preview()
         let completion = HabitCompletion.preview(habit: habit)
         let calendar = Calendar.current

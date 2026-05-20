@@ -15,7 +15,7 @@ public struct GetTodayProgressIntent: AppIntent {
     public init() {}
 
     public func perform() async throws -> some IntentResult & ReturnsValue<Double> {
-        let store = HabitIntentStore(modelContainer: IntentModelContainer.shared)
+        let store = HabitIntentStore(modelContainer: try IntentModelContainer.make())
         let progress = try await store.todayProgress()
         return .result(value: progress)
     }

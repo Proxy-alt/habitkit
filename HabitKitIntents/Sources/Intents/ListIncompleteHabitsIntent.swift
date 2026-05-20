@@ -15,7 +15,7 @@ public struct ListIncompleteHabitsIntent: AppIntent {
     public init() {}
 
     public func perform() async throws -> some IntentResult & ReturnsValue<[HabitEntity]> {
-        let store = HabitIntentStore(modelContainer: IntentModelContainer.shared)
+        let store = HabitIntentStore(modelContainer: try IntentModelContainer.make())
         let habits = try await store.fetchHabits(
             incompleteOnly: true,
             minimumCompletionPct: 0,

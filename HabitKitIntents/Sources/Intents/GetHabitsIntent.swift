@@ -38,7 +38,7 @@ public struct GetHabitsIntent: AppIntent {
     }
 
     public func perform() async throws -> some IntentResult & ReturnsValue<[HabitEntity]> {
-        let store = HabitIntentStore(modelContainer: IntentModelContainer.shared)
+        let store = HabitIntentStore(modelContainer: try IntentModelContainer.make())
         let skipped = incompleteOnly ? SkipStore.skippedTodayIDs() : []
         let habits = try await store.fetchHabits(
             incompleteOnly: incompleteOnly,

@@ -2,11 +2,12 @@ import Foundation
 import SwiftData
 import HabitKitCore
 
-/// Shared SwiftData container used by all AppIntents in the extension process.
+/// Creates a `ModelContainer` for use within AppIntent extension processes.
 ///
 /// Uses the App Group container so data is shared with the main app and widgets.
+/// Called once per intent invocation; `ModelContainer` is lightweight to construct.
 enum IntentModelContainer {
-    nonisolated(unsafe) static let shared: ModelContainer = {
+    static func make() throws -> ModelContainer {
         let schema = Schema([Habit.self, HabitCompletion.self, HabitSchedule.self])
         let groupURL = FileManager.default
             .containerURL(forSecurityApplicationGroupIdentifier: "group.com.habitkit.app")?
@@ -17,6 +18,6 @@ enum IntentModelContainer {
         } else {
             config = ModelConfiguration(schema: schema)
         }
-        return try! ModelContainer(for: schema, configurations: [config])
-    }()
+        return try ModelContainer(for: schema, configurations: [config])
+    }
 }

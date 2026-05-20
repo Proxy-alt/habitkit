@@ -19,7 +19,7 @@ public struct GetStreakIntent: AppIntent {
     }
 
     public func perform() async throws -> some IntentResult & ReturnsValue<Int> {
-        let store = HabitIntentStore(modelContainer: IntentModelContainer.shared)
+        let store = HabitIntentStore(modelContainer: try IntentModelContainer.make())
         let streak = try await store.currentStreak(for: habit.id)
         return .result(value: streak)
     }

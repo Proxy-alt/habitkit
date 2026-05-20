@@ -30,12 +30,12 @@ public struct HabitEntityQuery: EntityQuery {
     public init() {}
 
     public func entities(for identifiers: [UUID]) async throws -> [HabitEntity] {
-        let store = HabitIntentStore(modelContainer: IntentModelContainer.shared)
+        let store = HabitIntentStore(modelContainer: try IntentModelContainer.make())
         return try await store.fetchEntities(for: identifiers)
     }
 
     public func suggestedEntities() async throws -> [HabitEntity] {
-        let store = HabitIntentStore(modelContainer: IntentModelContainer.shared)
+        let store = HabitIntentStore(modelContainer: try IntentModelContainer.make())
         return try await store.fetchAllEntities()
     }
 }

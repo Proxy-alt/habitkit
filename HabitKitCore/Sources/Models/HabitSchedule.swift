@@ -4,8 +4,10 @@ import SwiftData
 /// Stores the scheduling rule and reminder configuration for a habit.
 @Model
 public class HabitSchedule {
-    /// How often the habit should be performed.
-    public var frequency: ScheduleFrequency
+    /// JSON-encoded `ScheduleFrequency`. Stored as `Data` so SwiftData's schema
+    /// analyser never traverses the enum's associated-value payload, which
+    /// contains `Set<Int>` backed by `Builtin.BridgeObject`.
+    private var frequencyData: Data
 
     /// List of times during the day when the user should receive a reminder.
     /// Only the hour and minute components of each Date are meaningful.
@@ -15,12 +17,22 @@ public class HabitSchedule {
     /// construction (e.g. previews and tests); always non-`nil` in production.
     public var habit: Habit?
 
+    /// The scheduling rule for this habit. Computed over `frequencyData`.
+    public var frequency: ScheduleFrequency {
+        get {
+            (try? JSONDecoder().decode(ScheduleFrequency.self, from: frequencyData)) ?? .daily
+        }
+        set {
+            frequencyData = (try? JSONEncoder().encode(newValue)) ?? Data()
+        }
+    }
+
     public init(
         frequency: ScheduleFrequency,
         reminderTimes: [Date] = [],
         habit: Habit? = nil
     ) {
-        self.frequency = frequency
+        self.frequencyData = (try? JSONEncoder().encode(frequency)) ?? Data()
         self.reminderTimes = reminderTimes
         self.habit = habit
     }

@@ -1,5 +1,5 @@
 # HabitKit — Design Document
-**Version 1.0 · May 2026**
+**Version 1.2 · May 2026**
 
 ---
 
@@ -32,6 +32,29 @@ Every feature, API choice, and scope decision is evaluated against this question
 | Architecture | No third-party analytics, no crash SDKs, no accounts |
 
 **Rationale for iOS 26 minimum:** iOS 26 shipped September 2025 and reached over 75% of active iPhones within 90 days. AlarmKit, the Foundation Models framework, interactive App Intents snippets, and RelevanceConfiguration widgets are all iOS 26-only APIs that are core to the product. Targeting iOS 25 or below would require stripping or conditionally compiling the app's most differentiated features.
+
+### Rolling Minimum OS Policy
+
+HabitKit tracks the current iOS release minus one. When Apple ships a new major iOS version, the minimum deployment target advances to the previous major release on the following schedule:
+
+| Event | Action |
+|---|---|
+| New iOS ships (e.g. iOS 27) | Begin progressive enhancement work targeting iOS 27 APIs |
+| New iOS reaches ~50% adoption (typically 60–90 days post-release) | Raise minimum to the previous release (iOS 26) in the next minor version |
+| Two major releases after a version (e.g. iOS 28 ships) | Drop support for iOS 26 entirely in the next major version |
+
+**In practice:** when iOS 28 is the current release, iOS 27 is the minimum. iOS 26 devices can no longer install new versions but retain the last compatible build via the App Store's automatic version gating.
+
+This policy is intentional and non-negotiable. It means:
+
+- No `if #available(iOS 27, *)` guards accumulate in the codebase beyond one generation
+- No compatibility shims for APIs superseded more than one release ago
+- New APIs are adopted as first-class features, not bolted-on conditionals
+- The CI matrix always tests against exactly two targets: current release and current release minus one
+
+**Progressive enhancement** means new iOS APIs are used unconditionally on supported versions — not wrapped in availability checks that water down the feature. If an API requires iOS 27, the minimum is raised to iOS 27 before shipping that feature, not after. A feature that exists only behind `#available` is not a shipped feature — it is a preview that half your users never see.
+
+The one exception is APIs that are device-capability-gated rather than OS-gated — Foundation Models (requires Apple Intelligence hardware), CoreHaptics (requires Taptic Engine), CMHeadphoneMotionManager (requires AirPods Pro/Max), EnergyKit (requires HomeKit + US location). These use capability checks, not OS version checks, and remain in the codebase permanently since the capability gap never closes regardless of OS version.
 
 ---
 
@@ -356,6 +379,9 @@ class Habit {
     var completions: [HabitCompletion]
     @Relationship(deleteRule: .cascade)
     var schedule: HabitSchedule
+    @Relationship(deleteRule: .cascade)
+    var progressionPlan: ProgressionPlan?   // nil = fixed target, no progression
+    var visionProfile: VisionProfile?       // nil in v1
 }
 
 @Model
@@ -387,7 +413,11 @@ class HabitCompletion {
     var value: Double?        // for quantity habits
     var durationSeconds: Int? // for timed habits
     var note: String?
-    var photoBookmark: Data?  // security-scoped bookmark to Files-stored photo
+    @Attribute(.externalStorage)
+    var photo: Data?          // raw JPEG; .externalStorage keeps blobs out of the SQLite store
+    @Attribute(.externalStorage)
+    var paperMarkup: Data?    // PaperKit annotation — nil if no annotation
+    var weatherContext: HKWeatherContext?
     var habit: Habit
 }
 
@@ -397,9 +427,110 @@ class HabitSchedule {
     var reminderTimes: [Date]
     var habit: Habit
 }
+
+// MARK: - Progressive Overload
+
+@Model
+class ProgressionPlan {
+    var baseTarget: Double              // original target at creation
+    var currentTarget: Double           // active target used for completion evaluation
+    var incrementValue: Double          // step size per scheduled increase
+    var incrementIntervalDays: Int      // cadence — e.g. 28 for monthly
+    var nextScheduledIncrease: Date?    // nil if no scheduled plan
+    var coreMLNudgesEnabled: Bool       // opt-in per habit; default true
+    var minimumTarget: Double?          // floor — CoreML will not suggest below this
+    var maximumTarget: Double?          // ceiling — CoreML will not suggest above this
+    @Relationship(deleteRule: .cascade)
+    var history: [ProgressionEvent]
+    var habit: Habit
+}
+
+@Model
+class ProgressionEvent {
+    var date: Date
+    var previousTarget: Double
+    var newTarget: Double
+    var source: ProgressionSource
+    var nudgeRationale: String?         // Foundation Models text if CoreML-driven; nil otherwise
+}
+
+enum ProgressionSource: String, Codable {
+    case scheduled              // automatic increment from ProgressionPlan
+    case userInitiated          // user manually changed target
+    case coreMLAccepted         // user accepted a CoreML nudge suggestion
+    case coreMLDismissed        // user dismissed at banner — model learns preference
+    case coreMLLoosenConfirmed  // user confirmed loosening after two-tap flow (negative habits)
+    case coreMLLoosenCancelled  // user reached confirmation screen but cancelled
+}
+
+// MARK: - Negative Habit Progression
+
+@Model
+class NegativeProgressionPlan: ProgressionPlan {
+    var timeWindowMinutes: Int?
+    var timeWindowStartHour: Int?
+    var timeWindowStartMinute: Int?
+    var timeWindowEndHour: Int?
+    var timeWindowEndMinute: Int?
+    var coreMLTightenConfidence: Float   // default 0.65
+    var coreMLLoosenConfidence: Float    // default 0.90
+    // Loosen always requires deliberate two-tap confirmation
+    var requireConfirmationToLoosen: Bool { true }
+}
 ```
 
-### 7.3 Habit Templates (.habit files)
+### 7.3 Progressive Overload
+
+Progressive overload is the principle that a target should evolve as the user grows. A 5km running target that was challenging in week one is trivial in month three. Without adjustment the habit becomes a maintenance checkbox rather than a growth mechanism.
+
+HabitKit supports two progression paths that operate independently and can be combined:
+
+**Scheduled progression** is a commitment device. At habit creation the user defines a step size and cadence — "increase my run distance by 0.5km every 28 days." The plan executes automatically. The user made a contract with their future self at a moment of high motivation and the app honours it without requiring ongoing willpower.
+
+**CoreML-driven nudges** are adaptive observations. The clustering model (§8.36) watches completion rate, actual completion value, and time-to-completion over a rolling 14-day window. When it detects consistent overperformance — the user averages 6.2km against a 5km target — it surfaces a suggestion. When it detects consistent underperformance it suggests lowering the target. The model observes and asks. The user always decides.
+
+The downward nudge is as important as the upward one. A target the user consistently misses generates avoidance and anxiety. A 15-minute meditation target the user consistently hits is more valuable than a 20-minute target they consistently avoid. Suggesting a decrease is reframed as calibration, not failure.
+
+**Conflict resolution:** if a scheduled increase is due but CoreML is detecting underperformance, HabitKit surfaces the conflict explicitly: "You planned to increase your target next week, but your recent completions suggest holding at the current level. What would you like to do?" The user is never blindsided by an automatic change in either direction.
+
+**The `ProgressionEvent` log** makes the entire history transparent and auditable. A chart of target values over two years — growing through scheduled increments and accepted nudges, dipping during illness, recovering — is a meaningful record of genuine development. It belongs in the Analytics tab as a dedicated progression timeline view.
+
+**`coreMLDismissed` source** is stored deliberately. When a user dismisses a CoreML suggestion, the model learns that this user's threshold for accepting nudges is different from the default. Over time the model calibrates its suggestion sensitivity to the individual user's preferences — it becomes less likely to suggest changes the user has historically rejected.
+
+#### Negative Habit Progression — Asymmetric Mechanics
+
+Negative habits (tracking avoidance — screen time, alcohol, junk food) use progression mechanics that are structurally inverted from positive habits and deliberately asymmetric in how they handle loosening vs. tightening.
+
+**The target is a tolerance threshold, not a goal.** For a negative habit, `currentTarget` represents the maximum allowed — the ceiling below which the day counts as a success. Progression always moves toward restriction: the ceiling lowers over time.
+
+**Progression operates on two independent axes:**
+- **X** — the quantity threshold (number of drinks, minutes of screen time, number of social media opens)
+- **Y** — the time window (per day, per sitting, after a specific hour)
+
+**Asymmetric CoreML confidence thresholds:**
+
+| Suggestion direction | Positive habit | Negative habit |
+|---|---|---|
+| Tighten (restrict more) | 0.70 | 0.65 — suggest readily |
+| Loosen (allow more) | 0.70 | 0.90 — require strong sustained evidence |
+
+**The loosen confirmation flow:**
+
+When the model reaches 0.90 confidence for a loosen suggestion, the UI does not show a banner. It presents a full sheet:
+
+```
+Title: "You've made real progress"
+Body: "You've stayed under your 1-drink limit for 47 consecutive days.
+Your data suggests your threshold could move to 2 drinks.
+This is your choice. Many people find maintaining a tight
+threshold protects progress they've worked hard to build."
+Primary action:   "Keep my current limit"   ← prominent
+Secondary action: "Raise to 2 drinks"        ← requires a second confirmation tap
+```
+
+`coreMLLoosenCancelled` is stored when the user reaches the second confirmation tap and backs out — this is a stronger preference signal than dismissing the initial sheet, and the model treats repeated cancellations as strong evidence not to suggest loosening again for at least 90 days.
+
+### 7.4 Habit Templates (.habit files)
 
 Any habit configuration can be exported as a `.habit` file — a JSON document registered as a custom UTType. Users share these via AirDrop, Files app, or the community GitHub repo. Importing a `.habit` file triggers a native share sheet prompt.
 
@@ -1541,6 +1672,65 @@ struct HandwrittenNoteView: UIViewRepresentable {
 
 The `PKDrawing` is serialized and stored in the `HabitCompletion.note` field alongside the transcribed text. The handwriting recognition uses `VNRecognizeTextRequest` on the rendered drawing image. Both the ink and the transcription are stored — the ink for fidelity, the transcription for Spotlight indexing.
 
+### 8.43 CarPlay — Commute Context Dashboard
+
+The morning commute is one of the densest windows for consecutive daily habits. CarPlay surfaces HabitKit in the vehicle's head unit display. HabitKit uses only the path that does not require special Apple approval in v1.
+
+#### The entitlement reality
+
+A full CarPlay template app (`CPTemplateApplicationSceneDelegate`) requires a category-specific entitlement. The approved categories are Audio, Communication, EV Charging, Navigation, Parking, and Quick Food Ordering. A habit tracker fits none of these. The template app path is documented here for a future entitlement application, but is not the v1 implementation.
+
+#### Tier 1 — WidgetKit (no entitlement required, ships in v1)
+
+HabitKit's WidgetKit widgets render in CarPlay's Dashboard natively as of iOS 16+. No additional code is required beyond what is already implemented for the home screen and Lock Screen widgets. The CarPlay widget surface is glanceable — display-only, no tap targets.
+
+#### Tier 2 — Live Activities (no entitlement required, ships in v1)
+
+An active `TimedHabit` Live Activity renders on the CarPlay dashboard during the commute. This is already implemented as part of §8.1 ActivityKit. Nothing additional is needed for CarPlay Live Activity support.
+
+#### Tier 3 — Full template app (entitlement required, post-v1)
+
+If Apple grants a CarPlay entitlement — strongest case: framing HabitKit as a wellness/productivity utility — the template app enables one-tap habit completion directly on the head unit display.
+
+```swift
+import CarPlay
+final class HKCarPlaySceneDelegate: UIResponder, CPTemplateApplicationSceneDelegate {
+    var interfaceController: CPInterfaceController?
+    func templateApplicationScene(
+        _ templateApplicationScene: CPTemplateApplicationScene,
+        didConnect interfaceController: CPInterfaceController
+    ) {
+        self.interfaceController = interfaceController
+        interfaceController.setRootTemplate(buildRootTemplate(), animated: false, completion: nil)
+    }
+    private func buildRootTemplate() -> CPTemplate {
+        let items = TodayHabitService.shared.todaysHabits.map { habit in
+            CPListItem(
+                text: habit.name,
+                detailText: habit.isCompletedToday ? "✓ Done" : "\(habit.streak) day streak",
+                image: habit.isCompletedToday
+                    ? UIImage(systemName: "checkmark.circle.fill")
+                    : UIImage(systemName: "circle")
+            )
+        }
+        let section = CPListSection(items: items)
+        return CPListTemplate(title: "Today's Habits", sections: [section])
+    }
+}
+```
+
+#### Template constraints — no exceptions
+
+The permitted templates for a general/productivity entitlement are: `CPListTemplate`, `CPInformationTemplate`, `CPAlertTemplate`, `CPTabBarTemplate`. No custom SwiftUI, no lists longer than 12 items, no auto-dismissing alerts, no text input of any kind.
+
+#### Driver safety constraints
+
+Any CarPlay UI that requires more than a single tap to complete an interaction will be rejected by App Review. The completion flow is: tap habit name → system confirms → done. Nothing more.
+
+#### Entitlement application strategy
+
+Apply via `developer.apple.com/carplay`. Category: **General**. Safety argument: all interactions are single-tap, no text input, glanceable display only. Apply early — the review process can take 4–8 weeks.
+
 ---
 
 ## 9. Settings Architecture
@@ -1810,78 +2000,84 @@ No information is conveyed by colour alone. Every state that uses colour (comple
 | Version | Date | Notes |
 |---|---|---|
 | 1.0 | May 2026 | Initial design document |
-| 1.1 | May 2026 | Extended API coverage: §8.10 Foundation Models (guided generation), §8.14 CoreSpotlight (CSIndexExtensionProvider), §8.16–8.42 (EventKit, TipKit, CoreHaptics, BGContinuedProcessingTask, Translation, CKShare, ShazamKit, CryptoKit, Vision/deferred, JournalingSuggestions, HealthKit Medication, MetricKit, BackgroundAssets, NSFilePresenter, MultipeerConnectivity, SensitiveContentAnalysis, SharedWithYou, IdentityLookup, CoreNFC, LocalAuthentication+SecureEnclave, CoreML clustering, WeatherKit, CoreMIDI, CMHeadphoneMotionManager, EnergyKit, LinkPresentation, PaperKit); §16 Accessibility; monetization updated for Epic v. Apple ruling |
-| 1.2 | May 2026 | Implementation: SwiftData schema fixes, HabitKitIntents package, test suite, CI coverage fix — see §18 |
+| 1.1 | May 2026 | §3 Rolling Minimum OS Policy; §7.3 Progressive Overload (scheduled + CoreML nudges, negative habit asymmetric mechanics); §7.2 updated Core Models (ProgressionPlan, ProgressionEvent, VisionProfile placeholder, HabitCompletion paperMarkup); §8.3 GetHabitsIntent expanded; §8.16–8.42 (EventKit, TipKit, CoreHaptics, BGContinuedProcessingTask, Translation, CKShare, ShazamKit, CryptoKit, Vision/deferred, JournalingSuggestions, HealthKit Medication, MetricKit, BackgroundAssets, NSFilePresenter, MultipeerConnectivity, SensitiveContentAnalysis, SharedWithYou, IdentityLookup, CoreNFC, LocalAuthentication+SecureEnclave, CoreML clustering, WeatherKit, CoreMIDI, CMHeadphoneMotionManager, EnergyKit, LinkPresentation, PaperKit); §8.43 CarPlay; §16 Accessibility; §18 Bundled Shortcuts (Archive Inspector, Accountability Check-In); monetization updated for Epic v. Apple ruling |
+| 1.2 | May 2026 | PR #1 implementation: SwiftData schema fixes, HabitKitIntents package, test suite, CI coverage fix, ProgressionPlan/ProgressionEvent/NegativeProgressionPlan/VisionProfile models, GetDailyHabitSummaryIntent, InspectArchiveIntent, expanded GetHabitsIntent |
 
 ---
 
-## 18. Implementation Notes (PR #1)
+## 18. Bundled Shortcuts
 
-This section documents implementation decisions and fixes made during the initial PR that established the package structure and CI pipeline.
+HabitKit ships two pre-built Shortcuts users can add with a single tap from the app's Shortcuts page. Both are powered by AppIntents, run entirely on-device, and use existing OS channels — no HabitKit infrastructure required. Neither is forced on the user; both are opt-in.
 
-### 18.1 SwiftData Schema — `HabitSchedule` Backing Store Fix
+### 18.1 Archive Inspector Shortcut
 
-**Problem:** The SwiftData schema analyser crashed at `SchemaProperty.swift:380` with a fatal error ("Unexpected property within Persisted Struct/Enum: Builtin.BridgeObject") during `ModelContainer` creation. This crash prevented any tests from running, producing 0% coverage.
+**Purpose:** Unzip a `.habitarchive` file and display a human-readable summary of its contents. Lets users verify their data export is complete and intact without writing code or using a command line.
 
-**Root cause:** `ScheduleFrequency.weekly(days: Set<Int>)` and `[Date]` both use `Builtin.BridgeObject` internally for their copy-on-write storage. SwiftData's schema analyser traverses the memory layout of stored types and cannot handle `Builtin.BridgeObject`.
+**Why this matters:** HabitKit's privacy commitment is "you own your data." That claim is only meaningful if users can actually inspect what their data contains. A one-tap shortcut that opens an archive and shows exactly what's inside makes data ownership tangible and verifiable.
 
-**Fix (`HabitKitCore/Sources/Models/HabitSchedule.swift`):**
-Both `frequency` and `reminderTimes` are now stored as `private var frequencyData: Data` and `private var reminderTimesData: Data` (JSON-encoded). Public computed properties perform JSON decode/encode transparently. The design doc model (§7.2) describes the intent; the backing store is an implementation detail hidden from consumers.
-
-### 18.2 HealthKit Workout Write — `HKWorkoutBuilder`
-
-**Problem:** `HKWorkout(activityType:start:end:)` is deprecated in macOS 14+ and produces a warning. The `HealthStore` protocol had no workout-writing method.
-
-**Fix (`HabitKitCore/Sources/HealthKit/HealthStore.swift`):**
-Added `saveWorkout(activityType:start:end:) async throws` to the `HealthStore` protocol. The `HKHealthStore` extension implements it via `HKWorkoutBuilder`:
-
-```swift
-public func saveWorkout(activityType: HKWorkoutActivityType, start: Date, end: Date) async throws {
-    let config = HKWorkoutConfiguration()
-    config.activityType = activityType
-    let builder = HKWorkoutBuilder(healthStore: self, configuration: config, device: nil)
-    try await builder.beginCollection(at: start)
-    try await builder.endCollection(at: end)
-    _ = try await builder.finishWorkout()
-}
+```
+Shortcut: Inspect HabitKit Archive
+Steps:
+1. Get File (filter: .habitarchive)
+2. InspectArchiveIntent (file: above)
+3. Show Result:
+   "Archive: [date range]
+    [habitCount] habits
+    [completionCount] completions
+    [photoCount] photos
+    [annotationCount] PaperKit annotations
+    Schema version: [schemaVersion]
+    Encrypted: [yes/no]"
+4. Choose from menu:
+   — Browse completion JSON for a specific habit
+   — Export completions as CSV (passes to Numbers/Excel)
+   — View attached photos (Quick Look gallery)
+   — Done
 ```
 
-### 18.3 AppIntents — `HabitKitIntents` Package
+The CSV export path is particularly useful for users who want to analyse their habit data in a spreadsheet. Numbers and Excel can receive the file directly from the Shortcut without HabitKit needing to implement a native export UI.
 
-**`GetHabitsIntent`** is the canonical entry point for habit list queries. It replaces `ListIncompleteHabitsIntent` as the primary Shortcuts action:
-- `incompleteOnly: Bool` — filter to habits not yet done today
-- `minimumCompletionPct: Int` — filter by 30-day completion rate (0 = no filter)
+### 18.2 Accountability Check-In Shortcut
 
-**`HabitIntentStore`** is a `@ModelActor` actor that owns its own `ModelContext`, avoiding any `@MainActor` boundary crossing from the extension process.
+**Purpose:** Send a daily message to an accountability buddy listing which habits were and weren't completed, on a schedule the user sets.
 
-**`IntentModelContainer.make()`** is a throwing factory (not a force-try singleton) that creates a `ModelContainer` pointed at the App Group container (`group.com.habitkit.app`), enabling data sharing between the main app, widgets, and intent extensions.
+**Why this approach is right:**
 
-**`SkipStore`** persists today's skipped habit IDs in the App Group `UserDefaults`, keyed by calendar date so skips expire at midnight automatically.
+The Shortcut uses infrastructure that already exists — Messages for delivery, Shortcuts for scheduling, HabitKit's AppIntents for data — rather than building a social layer inside the app. The buddy doesn't need to install HabitKit. They don't need an account. They don't need to understand the app. They receive a text message in an existing conversation. The accountability relationship stays between two people, not mediated by a platform.
 
-### 18.4 CI Pipeline — Coverage Fix
+The schedule removes the willpower requirement. The hardest part of manual accountability reporting is sending the message on the days you failed. An automated Shortcut removes that obstacle — the message goes at 9pm regardless of how the day went.
 
-**Problem:** The CI coverage check used `xcrun xccov view --report --json` expecting an `.xcresult` bundle. `swift test --enable-code-coverage` produces LLVM profdata, not `.xcresult`. Additionally, `--package-path HabitKitCore` puts build artefacts in `HabitKitCore/.build/`, not the repo root's `.build/`.
+Private Messages accountability is honest rather than performative. A private message to one specific chosen person is a fundamentally different social contract from a leaderboard or shared streak. It's not about looking good publicly; it's about not wanting to let down someone who knows you.
 
-**Fix (`.github/workflows/ci.yml`):**
-- Changed tool from `xcrun xccov` to `xcrun llvm-cov export --format=json`
-- Corrected profdata path to `HabitKitCore/.build/debug/codecov/default.profdata`
-- Test binary discovered via `find HabitKitCore/.build/debug -name "HabitKitCorePackageTests" -path "*/Contents/MacOS/*"`
-- Coverage extracted from `data[0].totals.lines` in the JSON output
+**The bundled Shortcut:**
 
-### 18.5 Test Suite
+```
+Shortcut: Evening Habit Check-In
+Trigger: Daily automation at [user-configured time, default 9:00pm]
+Steps:
+1. Get Daily Habit Summary
+   — Visibility: Non-sensitive habits only
+   — Include streaks: On
+   — Include environmental context: On
+2. If [missed habits count] > 0:
+   Format message:
+   "Habit check-in [day, date]:
+    ✓ [completedCount] of [totalCount] done
 
-Five test suites were added to reach the 80% coverage threshold:
+    Still working on:
+    [for each missed habit:]
+    • [name] ([streak]-day streak)[if environmental: — [reason]]"
 
-| File | Coverage target | Key tests |
-|---|---|---|
-| `AnalyticsEngineTests.swift` | `AnalyticsEngine`, `AnalyticsPeriod` | completionRate, bestTimeOfDay, correlationCoefficient, heatmapData |
-| `HabitScheduleTests.swift` | `HabitSchedule.isDue(on:)`, `ScheduleFrequency` | All 4 frequency types with edge cases; Data-backing round-trips |
-| `HabitTemplateTests.swift` | `HabitTemplate`, `HabitType` | JSON round-trip, resolvedFrequency for all cases, type-specific fields |
-| `SwiftDataRepositoryTests.swift` | `SwiftDataHabitRepository`, `SwiftDataCompletionRepository`, `ModelContainerConfiguration`, `DefaultsKeys` | CRUD, ordering, fetchDue, ModelContainer creation |
-| `HealthKitManagerTests.swift` | `HealthKitManager`, `HealthKitError` | requestAuthorization for all 6 HabitHealthType values, observeAutoCompletion, duplicate-observer dedup |
-| `HabitSubclassTests.swift` | `TimedHabit`, `QuantityHabit`, `ChecklistHabit`, `NegativeHabit`, `HabitFixtures` | Init and mutation for all 4 subclasses; all 4 preview factory extensions |
+   Send Message to [buddy contact]
+3. If [missed habits count] = 0:
+   Send Message:
+   "Clean sweep ✓ All [totalCount] habits done today."
+```
 
-**Swift 6 strictness notes:**
-- All test suites that access `@Model` objects are `@MainActor`-isolated
-- Force-unwraps (`!`) replaced with nil-coalescing (`?? Date()`) throughout test code — required by `NeverForceUnwrap` swift-format rule
-- Semicolon-separated statements split to individual lines — required by `DoNotUseSemicolons` swift-format rule
+**Visibility configuration is the critical privacy control.** The default is `nonSensitive` — habits marked sensitive in HabitKit settings never appear in accountability messages unless the user explicitly changes the visibility to `all` or configures a custom list. A user tracking medication compliance, sobriety, therapy homework, or mental health check-ins shares those habits with nobody by default.
+
+**Environmental context removes the shame dimension.** "Still working on: Morning Run — thunderstorm" is a report of circumstance. "Still working on: Morning Run" on a clear day is a different kind of accountability. The buddy gets context that makes the message a genuine communication rather than a bare failure notification.
+
+**The bidirectional setup.** Two users can each install the Shortcut configured to send to each other. No server, no shared account, no platform. Two people exchanging scheduled Messages. The accountability relationship is entirely between them — HabitKit provides the data, Messages provides the channel, Shortcuts provides the schedule.
+
+**What HabitKit never knows.** The buddy's contact information never enters HabitKit. The app provides a `HabitSummaryResult` to the Shortcut. What the Shortcut does with that data — who it sends it to, when, in what format — is entirely outside the app's scope. HabitKit is a data source. The user's Shortcuts automation is the delivery mechanism. The two are deliberately decoupled.

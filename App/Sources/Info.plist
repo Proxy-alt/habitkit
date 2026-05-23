@@ -1,0 +1,455 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN"
+    "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+
+    <!-- ═══════════════════════════════════════════════════════════
+         BUNDLE IDENTITY
+    ═══════════════════════════════════════════════════════════ -->
+
+    <key>CFBundleIdentifier</key>
+    <string>$(PRODUCT_BUNDLE_IDENTIFIER)</string>
+
+    <key>CFBundleName</key>
+    <string>HabitKit</string>
+
+    <key>CFBundleDisplayName</key>
+    <string>HabitKit</string>
+
+    <key>CFBundleShortVersionString</key>
+    <string>$(MARKETING_VERSION)</string>
+
+    <key>CFBundleVersion</key>
+    <string>$(CURRENT_PROJECT_VERSION)</string>
+
+    <key>CFBundleExecutable</key>
+    <string>$(EXECUTABLE_NAME)</string>
+
+    <key>CFBundlePackageType</key>
+    <string>APPL</string>
+
+    <key>CFBundleSignature</key>
+    <string>????</string>
+
+    <key>CFBundleDevelopmentRegion</key>
+    <string>en</string>
+
+    <key>CFBundleLocalizations</key>
+    <array>
+        <string>en</string>
+    </array>
+
+    <!-- ═══════════════════════════════════════════════════════════
+         MINIMUM OS
+    ═══════════════════════════════════════════════════════════ -->
+
+    <key>MinimumOSVersion</key>
+    <string>26.0</string>
+
+    <key>LSRequiresIPhoneOS</key>
+    <true/>
+
+    <!-- ═══════════════════════════════════════════════════════════
+         ICONS
+    ═══════════════════════════════════════════════════════════ -->
+
+    <key>CFBundleIcons</key>
+    <dict>
+        <key>CFBundlePrimaryIcon</key>
+        <dict>
+            <key>CFBundleIconName</key>
+            <string>AppIcon</string>
+            <key>CFBundleIconFiles</key>
+            <array>
+                <string>AppIcon</string>
+            </array>
+        </dict>
+    </dict>
+
+    <!-- ═══════════════════════════════════════════════════════════
+         INTERFACE ORIENTATIONS
+    ═══════════════════════════════════════════════════════════ -->
+
+    <!-- iPhone: portrait + landscape -->
+    <key>UISupportedInterfaceOrientations</key>
+    <array>
+        <string>UIInterfaceOrientationPortrait</string>
+        <string>UIInterfaceOrientationLandscapeLeft</string>
+        <string>UIInterfaceOrientationLandscapeRight</string>
+    </array>
+
+    <!-- iPad: all four -->
+    <key>UISupportedInterfaceOrientations~ipad</key>
+    <array>
+        <string>UIInterfaceOrientationPortrait</string>
+        <string>UIInterfaceOrientationPortraitUpsideDown</string>
+        <string>UIInterfaceOrientationLandscapeLeft</string>
+        <string>UIInterfaceOrientationLandscapeRight</string>
+    </array>
+
+    <!-- ═══════════════════════════════════════════════════════════
+         LAUNCH SCREEN
+    ═══════════════════════════════════════════════════════════ -->
+
+    <key>UILaunchScreen</key>
+    <dict/>
+
+    <!-- ═══════════════════════════════════════════════════════════
+         STATUS BAR
+    ═══════════════════════════════════════════════════════════ -->
+
+    <key>UIStatusBarStyle</key>
+    <string>UIStatusBarStyleDefault</string>
+
+    <key>UIViewControllerBasedStatusBarAppearance</key>
+    <true/>
+
+    <!-- ═══════════════════════════════════════════════════════════
+         SCENE MANIFEST
+    ═══════════════════════════════════════════════════════════ -->
+
+    <key>UIApplicationSceneManifest</key>
+    <dict>
+        <key>UIApplicationSupportsMultipleScenes</key>
+        <true/>
+
+        <key>UISceneConfigurations</key>
+        <dict>
+
+            <!-- Main iOS window scene -->
+            <key>UIWindowSceneSessionRoleApplication</key>
+            <array>
+                <dict>
+                    <key>UISceneConfigurationName</key>
+                    <string>Default Configuration</string>
+                    <key>UISceneDelegateClassName</key>
+                    <string>$(PRODUCT_MODULE_NAME).SceneDelegate</string>
+                    <key>UISceneStoryboardFile</key>
+                    <string></string>
+                </dict>
+            </array>
+
+            <!-- CarPlay scene (§8.43 — CPTemplateApplicationScene) -->
+            <key>CPTemplateApplicationSceneSessionRoleApplication</key>
+            <array>
+                <dict>
+                    <key>UISceneConfigurationName</key>
+                    <string>CarPlay Configuration</string>
+                    <key>UISceneDelegateClassName</key>
+                    <string>$(PRODUCT_MODULE_NAME).CarPlaySceneDelegate</string>
+                </dict>
+            </array>
+
+        </dict>
+    </dict>
+
+    <!-- ═══════════════════════════════════════════════════════════
+         BACKGROUND MODES
+         All modes required by §8.x integrations.
+    ═══════════════════════════════════════════════════════════ -->
+
+    <key>UIBackgroundModes</key>
+    <array>
+        <!-- BGAppRefreshTask (§8.6 HealthKit backfill) -->
+        <string>fetch</string>
+        <!-- BGProcessingTask + BGContinuedProcessingTask (§8.19) -->
+        <string>processing</string>
+        <!-- UNUserNotificationCenter delivery (§8.13) -->
+        <string>remote-notification</string>
+        <!-- CoreMIDI / ShazamKit audio input (§8.22, §8.38) -->
+        <string>audio</string>
+        <!-- WatchConnectivity session keep-alive (§8.12) -->
+        <string>external-accessory</string>
+        <!-- ActivityKit Live Activity updates (§8.1) -->
+        <string>location</string>
+    </array>
+
+    <!-- ═══════════════════════════════════════════════════════════
+         BACKGROUND TASK IDENTIFIERS (§8.19)
+         Must match BGTaskSchedulerPermittedIdentifiers entitlement.
+    ═══════════════════════════════════════════════════════════ -->
+
+    <key>BGTaskSchedulerPermittedIdentifiers</key>
+    <array>
+        <string>com.habitkit.bg.archiveExport</string>
+        <string>com.habitkit.bg.healthBackfill</string>
+    </array>
+
+    <!-- ═══════════════════════════════════════════════════════════
+         HANDOFF / NSUserActivity TYPES (§8.11)
+    ═══════════════════════════════════════════════════════════ -->
+
+    <key>NSUserActivityTypes</key>
+    <array>
+        <string>com.habitkit.activity.viewHabit</string>
+        <string>com.habitkit.activity.liveSession</string>
+    </array>
+
+    <!-- ═══════════════════════════════════════════════════════════
+         URL SCHEMES — habitkit:// deep links
+         Used by Handoff, NFC tags, QR codes, SharedWithYou (§8.11,
+         §8.32, §8.34, §8.43).
+    ═══════════════════════════════════════════════════════════ -->
+
+    <key>CFBundleURLTypes</key>
+    <array>
+        <dict>
+            <key>CFBundleTypeRole</key>
+            <string>Editor</string>
+            <key>CFBundleURLName</key>
+            <string>com.habitkit.app</string>
+            <key>CFBundleURLSchemes</key>
+            <array>
+                <string>habitkit</string>
+            </array>
+        </dict>
+    </array>
+
+    <!-- ═══════════════════════════════════════════════════════════
+         UNIVERSAL LINKS — Associated Domains
+         Declared in entitlements; mirrored here for reference.
+         habitkit.app/.well-known/apple-app-site-association
+    ═══════════════════════════════════════════════════════════ -->
+
+    <!-- ═══════════════════════════════════════════════════════════
+         EXPORTED UTI DECLARATIONS — .habitarchive (§8.15)
+    ═══════════════════════════════════════════════════════════ -->
+
+    <key>UTExportedTypeDeclarations</key>
+    <array>
+        <dict>
+            <key>UTTypeIdentifier</key>
+            <string>com.habitkit.habitarchive</string>
+
+            <key>UTTypeDescription</key>
+            <string>HabitKit Archive</string>
+
+            <key>UTTypeConformsTo</key>
+            <array>
+                <string>public.archive</string>
+                <string>public.data</string>
+            </array>
+
+            <key>UTTypeTagSpecification</key>
+            <dict>
+                <key>public.filename-extension</key>
+                <array>
+                    <string>habitarchive</string>
+                </array>
+                <key>public.mime-type</key>
+                <string>application/x-habitarchive</string>
+            </dict>
+
+            <key>UTTypeIsDynamic</key>
+            <false/>
+        </dict>
+    </dict>
+    </array>
+
+    <!-- ═══════════════════════════════════════════════════════════
+         DOCUMENT TYPES — open .habitarchive from Files.app (§8.15)
+    ═══════════════════════════════════════════════════════════ -->
+
+    <key>CFBundleDocumentTypes</key>
+    <array>
+        <dict>
+            <key>CFBundleTypeName</key>
+            <string>HabitKit Archive</string>
+
+            <key>CFBundleTypeRole</key>
+            <string>Editor</string>
+
+            <key>LSItemContentTypes</key>
+            <array>
+                <string>com.habitkit.habitarchive</string>
+            </array>
+
+            <key>CFBundleTypeIconSystemFile</key>
+            <string>doc.zipper</string>
+        </dict>
+    </array>
+
+    <!-- ═══════════════════════════════════════════════════════════
+         SPOTLIGHT / CORE SPOTLIGHT (§8.14)
+         Enables CSSearchableItem links to open HabitKit.
+    ═══════════════════════════════════════════════════════════ -->
+
+    <key>CoreSpotlightContinuation</key>
+    <true/>
+
+    <!-- ═══════════════════════════════════════════════════════════
+         ICLOUD / CLOUDKIT (§8.21 CKShare)
+         Container identifiers duplicated from entitlements for runtime
+         reads by NSPersistentCloudKitContainer.
+    ═══════════════════════════════════════════════════════════ -->
+
+    <key>NSUbiquitousContainers</key>
+    <dict>
+        <key>iCloud.com.habitkit.app</key>
+        <dict>
+            <key>NSUbiquitousContainerIsDocumentScopePublic</key>
+            <true/>
+            <key>NSUbiquitousContainerSupportedFolderLevels</key>
+            <string>Any</string>
+            <key>NSUbiquitousContainerName</key>
+            <string>HabitKit</string>
+        </dict>
+    </dict>
+
+    <!-- ═══════════════════════════════════════════════════════════
+         LOCAL NETWORK (MultipeerConnectivity §8.30)
+    ═══════════════════════════════════════════════════════════ -->
+
+    <key>NSLocalNetworkUsageDescription</key>
+    <string>HabitKit uses your local network to exchange habit templates with nearby devices running HabitKit.</string>
+
+    <key>NSBonjourServices</key>
+    <array>
+        <!-- MCNearbyServiceAdvertiser service type: _habitkit-share._tcp -->
+        <string>_habitkit-share._tcp</string>
+        <string>_habitkit-share._udp</string>
+    </array>
+
+    <!-- ═══════════════════════════════════════════════════════════
+         PRIVACY USAGE DESCRIPTIONS
+         One key per framework that accesses protected data.
+         Ordered alphabetically by framework.
+    ═══════════════════════════════════════════════════════════ -->
+
+    <!-- Bluetooth — MultipeerConnectivity uses BT for peer discovery (§8.30) -->
+    <key>NSBluetoothAlwaysUsageDescription</key>
+    <string>HabitKit uses Bluetooth to find nearby devices for habit template sharing.</string>
+
+    <!-- Calendar / EventKit — habit ↔ event sync, busy-day detection (§8.16) -->
+    <key>NSCalendarsWriteOnlyAccessUsageDescription</key>
+    <string>HabitKit can add completed habits to your calendar so they appear alongside other events.</string>
+
+    <key>NSCalendarsFullAccessUsageDescription</key>
+    <string>HabitKit reads your calendar to detect busy days and suggest when to reschedule missed habits.</string>
+
+    <!-- Camera — completion photos, PaperKit markup (§8.42) -->
+    <key>NSCameraUsageDescription</key>
+    <string>HabitKit uses your camera to attach a photo to a habit completion or to annotate it with PaperKit markup.</string>
+
+    <!-- Face ID / Touch ID — per-habit biometric lock (§8.35) -->
+    <key>NSFaceIDUsageDescription</key>
+    <string>HabitKit uses Face ID to protect habits you have marked as sensitive.</string>
+
+    <!-- HealthKit — read/write workout, sleep, steps, water, meditation (§8.6, §8.26) -->
+    <key>NSHealthShareUsageDescription</key>
+    <string>HabitKit reads your health data — steps, sleep, stand time, and workouts — to automatically complete linked habits when you meet your daily goal.</string>
+
+    <key>NSHealthUpdateUsageDescription</key>
+    <string>HabitKit saves your habit completions to Health so your history is visible in the Health app alongside other activity data.</string>
+
+    <!-- Location — geofence habit triggers (§8.8) -->
+    <key>NSLocationWhenInUseUsageDescription</key>
+    <string>HabitKit uses your location to complete location-triggered habits automatically when you arrive at a saved place, such as the gym or your desk.</string>
+
+    <key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+    <string>HabitKit uses your location in the background to detect when you arrive at a saved place and complete the linked habit, even when the app is not open.</string>
+
+    <!-- Microphone — ShazamKit acoustic matching, CoreMIDI input (§8.22, §8.38) -->
+    <key>NSMicrophoneUsageDescription</key>
+    <string>HabitKit uses the microphone to recognise instrument practice audio for music habits and to match ambient audio cues for custom habit triggers.</string>
+
+    <!-- Motion — step counting, activity classification (§8.7) -->
+    <key>NSMotionUsageDescription</key>
+    <string>HabitKit uses motion data to count your steps and detect physical activity so exercise habits can be completed automatically.</string>
+
+    <!-- NFC — habit tag read/write (§8.34) -->
+    <key>NFCReaderUsageDescription</key>
+    <string>HabitKit can read and write NFC stickers so tapping a tag instantly logs the linked habit.</string>
+
+    <!-- Photo Library — completion photo attachment -->
+    <key>NSPhotoLibraryUsageDescription</key>
+    <string>HabitKit accesses your photo library so you can attach a photo to a habit completion.</string>
+
+    <key>NSPhotoLibraryAddUsageDescription</key>
+    <string>HabitKit can save annotated completion photos to your photo library.</string>
+
+    <!-- Siri / App Intents — Siri shortcut phrases (§8.3) -->
+    <key>NSSiriUsageDescription</key>
+    <string>HabitKit works with Siri so you can log habits, check your streak, and get your daily summary without opening the app.</string>
+
+    <!-- Speech Recognition — not used; omitted intentionally -->
+
+    <!-- ═══════════════════════════════════════════════════════════
+         APP INTENTS / SIRI
+    ═══════════════════════════════════════════════════════════ -->
+
+    <!-- Allows the system to call AppIntents from Shortcuts and Siri -->
+    <key>NSAppTransportSecurity</key>
+    <dict>
+        <!-- All HabitKit network calls use HTTPS; no exceptions required -->
+        <key>NSAllowsArbitraryLoads</key>
+        <false/>
+    </dict>
+
+    <!-- ═══════════════════════════════════════════════════════════
+         BACKGROUND ASSETS (§8.28)
+         Extension bundle ID for BADownloaderExtension.
+    ═══════════════════════════════════════════════════════════ -->
+
+    <key>BAInitialDownloadRestrictions</key>
+    <dict>
+        <key>BADownloadAllowance</key>
+        <integer>524288</integer><!-- 512 KB for initial themes.json -->
+        <key>BADownloadDomainAllowList</key>
+        <array>
+            <string>habitkit.app</string>
+        </array>
+    </dict>
+
+    <!-- ═══════════════════════════════════════════════════════════
+         METRICS / METRICKIT (§8.27)
+         Opt in to receiving MXMetricPayload and MXDiagnosticPayload.
+    ═══════════════════════════════════════════════════════════ -->
+
+    <!-- MetricKit subscriber registration is done in code; no plist key required -->
+
+    <!-- ═══════════════════════════════════════════════════════════
+         SCREEN TIME / FAMILY CONTROLS (§8.9)
+         Requires com.apple.developer.family-controls entitlement.
+         No plist key; declared in entitlements only.
+    ═══════════════════════════════════════════════════════════ -->
+
+    <!-- ═══════════════════════════════════════════════════════════
+         TIPKIT (§8.17)
+         Shared tips store is configured in App.init via Tips.configure().
+         No plist key required.
+    ═══════════════════════════════════════════════════════════ -->
+
+    <!-- ═══════════════════════════════════════════════════════════
+         SUPPORTED CAPABILITIES / DEVICE REQUIREMENTS
+    ═══════════════════════════════════════════════════════════ -->
+
+    <key>UIRequiredDeviceCapabilities</key>
+    <array>
+        <string>arm64</string>
+    </array>
+
+    <!-- ═══════════════════════════════════════════════════════════
+         SHARED WITH YOU (§8.32)
+         Declared in entitlements; no plist key required.
+    ═══════════════════════════════════════════════════════════ -->
+
+    <!-- ═══════════════════════════════════════════════════════════
+         CARPLAY (§8.43)
+         Requires com.apple.developer.carplay-templates entitlement.
+         Scene manifest above registers CPTemplateApplicationScene.
+    ═══════════════════════════════════════════════════════════ -->
+
+    <!-- ═══════════════════════════════════════════════════════════
+         ACTIVITY CONTINUATION (Handoff §8.11)
+    ═══════════════════════════════════════════════════════════ -->
+
+    <key>UIActivityTypes</key>
+    <array>
+        <string>com.habitkit.activity.viewHabit</string>
+        <string>com.habitkit.activity.liveSession</string>
+    </array>
+
+</dict>
+</plist>

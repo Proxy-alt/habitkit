@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN"
+    "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+
+    <!-- ═══════════════════════════════════════════════════════════
+         APP GROUPS
+         Shared container read by widgets, extensions, CarPlay delegate,
+         and WatchConnectivity (§8.9, §8.12, §8.28, §8.43).
+    ═══════════════════════════════════════════════════════════ -->
+
+    <key>com.apple.security.application-groups</key>
+    <array>
+        <string>group.com.habitkit.app</string>
+    </array>
+
+    <!-- ═══════════════════════════════════════════════════════════
+         ICLOUD — CloudKit + iCloud Documents
+         NSPersistentCloudKitContainer (§7.1) and CKShare (§8.21).
+    ═══════════════════════════════════════════════════════════ -->
+
+    <key>com.apple.developer.icloud-container-identifiers</key>
+    <array>
+        <string>iCloud.com.habitkit.app</string>
+    </array>
+
+    <key>com.apple.developer.icloud-services</key>
+    <array>
+        <string>CloudDocuments</string>
+        <string>CloudKit</string>
+    </array>
+
+    <key>com.apple.developer.ubiquity-container-identifiers</key>
+    <array>
+        <string>iCloud.com.habitkit.app</string>
+    </array>
+
+    <key>com.apple.developer.ubiquity-kvstore-identifier</key>
+    <string>$(TeamIdentifierPrefix)com.habitkit.app</string>
+
+    <!-- ═══════════════════════════════════════════════════════════
+         HEALTHKIT (§8.6, §8.26)
+    ═══════════════════════════════════════════════════════════ -->
+
+    <key>com.apple.developer.healthkit</key>
+    <true/>
+
+    <key>com.apple.developer.healthkit.access</key>
+    <array>
+        <string>health-records</string>
+    </array>
+
+    <!-- ═══════════════════════════════════════════════════════════
+         SIRI / APP INTENTS (§8.3)
+    ═══════════════════════════════════════════════════════════ -->
+
+    <key>com.apple.developer.siri</key>
+    <true/>
+
+    <!-- ═══════════════════════════════════════════════════════════
+         NFC — NFCNDEFReaderSession (§8.34)
+         Specify both ISO 14443 (MIFARE) and ISO 15693 tag formats.
+    ═══════════════════════════════════════════════════════════ -->
+
+    <key>com.apple.developer.nfc.readersession.formats</key>
+    <array>
+        <string>NDEF</string>
+        <string>TAG</string>
+    </array>
+
+    <!-- ═══════════════════════════════════════════════════════════
+         FAMILY CONTROLS / SCREEN TIME (§8.9)
+         Requires Apple provisioning approval for distribution.
+    ═══════════════════════════════════════════════════════════ -->
+
+    <key>com.apple.developer.family-controls</key>
+    <true/>
+
+    <!-- ═══════════════════════════════════════════════════════════
+         CARPLAY — CPTemplateApplicationScene (§8.43)
+         Request 'navigation' subtype for the template UI entitlement.
+    ═══════════════════════════════════════════════════════════ -->
+
+    <key>com.apple.developer.carplay-templates</key>
+    <true/>
+
+    <!-- ═══════════════════════════════════════════════════════════
+         ASSOCIATED DOMAINS
+         - applinks: for Universal Links (Handoff, SharedWithYou §8.11, §8.32)
+         - webcredentials: for AutoFill
+         - appclips: for App Clips (future)
+         - activitycontinuation: explicit Handoff domain
+    ═══════════════════════════════════════════════════════════ -->
+
+    <key>com.apple.developer.associated-domains</key>
+    <array>
+        <string>applinks:habitkit.app</string>
+        <string>webcredentials:habitkit.app</string>
+        <string>activitycontinuation:habitkit.app</string>
+    </array>
+
+    <!-- ═══════════════════════════════════════════════════════════
+         PUSH NOTIFICATIONS
+         Required for CloudKit background pushes and UNUserNotification
+         background delivery (§8.13, §8.21).
+    ═══════════════════════════════════════════════════════════ -->
+
+    <key>aps-environment</key>
+    <string>development</string><!-- Set to 'production' for release builds -->
+
+    <!-- ═══════════════════════════════════════════════════════════
+         KEYCHAIN SHARING
+         Secure Enclave key stored in the shared keychain access group
+         so archive encryption keys survive app reinstalls (§8.23).
+    ═══════════════════════════════════════════════════════════ -->
+
+    <key>keychain-access-groups</key>
+    <array>
+        <string>$(AppIdentifierPrefix)com.habitkit.app</string>
+    </array>
+
+    <!-- ═══════════════════════════════════════════════════════════
+         BACKGROUND TASKS (§8.19)
+         Must match BGTaskSchedulerPermittedIdentifiers in Info.plist.
+    ═══════════════════════════════════════════════════════════ -->
+
+    <!-- BGTaskSchedulerPermittedIdentifiers is an Info.plist key, not
+         an entitlement. Listed in Info.plist. -->
+
+    <!-- ═══════════════════════════════════════════════════════════
+         SHARED WITH YOU (§8.32)
+         Requires SWHighlightCenter capability.
+    ═══════════════════════════════════════════════════════════ -->
+
+    <key>com.apple.developer.shared-with-you</key>
+    <true/>
+
+    <!-- ═══════════════════════════════════════════════════════════
+         MAPS / LOCATION (§8.8)
+         Precise location required for geofence accuracy.
+    ═══════════════════════════════════════════════════════════ -->
+
+    <key>com.apple.developer.location.always</key>
+    <true/>
+
+    <!-- ═══════════════════════════════════════════════════════════
+         SENSITIVE CONTENT ANALYSIS (§8.31)
+         Entitlement required to instantiate SCSensitivityAnalyzer.
+    ═══════════════════════════════════════════════════════════ -->
+
+    <key>com.apple.developer.sensitivecontentanalysis.client</key>
+    <true/>
+
+    <!-- ═══════════════════════════════════════════════════════════
+         WEATHERKIT (§8.37)
+    ═══════════════════════════════════════════════════════════ -->
+
+    <key>com.apple.developer.weatherkit</key>
+    <true/>
+
+</dict>
+</plist>

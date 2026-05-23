@@ -36,6 +36,15 @@ public class Habit {
     @Relationship(deleteRule: .cascade)
     public var schedule: HabitSchedule
 
+    /// Optional progressive overload plan.
+    /// `nil` means the target is fixed and never automatically adjusted.
+    @Relationship(deleteRule: .cascade)
+    public var progressionPlan: ProgressionPlan?
+
+    /// Placeholder for post-v1 Vision-based photo completion validation.
+    /// Always `nil` in v1.
+    public var visionProfile: VisionProfile?
+
     public init(
         id: UUID = UUID(),
         name: String,
@@ -46,7 +55,9 @@ public class Habit {
         isArchived: Bool = false,
         focusModeID: String? = nil,
         completions: [HabitCompletion] = [],
-        schedule: HabitSchedule
+        schedule: HabitSchedule,
+        progressionPlan: ProgressionPlan? = nil,
+        visionProfile: VisionProfile? = nil
     ) {
         self.id = id
         self.name = name
@@ -58,5 +69,7 @@ public class Habit {
         self.focusModeID = focusModeID
         self.completions = completions
         self.schedule = schedule
+        self.progressionPlan = progressionPlan
+        self.visionProfile = visionProfile
     }
 }

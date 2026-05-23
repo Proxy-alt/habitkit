@@ -22,6 +22,12 @@ public class HabitCompletion {
     /// Security-scoped bookmark data referencing a photo attached to this completion.
     public var photoBookmark: Data?
 
+    /// Serialised `PaperMarkup` annotation attached to this completion.
+    /// Stored with `.externalStorage` to keep binary markup data out of SQLite.
+    /// `nil` if no annotation has been added.
+    @Attribute(.externalStorage)
+    public var paperMarkup: Data?
+
     /// The habit this completion belongs to.
     public var habit: Habit
 
@@ -32,6 +38,7 @@ public class HabitCompletion {
         durationSeconds: Int? = nil,
         note: String? = nil,
         photoBookmark: Data? = nil,
+        paperMarkup: Data? = nil,
         habit: Habit
     ) {
         self.id = id
@@ -40,6 +47,7 @@ public class HabitCompletion {
         self.durationSeconds = durationSeconds
         self.note = note
         self.photoBookmark = photoBookmark
+        self.paperMarkup = paperMarkup
         self.habit = habit
     }
 }

@@ -10,7 +10,11 @@ public actor ModelContainerConfiguration {
     private static let allModelTypes: [any PersistentModel.Type] = [
         Habit.self,
         HabitCompletion.self,
-        HabitSchedule.self
+        HabitSchedule.self,
+        ProgressionPlan.self,
+        ProgressionEvent.self,
+        NegativeProgressionPlan.self,
+        VisionProfile.self,
     ]
 
     // MARK: - Factory

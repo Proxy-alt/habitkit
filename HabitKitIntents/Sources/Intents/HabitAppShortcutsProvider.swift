@@ -7,7 +7,7 @@ import AppIntents
 public struct HabitAppShortcutsProvider: AppShortcutsProvider {
     public static var appShortcuts: [AppShortcut] {
         AppShortcut(
-            intent: GetHabitsIntent(incompleteOnly: true),
+            intent: GetHabitsIntent(filterByCompletion: true, completionState: .incomplete),
             phrases: [
                 "Show my incomplete habits in \(.applicationName)",
                 "What habits do I still have today in \(.applicationName)",
@@ -33,6 +33,16 @@ public struct HabitAppShortcutsProvider: AppShortcutsProvider {
             ],
             shortTitle: "Start Timer",
             systemImageName: "timer"
+        )
+
+        AppShortcut(
+            intent: GetDailyHabitSummaryIntent(),
+            phrases: [
+                "Get my habit summary in \(.applicationName)",
+                "How did I do today in \(.applicationName)",
+            ],
+            shortTitle: "Today's Summary",
+            systemImageName: "chart.bar.doc.horizontal"
         )
     }
 }

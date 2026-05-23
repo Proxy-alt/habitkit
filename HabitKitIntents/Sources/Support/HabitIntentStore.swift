@@ -1,6 +1,6 @@
 import Foundation
-import SwiftData
 import HabitKitCore
+import SwiftData
 
 /// Actor-isolated SwiftData query layer for AppIntents.
 ///
@@ -17,9 +17,21 @@ actor HabitIntentStore {
         let descriptor = FetchDescriptor<Habit>(
             predicate: #Predicate { !$0.isArchived }
         )
+        let today = Calendar.current.startOfDay(for: Date())
         return try modelContext.fetch(descriptor)
             .filter { idSet.contains($0.id) }
-            .map { HabitEntity(id: $0.id, name: $0.name, icon: $0.icon) }
+            .map { habit in
+                HabitEntity(
+                    id: habit.id,
+                    name: habit.name,
+                    icon: habit.icon,
+                    streak: StreakCalculator.currentStreak(
+                        completions: habit.completions,
+                        schedule: habit.schedule
+                    ),
+                    isCompletedToday: hasCompletion(habit, on: today)
+                )
+            }
     }
 
     func fetchAllEntities() throws -> [HabitEntity] {
@@ -27,8 +39,44 @@ actor HabitIntentStore {
             predicate: #Predicate { !$0.isArchived },
             sortBy: [SortDescriptor(\.sortOrder)]
         )
+        let today = Calendar.current.startOfDay(for: Date())
         return try modelContext.fetch(descriptor)
-            .map { HabitEntity(id: $0.id, name: $0.name, icon: $0.icon) }
+            .map { habit in
+                HabitEntity(
+                    id: habit.id,
+                    name: habit.name,
+                    icon: habit.icon,
+                    streak: StreakCalculator.currentStreak(
+                        completions: habit.completions,
+                        schedule: habit.schedule
+                    ),
+                    isCompletedToday: hasCompletion(habit, on: today)
+                )
+            }
+    }
+
+    // MARK: - Full habit list for summary/check-in intents
+
+    /// Returns all non-archived habits with completion state for today.
+    func fetchAllHabits() throws -> [HabitEntity] {
+        let descriptor = FetchDescriptor<Habit>(
+            predicate: #Predicate { !$0.isArchived },
+            sortBy: [SortDescriptor(\.sortOrder)]
+        )
+        let today = Calendar.current.startOfDay(for: Date())
+        return try modelContext.fetch(descriptor)
+            .map { habit in
+                HabitEntity(
+                    id: habit.id,
+                    name: habit.name,
+                    icon: habit.icon,
+                    streak: StreakCalculator.currentStreak(
+                        completions: habit.completions,
+                        schedule: habit.schedule
+                    ),
+                    isCompletedToday: hasCompletion(habit, on: today)
+                )
+            }
     }
 
     // MARK: - Filtered habit list
@@ -62,7 +110,18 @@ actor HabitIntentStore {
             }
         }
 
-        return habits.map { HabitEntity(id: $0.id, name: $0.name, icon: $0.icon) }
+        return habits.map { habit in
+            HabitEntity(
+                id: habit.id,
+                name: habit.name,
+                icon: habit.icon,
+                streak: StreakCalculator.currentStreak(
+                    completions: habit.completions,
+                    schedule: habit.schedule
+                ),
+                isCompletedToday: hasCompletion(habit, on: today)
+            )
+        }
     }
 
     // MARK: - Streak

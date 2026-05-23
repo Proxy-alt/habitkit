@@ -14,10 +14,18 @@ public struct HabitEntity: AppEntity, Identifiable, Sendable {
     public let name: String
     public let icon: String
 
-    public init(id: UUID, name: String, icon: String) {
+    /// The current streak length in days.
+    public let streak: Int
+
+    /// Whether this habit has a completion recorded for today.
+    public let isCompletedToday: Bool
+
+    public init(id: UUID, name: String, icon: String, streak: Int = 0, isCompletedToday: Bool = false) {
         self.id = id
         self.name = name
         self.icon = icon
+        self.streak = streak
+        self.isCompletedToday = isCompletedToday
     }
 
     public var displayRepresentation: DisplayRepresentation {

@@ -85,7 +85,9 @@ public final class CarPlaySceneDelegate: UIResponder, CPTemplateApplicationScene
             text: habit.name,
             detailText: habit.isComplete ? "Done ✓" : "\(habit.streak) day streak"
         )
-        item.accessoryType = habit.isComplete ? .checkmark : .none
+        // CPListItemAccessoryType has no checkmark case; completion is
+        // already conveyed by detailText ("Done ✓" above).
+        item.accessoryType = .none
         item.handler = { [weak self] _, completion in
             if !habit.isComplete {
                 self?.logHabit(habit)

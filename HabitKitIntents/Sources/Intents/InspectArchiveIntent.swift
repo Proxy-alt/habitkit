@@ -50,9 +50,7 @@ enum ArchiveInspector {
     /// - Returns: A populated `ArchiveSummaryResult`.
     /// - Throws: `ArchiveError.invalidFormat` if the file is not a valid archive.
     static func summarise(file: IntentFile) throws -> ArchiveSummaryResult {
-        guard let data = file.data else {
-            throw ArchiveError.invalidFormat
-        }
+        let data = file.data
         // Attempt to decode a lightweight JSON manifest embedded at the start of the archive.
         // Full-extraction archives store their manifest as the first entry.
         if let manifest = try? JSONDecoder().decode(ArchiveManifest.self, from: data) {

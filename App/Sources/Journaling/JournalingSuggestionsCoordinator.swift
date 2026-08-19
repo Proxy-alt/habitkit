@@ -1,5 +1,14 @@
 import Foundation
+
+// JournalingSuggestions is a device-only framework — it is not present in
+// the iOS Simulator SDK at all, since it depends on the on-device Journal
+// service. Fall back to a placeholder type so this file still builds for
+// Simulator; the real framework is used automatically on device.
+#if canImport(JournalingSuggestions)
 import JournalingSuggestions
+#else
+public struct JournalingSuggestion: Sendable {}
+#endif
 
 // MARK: - JournalingSuggestionsCoordinator
 
@@ -8,7 +17,7 @@ import JournalingSuggestions
 /// After a streak milestone (7, 30, 100 days) or when completing all habits
 /// for the day, HabitKit can offer the JournalingSuggestionsPicker so the
 /// user can add their completion as a journal-worthy moment.
-public final class JournalingSuggestionsCoordinator: ObservableObject, Sendable {
+public final class JournalingSuggestionsCoordinator: ObservableObject, @unchecked Sendable {
 
     // MARK: - Shared instance
 

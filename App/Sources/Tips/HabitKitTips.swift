@@ -18,12 +18,12 @@ public struct FocusFilterTip: Tip {
         Image(systemName: "moon.fill")
     }
 
-    public var rules: [Rule] {
-        [
-            #Rule(HabitKitTipEvents.habitCount) { $0.donations.count >= 3 },
-            #Rule(HabitKitTipEvents.focusFilterConfigured) { $0.donations.isEmpty },
-        ]
-    }
+    // NOTE: `#Rule` is unusable on this Xcode 27 beta toolchain — its macro
+    // expansion drops the closure's enclosing braces regardless of closure
+    // syntax, producing "anonymous closure argument not contained in a
+    // closure" at every call site. Falling back to no rules (TipKit shows
+    // an unconditional tip until dismissed) until the beta bug is fixed.
+    public var rules: [Rule] { [] }
 
     public var options: [any TipOption] {
         [Tips.MaxDisplayCount(1)]
@@ -48,12 +48,9 @@ public struct StreakMilestoneTip: Tip {
         Image(systemName: "flame.fill")
     }
 
-    public var rules: [Rule] {
-        [
-            #Rule(HabitKitTipEvents.streakReached7Days) { $0.donations.count >= 1 },
-            #Rule(HabitKitTipEvents.streakCalendarViewed) { $0.donations.isEmpty },
-        ]
-    }
+    // See NOTE on FocusFilterTip.rules above — `#Rule` is unusable on this
+    // beta toolchain.
+    public var rules: [Rule] { [] }
 
     public var options: [any TipOption] {
         [Tips.MaxDisplayCount(2)]
@@ -78,12 +75,9 @@ public struct TemplateTip: Tip {
         Image(systemName: "square.grid.2x2.fill")
     }
 
-    public var rules: [Rule] {
-        [
-            #Rule(HabitKitTipEvents.templatesViewed) { $0.donations.isEmpty },
-            #Rule(HabitKitTipEvents.habitCount) { $0.donations.count < 3 },
-        ]
-    }
+    // See NOTE on FocusFilterTip.rules above — `#Rule` is unusable on this
+    // beta toolchain.
+    public var rules: [Rule] { [] }
 
     public var options: [any TipOption] {
         [Tips.MaxDisplayCount(1)]
@@ -108,12 +102,9 @@ public struct ArchiveEncryptionTip: Tip {
         Image(systemName: "lock.shield.fill")
     }
 
-    public var rules: [Rule] {
-        [
-            #Rule(HabitKitTipEvents.archiveExported) { $0.donations.count >= 1 },
-            #Rule(HabitKitTipEvents.encryptionEnabled) { $0.donations.isEmpty },
-        ]
-    }
+    // See NOTE on FocusFilterTip.rules above — `#Rule` is unusable on this
+    // beta toolchain.
+    public var rules: [Rule] { [] }
 
     public var options: [any TipOption] {
         [Tips.MaxDisplayCount(1)]
@@ -126,11 +117,11 @@ public struct ArchiveEncryptionTip: Tip {
 
 /// Centralised tip event types used in `Rule` closures.
 public enum HabitKitTipEvents {
-    public static let habitCount = Event(id: "habitkit.habitCount")
-    public static let focusFilterConfigured = Event(id: "habitkit.focusFilterConfigured")
-    public static let streakReached7Days = Event(id: "habitkit.streakReached7Days")
-    public static let streakCalendarViewed = Event(id: "habitkit.streakCalendarViewed")
-    public static let templatesViewed = Event(id: "habitkit.templatesViewed")
-    public static let archiveExported = Event(id: "habitkit.archiveExported")
-    public static let encryptionEnabled = Event(id: "habitkit.encryptionEnabled")
+    public static let habitCount = Tips.Event(id: "habitkit.habitCount")
+    public static let focusFilterConfigured = Tips.Event(id: "habitkit.focusFilterConfigured")
+    public static let streakReached7Days = Tips.Event(id: "habitkit.streakReached7Days")
+    public static let streakCalendarViewed = Tips.Event(id: "habitkit.streakCalendarViewed")
+    public static let templatesViewed = Tips.Event(id: "habitkit.templatesViewed")
+    public static let archiveExported = Tips.Event(id: "habitkit.archiveExported")
+    public static let encryptionEnabled = Tips.Event(id: "habitkit.encryptionEnabled")
 }

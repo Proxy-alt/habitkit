@@ -8,7 +8,7 @@ import SharedWithYou
 ///
 /// When someone shares a habitkit:// deep link via iMessage, the link appears
 /// in the app's "Shared With You" section using `SWHighlightCenter`.
-public final class SharedWithYouCoordinator: NSObject, SWHighlightCenterDelegate, ObservableObject {
+public final class SharedWithYouCoordinator: NSObject, SWHighlightCenterDelegate, ObservableObject, @unchecked Sendable {
 
     // MARK: - Shared instance
 
@@ -32,7 +32,7 @@ public final class SharedWithYouCoordinator: NSObject, SWHighlightCenterDelegate
     // MARK: - SWHighlightCenterDelegate
 
     public func highlightCenterHighlightsDidChange(_ highlightCenter: SWHighlightCenter) {
-        let currentHighlights = highlightCenter.highlights.filter { highlight in
+        nonisolated(unsafe) let currentHighlights = highlightCenter.highlights.filter { highlight in
             highlight.url.scheme == "habitkit"
         }
         Task { @MainActor in

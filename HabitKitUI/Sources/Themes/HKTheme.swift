@@ -217,7 +217,7 @@ extension Color {
     /// Parses a CSS-style hex string (`#RGB`, `#RRGGBB`, or `#RRGGBBAA`).
     ///
     /// Returns `nil` if the string cannot be parsed.
-    init?(hex: String) {
+    public init?(hex: String) {
         var raw = hex.trimmingCharacters(in: .whitespacesAndNewlines)
         if raw.hasPrefix("#") { raw = String(raw.dropFirst()) }
 

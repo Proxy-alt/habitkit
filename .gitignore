@@ -1,1 +1,13 @@
 .claude/
+
+# Swift Package Manager
+.build/
+.swiftpm/
+
+# xcodegen — regenerate from project.yml via `xcodegen generate`
+HabitKit.xcodeproj/
+
+# Xcode
+xcuserdata/
+DerivedData/
+

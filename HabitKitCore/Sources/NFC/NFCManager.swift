@@ -9,7 +9,7 @@ import Foundation
 /// Tapping the sticker while HabitKit is in the foreground logs the habit
 /// instantly. Tapping when HabitKit is not running launches the app via
 /// Universal Links.
-public final class NFCManager: NSObject, NFCNDEFReaderSessionDelegate, Sendable {
+public final class NFCManager: NSObject, NFCNDEFReaderSessionDelegate, @unchecked Sendable {
 
     // MARK: - Shared instance
 

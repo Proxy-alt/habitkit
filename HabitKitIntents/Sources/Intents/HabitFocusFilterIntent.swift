@@ -1,5 +1,6 @@
 import AppIntents
 import Foundation
+import HabitKitCore
 
 // MARK: - HabitFocusFilterIntent (§8.5)
 
@@ -57,6 +58,16 @@ public struct HabitFocusFilterIntent: SetFocusFilterIntent {
     // MARK: - Init
 
     public init() {}
+
+    // MARK: - InstanceDisplayRepresentable
+
+    public var displayRepresentation: DisplayRepresentation {
+        let title: LocalizedStringResource = habitGroup.map { "\($0)" } ?? "All Habits"
+        return DisplayRepresentation(
+            title: title,
+            subtitle: hideSensitiveHabits ? "Sensitive habits hidden" : nil
+        )
+    }
 
     // MARK: - Perform
 

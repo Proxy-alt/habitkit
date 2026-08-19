@@ -57,7 +57,9 @@ public final class BackgroundTaskManager: Sendable {
     /// Call this after the user initiates an export in the UI.
     public func scheduleArchiveExport() throws {
         let request = BGContinuedProcessingTaskRequest(
-            identifier: Self.archiveExportIdentifier
+            identifier: Self.archiveExportIdentifier,
+            title: "Exporting Habit Archive",
+            subtitle: "Preparing your habit data for export"
         )
         try BGTaskScheduler.shared.submit(request)
     }
@@ -76,6 +78,7 @@ public final class BackgroundTaskManager: Sendable {
     // MARK: - Task handlers
 
     private static func handleArchiveExport(task: BGTask) {
+        nonisolated(unsafe) let task = task
         let exportTask = Task {
             defer { task.setTaskCompleted(success: true) }
             // Notify the app to start the export; the continuation task keeps
@@ -92,6 +95,7 @@ public final class BackgroundTaskManager: Sendable {
     }
 
     private static func handleHealthBackfill(task: BGTask) {
+        nonisolated(unsafe) let task = task
         let backfillTask = Task {
             defer { task.setTaskCompleted(success: true) }
             NotificationCenter.default.post(

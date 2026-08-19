@@ -41,7 +41,7 @@ struct AddHabitView: View {
 
                 Form {
                     Section("Name") {
-                        HKTextField(text: $name, placeholder: "e.g. Morning Run")
+                        HKTextField("e.g. Morning Run", text: $name)
                     }
 
                     Section("Icon") {
@@ -112,12 +112,12 @@ struct AddHabitView: View {
                 .foregroundStyle(themes.current.textColor)
         case .quantity:
             HStack {
-                HKTextField(text: $unit, placeholder: "Unit (pages, glasses…)")
+                HKTextField("Unit (pages, glasses…)", text: $unit)
                 Stepper("\(Int(targetQuantity))", value: $targetQuantity, in: 1...999)
             }
         case .checklist:
             ForEach(steps.indices, id: \.self) { i in
-                HKTextField(text: $steps[i], placeholder: "Step \(i + 1)")
+                HKTextField("Step \(i + 1)", text: $steps[i])
             }
             Button("Add Step") { steps.append("") }
                 .foregroundStyle(themes.current.primaryColor)
@@ -175,22 +175,25 @@ struct AddHabitView: View {
         case .yesNo:
             habit = Habit(name: trimmedName, icon: selectedIcon, colorHex: selectedColorHex, schedule: schedule)
         case .timed:
-            let timed = TimedHabit(name: trimmedName, icon: selectedIcon, colorHex: selectedColorHex, schedule: schedule)
-            timed.targetDurationSeconds = targetDuration
-            habit = timed
+            habit = TimedHabit(
+                name: trimmedName, icon: selectedIcon, colorHex: selectedColorHex,
+                schedule: schedule, targetDurationSeconds: targetDuration
+            )
         case .quantity:
-            let qty = QuantityHabit(name: trimmedName, icon: selectedIcon, colorHex: selectedColorHex, schedule: schedule)
-            qty.targetQuantity = targetQuantity
-            qty.unit = unit
-            habit = qty
+            habit = QuantityHabit(
+                name: trimmedName, icon: selectedIcon, colorHex: selectedColorHex,
+                schedule: schedule, targetQuantity: targetQuantity, unit: unit
+            )
         case .checklist:
-            let cl = ChecklistHabit(name: trimmedName, icon: selectedIcon, colorHex: selectedColorHex, schedule: schedule)
-            cl.steps = steps.filter { !$0.isEmpty }
-            habit = cl
+            habit = ChecklistHabit(
+                name: trimmedName, icon: selectedIcon, colorHex: selectedColorHex,
+                schedule: schedule, steps: steps.filter { !$0.isEmpty }
+            )
         case .negative:
-            let neg = NegativeHabit(name: trimmedName, icon: selectedIcon, colorHex: selectedColorHex, schedule: schedule)
-            neg.avoidTarget = trimmedName
-            habit = neg
+            habit = NegativeHabit(
+                name: trimmedName, icon: selectedIcon, colorHex: selectedColorHex,
+                schedule: schedule, avoidTarget: trimmedName
+            )
         }
 
         schedule.habit = habit

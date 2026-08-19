@@ -47,7 +47,7 @@ public actor ShazamMatcher: NSObject {
 
         let audioEngine = SHManagedSession()
         Task {
-            await audioEngine.activate()
+            await audioEngine.prepare()
             for await result in audioEngine.results {
                 switch result {
                 case .match(let match):
@@ -89,7 +89,7 @@ public actor ShazamMatcher: NSObject {
                 .title: item.title,
                 .artist: item.artist,
             ])
-            try? catalog.addReferenceSignature(signature, representing: mediaItem)
+            try? catalog.addReferenceSignature(signature, representing: [mediaItem])
         }
         return catalog
     }
@@ -100,8 +100,10 @@ public actor ShazamMatcher: NSObject {
 extension ShazamMatcher: SHSessionDelegate {
     nonisolated public func session(_ session: SHSession, didFind match: SHMatch) {
         guard let item = match.mediaItems.first else { return }
-        let handler = onMatchHandler
-        Task { await MainActor.run { handler?(item) } }
+        Task {
+            let handler = await self.onMatchHandler
+            handler?(item)
+        }
     }
 
     nonisolated public func session(
@@ -109,7 +111,9 @@ extension ShazamMatcher: SHSessionDelegate {
         didNotFindMatchFor signature: SHSignature,
         error: (any Error)?
     ) {
-        let handler = onNoMatchHandler
-        Task { await MainActor.run { handler?() } }
+        Task {
+            let handler = await self.onNoMatchHandler
+            handler?()
+        }
     }
 }

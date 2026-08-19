@@ -67,7 +67,7 @@ struct LiveSessionView: View {
                 }
             }
 
-            HKTextField(text: $note, placeholder: "Add a note…")
+            HKTextField("Add a note…", text: $note)
                 .padding(.horizontal, HKSpacing.lg)
 
             HStack(spacing: HKSpacing.md) {

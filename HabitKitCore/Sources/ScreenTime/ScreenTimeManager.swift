@@ -19,7 +19,6 @@ public actor ScreenTimeManager {
     // MARK: - Private state
 
     private let store = ManagedSettingsStore()
-    private let center = AuthorizationCenter.shared
 
     // MARK: - Init
 
@@ -32,12 +31,13 @@ public actor ScreenTimeManager {
     /// Must be called on the main thread; authorization UI is modal.
     @MainActor
     public func requestAuthorization() async throws {
-        try await center.requestAuthorization(for: .individual)
+        try await AuthorizationCenter.shared.requestAuthorization(for: .individual)
     }
 
     /// Returns whether FamilyControls authorization has been granted.
+    @MainActor
     public var isAuthorized: Bool {
-        center.authorizationStatus == .approved
+        AuthorizationCenter.shared.authorizationStatus == .approved
     }
 
     // MARK: - App blocking
@@ -48,12 +48,8 @@ public actor ScreenTimeManager {
     ///   - selection: A `FamilyActivitySelection` of apps to restrict.
     ///   - unblockDate: Date at which restrictions are automatically cleared.
     public func blockApps(_ selection: FamilyActivitySelection, until unblockDate: Date) {
-        var shield = ShieldSettings()
-        shield.applications = selection.applicationTokens
-        shield.applicationCategories = ShieldSettings.ActivityCategoryPolicy.specific(
-            selection.categoryTokens
-        )
-        store.shield = shield
+        store.shield.applications = selection.applicationTokens
+        store.shield.applicationCategories = .specific(selection.categoryTokens)
 
         // Schedule automatic unblock via DeviceActivity.
         let schedule = DeviceActivitySchedule(
@@ -70,7 +66,8 @@ public actor ScreenTimeManager {
 
     /// Removes all app shield restrictions applied by HabitKit.
     public func unblockAllApps() {
-        store.shield = ShieldSettings()
+        store.shield.applications = nil
+        store.shield.applicationCategories = nil
         let center = DeviceActivityCenter()
         center.stopMonitoring([DeviceActivityName("com.habitkit.unblock")])
     }

@@ -115,7 +115,7 @@ public struct MetricSummary: Codable, Sendable {
         let memMetrics = payload.memoryMetrics
         peakMemoryMB = memMetrics?.peakMemoryUsage.converted(to: .megabytes).value ?? 0
 
-        hangCount = payload.applicationResponsivenessMetrics?.histogrammedAppHangTime
+        hangCount = payload.applicationResponsivenessMetrics?.histogrammedApplicationHangTime
             .bucketEnumerator
             .allObjects
             .count ?? 0

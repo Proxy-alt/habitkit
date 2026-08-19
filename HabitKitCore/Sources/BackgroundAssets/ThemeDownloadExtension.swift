@@ -18,9 +18,13 @@ public final class ThemeDownloadExtension: BADownloaderExtension {
         string: "https://habitkit.app/assets/themes.json"
     )
 
+    // MARK: - Init
+
+    public init() {}
+
     // MARK: - BADownloaderExtension
 
-    public override func downloads(
+    public func downloads(
         for request: BAContentRequest,
         manifestURL: URL,
         extensionInfo: BAAppExtensionInfo
@@ -37,7 +41,7 @@ public final class ThemeDownloadExtension: BADownloaderExtension {
         return [download]
     }
 
-    public override func backgroundDownload(
+    public func backgroundDownload(
         _ download: BADownload,
         finishedWithFileURL fileURL: URL
     ) {
@@ -48,7 +52,7 @@ public final class ThemeDownloadExtension: BADownloaderExtension {
         try? FileManager.default.moveItem(at: fileURL, to: destination)
     }
 
-    public override func backgroundDownload(
+    public func backgroundDownload(
         _ download: BADownload,
         failedWithError error: any Error
     ) {

@@ -117,16 +117,14 @@
         <key>UISceneConfigurations</key>
         <dict>
 
-            <!-- Main iOS window scene -->
+            <!-- Main iOS window scene — no custom UISceneDelegateClassName:
+                 SwiftUI's WindowGroup supplies its own scene delegate.
+                 Naming a nonexistent class here crashes at scene connection. -->
             <key>UIWindowSceneSessionRoleApplication</key>
             <array>
                 <dict>
                     <key>UISceneConfigurationName</key>
                     <string>Default Configuration</string>
-                    <key>UISceneDelegateClassName</key>
-                    <string>$(PRODUCT_MODULE_NAME).SceneDelegate</string>
-                    <key>UISceneStoryboardFile</key>
-                    <string></string>
                 </dict>
             </array>
 
@@ -244,7 +242,6 @@
             <key>UTTypeIsDynamic</key>
             <false/>
         </dict>
-    </dict>
     </array>
 
     <!-- ═══════════════════════════════════════════════════════════
@@ -424,6 +421,9 @@
     <!-- ═══════════════════════════════════════════════════════════
          SUPPORTED CAPABILITIES / DEVICE REQUIREMENTS
     ═══════════════════════════════════════════════════════════ -->
+
+    <key>UILaunchScreen</key>
+    <dict/>
 
     <key>UIRequiredDeviceCapabilities</key>
     <array>

@@ -9,7 +9,7 @@ import MultipeerConnectivity
 /// HabitKit advertises itself as "habitkit-share" and discovers peers with
 /// the same service type. Template data is sent as JSON; live timer ticks
 /// are sent as small binary payloads.
-public final class MultipeerSession: NSObject, Sendable {
+public final class MultipeerSession: NSObject, @unchecked Sendable {
 
     // MARK: - Shared instance
 
@@ -21,7 +21,7 @@ public final class MultipeerSession: NSObject, Sendable {
 
     // MARK: - Private state (nonisolated access guarded by isolation below)
 
-    private let peerID = MCPeerID(displayName: UIDevice.current.name)
+    private let peerID = MCPeerID(displayName: ProcessInfo.processInfo.hostName)
     private var session: MCSession?
     private var advertiser: MCNearbyServiceAdvertiser?
     private var browser: MCNearbyServiceBrowser?
@@ -191,15 +191,3 @@ extension MultipeerSession: MCNearbyServiceBrowserDelegate {
         lostPeer peerID: MCPeerID
     ) {}
 }
-
-// MARK: - UIDevice import shim
-
-#if canImport(UIKit)
-import UIKit
-#else
-import Foundation
-private class UIDevice {
-    static let current = UIDevice()
-    var name: String { "HabitKit" }
-}
-#endif

@@ -56,10 +56,20 @@ public actor HabitLinkPresenter {
         await withTaskGroup(of: Void.self) { group in
             for url in urls {
                 group.addTask {
-                    _ = await self.fetchMetadata(for: url)
+                    await self.warmCache(for: url)
                 }
             }
         }
+    }
+
+    /// Fetches and caches metadata for `url`, discarding the result.
+    ///
+    /// Exists so `prefetch`'s concurrent child tasks only ever cross the
+    /// actor boundary with a `Void` result — `LPLinkMetadata` isn't
+    /// `Sendable`, so returning it directly from a `@concurrent` child task
+    /// is not possible.
+    private func warmCache(for url: URL) async {
+        _ = await fetchMetadata(for: url)
     }
 
     /// Clears the in-memory metadata cache.

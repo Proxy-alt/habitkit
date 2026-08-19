@@ -52,7 +52,7 @@ public actor LocationManager: NSObject {
         let identifier = habitID.uuidString
 
         let monitor = try await getOrCreateMonitor()
-        let condition = CLCircularGeographicCondition(
+        let condition = CLMonitor.CircularGeographicCondition(
             center: coordinate,
             radius: clampedRadius
         )
@@ -89,8 +89,12 @@ public actor LocationManager: NSObject {
     /// This runs indefinitely until cancelled. Call from a long-lived `Task`.
     public func startMonitoring() async {
         guard let monitor = try? await getOrCreateMonitor() else { return }
-        for await event in await monitor.events {
-            await handleEvent(event)
+        do {
+            for try await event in await monitor.events {
+                await handleEvent(event)
+            }
+        } catch {
+            // Event stream terminated; nothing further to process.
         }
     }
 
@@ -98,7 +102,7 @@ public actor LocationManager: NSObject {
 
     private func getOrCreateMonitor() async throws -> CLMonitor {
         if let existing = monitor { return existing }
-        let newMonitor = CLMonitor("com.habitkit.geofence")
+        let newMonitor = await CLMonitor("com.habitkit.geofence")
         self.monitor = newMonitor
         return newMonitor
     }

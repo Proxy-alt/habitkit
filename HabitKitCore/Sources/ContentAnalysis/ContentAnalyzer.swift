@@ -1,4 +1,6 @@
+import CoreGraphics
 import Foundation
+import ImageIO
 import SensitiveContentAnalysis
 
 // MARK: - ContentAnalyzer
@@ -33,19 +35,19 @@ public actor ContentAnalyzer {
             return .notApplicable
         }
 
-        guard let handler = SCSensitivityAnalysisHandler(data: imageData) else {
+        guard let source = CGImageSourceCreateWithData(imageData as CFData, nil),
+              let cgImage = CGImageSourceCreateImageAtIndex(source, 0, nil) else {
             return .analysisUnavailable
         }
 
-        do {
-            let response = try await analyzer.analysisResult(for: handler)
-            if response.isSensitive {
-                return .sensitive
-            } else {
-                return .safe
+        return await withCheckedContinuation { continuation in
+            analyzer.analyzeImage(cgImage) { result, error in
+                guard let result, error == nil else {
+                    continuation.resume(returning: .analysisUnavailable)
+                    return
+                }
+                continuation.resume(returning: result.isSensitive ? .sensitive : .safe)
             }
-        } catch {
-            return .analysisUnavailable
         }
     }
 }

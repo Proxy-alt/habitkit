@@ -1,0 +1,52 @@
+name: HabitKit
+options:
+  bundleIdPrefix: com.habitkit
+  deploymentTarget:
+    iOS: "26.0"
+  createIntermediateGroups: true
+
+packages:
+  HabitKit:
+    path: .
+
+targets:
+  HabitKit:
+    type: application
+    platform: iOS
+    deploymentTarget: "26.0"
+    sources:
+      - path: App/Sources
+        excludes:
+          - Info.plist
+          - HabitKit.entitlements
+          - PrivacyInfo.xcprivacy
+          # Coded against a "finish/cancel" delegate flow that PaperKit's real
+          # PaperMarkupViewController.Delegate does not have (it only reports
+          # live editing interactions: drawing/selection/adornment changes,
+          # not a save/cancel lifecycle). Needs a rewrite — the app should
+          # supply its own Done/Cancel bar buttons and call
+          # PaperMarkup.dataRepresentation() directly — before re-enabling.
+          - PaperKit/PaperMarkupCoordinator.swift
+    resources:
+      - path: App/Sources/PrivacyInfo.xcprivacy
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.habitkit.app
+        PRODUCT_MODULE_NAME: HabitKit
+        MARKETING_VERSION: "1.0"
+        CURRENT_PROJECT_VERSION: "1"
+        SWIFT_VERSION: "6.0"
+        CODE_SIGN_STYLE: Automatic
+        CODE_SIGNING_ALLOWED: NO
+        CODE_SIGNING_REQUIRED: NO
+        ENABLE_USER_SCRIPT_SANDBOXING: NO
+        GENERATE_INFOPLIST_FILE: NO
+        INFOPLIST_FILE: App/Sources/Info.plist
+        CODE_SIGN_ENTITLEMENTS: App/Sources/HabitKit.entitlements
+    dependencies:
+      - package: HabitKit
+        product: HabitKitCore
+      - package: HabitKit
+        product: HabitKitUI
+      - package: HabitKit
+        product: HabitKitIntents

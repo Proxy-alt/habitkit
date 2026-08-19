@@ -4,7 +4,7 @@ import HabitKitUI
 
 struct SettingsView: View {
     @Environment(HKThemeManager.self) private var themes
-    @AppStorage(DefaultsKeys.icloudSync) private var icloudSync = true
+    @AppStorage(DefaultsKeys.iCloudSync) private var icloudSync = true
     @AppStorage(DefaultsKeys.hapticsEnabled) private var hapticsEnabled = true
     @AppStorage(DefaultsKeys.notificationSound) private var notificationSound = "default"
     @State private var showThemePicker = false

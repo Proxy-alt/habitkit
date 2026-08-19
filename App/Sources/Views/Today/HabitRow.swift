@@ -15,7 +15,7 @@ struct HabitRow: View {
 
     var body: some View {
         HStack(spacing: HKSpacing.md) {
-            HKCompletionBadge(isComplete: isCompletedToday) {
+            HKCompletionBadge(isCompleted: isCompletedToday) {
                 toggleCompletion()
             }
             .accessibilityLabel(isCompletedToday ? "Mark \(habit.name) incomplete" : "Mark \(habit.name) complete")

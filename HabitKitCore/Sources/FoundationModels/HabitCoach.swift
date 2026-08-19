@@ -55,7 +55,7 @@ public actor HabitCoach {
                 to: prompt,
                 generating: HabitSuggestionsResponse.self
             )
-            return response.suggestions
+            return response.content.suggestions
         } catch {
             return []
         }
@@ -76,7 +76,7 @@ public actor HabitCoach {
                 to: prompt,
                 generating: NoteTagsResponse.self
             )
-            return response.tags
+            return response.content.tags
         } catch {
             return []
         }
@@ -110,7 +110,7 @@ public actor HabitCoach {
                 to: prompt,
                 generating: WeeklySummaryResponse.self
             )
-            return response.summary
+            return response.content.summary
         } catch {
             return ""
         }
@@ -140,7 +140,7 @@ public struct HabitSuggestionsResponse: Sendable {
 @Generable
 public struct HabitSuggestion: Sendable {
     /// Short habit name (3–6 words).
-    @Guide(description: "Short habit name", .maximumCount(6))
+    @Guide(description: "Short habit name, 3 to 6 words")
     public var name: String
 
     /// One-sentence rationale for the suggestion.

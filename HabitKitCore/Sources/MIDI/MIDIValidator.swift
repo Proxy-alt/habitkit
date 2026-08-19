@@ -44,11 +44,16 @@ public actor MIDIValidator {
         MIDIClientCreate(clientName, nil, nil, &midiClient)
 
         let portName = "HabitKit Input" as CFString
-        MIDIInputPortCreateWithProtocol(midiClient, portName, .midi1_0, &inputPort) {
+        MIDIInputPortCreateWithProtocol(midiClient, portName, ._1_0, &inputPort) {
             [weak self] eventList, srcConnRefCon in
             guard let self else { return }
+            // The event list pointer is only valid for the duration of this
+            // callback, so count note-on events synchronously here and send
+            // only the (Sendable) count across to the actor.
+            let noteOnCount = MIDIValidator.countNoteOnEvents(in: eventList)
+            guard noteOnCount > 0 else { return }
             Task {
-                await self.handleEventList(eventList, onValidated: onValidated)
+                await self.handleNoteOnEvents(count: noteOnCount, onValidated: onValidated)
             }
         }
 
@@ -72,11 +77,11 @@ public actor MIDIValidator {
 
     // MARK: - Private
 
-    private func handleEventList(
-        _ eventList: UnsafePointer<MIDIEventList>,
-        onValidated: @Sendable @escaping () -> Void
-    ) {
-        guard isListening else { return }
+    /// Counts note-on events (status 0x90–0x9F, velocity > 0) in a MIDI event
+    /// list. Runs synchronously on the MIDI callback thread, since the
+    /// pointer is only valid for the duration of the callback.
+    private static func countNoteOnEvents(in eventList: UnsafePointer<MIDIEventList>) -> Int {
+        var count = 0
         var packet = eventList.pointee.packet
         for _ in 0..<eventList.pointee.numPackets {
             let bytes = Mirror(reflecting: packet.words).children
@@ -84,16 +89,24 @@ public actor MIDIValidator {
             for word in bytes {
                 let status = UInt8((word >> 16) & 0xFF)
                 let velocity = UInt8(word & 0xFF)
-                // Note-on: status byte 0x90–0x9F, velocity > 0
                 if (status & 0xF0) == 0x90, velocity > 0 {
-                    noteCount += 1
-                    if noteCount >= Self.minimumNoteCount {
-                        isListening = false
-                        onValidated()
-                    }
+                    count += 1
                 }
             }
             packet = MIDIEventPacketNext(&packet).pointee
+        }
+        return count
+    }
+
+    private func handleNoteOnEvents(
+        count: Int,
+        onValidated: @Sendable @escaping () -> Void
+    ) {
+        guard isListening else { return }
+        noteCount += count
+        if noteCount >= Self.minimumNoteCount {
+            isListening = false
+            onValidated()
         }
     }
 }

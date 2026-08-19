@@ -35,7 +35,7 @@ public actor PostureTracker {
 
     /// Returns whether headphone motion is available on this device.
     public var isAvailable: Bool {
-        CMHeadphoneMotionManager.isDeviceMotionAvailable()
+        motionManager.isDeviceMotionAvailable
     }
 
     // MARK: - Session management
@@ -44,14 +44,15 @@ public actor PostureTracker {
     ///
     /// - Parameter onWarning: Called when the posture warning threshold is crossed.
     public func startSession(onWarning: @Sendable @escaping () -> Void) {
-        guard CMHeadphoneMotionManager.isDeviceMotionAvailable() else { return }
+        guard motionManager.isDeviceMotionAvailable else { return }
         badPostureCount = 0
         totalSamples = 0
 
         motionManager.startDeviceMotionUpdates(to: .main) { [weak self] motion, error in
             guard error == nil, let motion, let self else { return }
+            let pitch = motion.attitude.pitch
             Task {
-                await self.handleMotionUpdate(motion, onWarning: onWarning)
+                await self.handleMotionUpdate(pitch: pitch, onWarning: onWarning)
             }
         }
     }
@@ -70,11 +71,10 @@ public actor PostureTracker {
     // MARK: - Private
 
     private func handleMotionUpdate(
-        _ motion: CMDeviceMotion,
+        pitch: Double,
         onWarning: @Sendable @escaping () -> Void
     ) {
         totalSamples += 1
-        let pitch = motion.attitude.pitch
         if abs(pitch) > Self.badPostureThresholdRadians {
             badPostureCount += 1
         }

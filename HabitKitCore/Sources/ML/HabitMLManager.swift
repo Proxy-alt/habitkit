@@ -44,7 +44,7 @@ public actor HabitMLManager {
             "avg_completion_hour": avgCompletionHour as NSNumber,
             "streak_length": Double(streakLength) as NSNumber,
         ])
-        guard let input, let output = try? model.prediction(from: input) else { return nil }
+        guard let input, let output = try? await model.prediction(from: input) else { return nil }
 
         guard let clusterID = output.featureValue(for: "cluster_label")?.int64Value else {
             return nil
@@ -78,7 +78,7 @@ public actor HabitMLManager {
             trainingData: batchProvider,
             configuration: nil
         ) { [weak self] context in
-            guard let updatedModel = context.model else { return }
+            let updatedModel = context.model
             try? updatedModel.write(to: outputURL)
             Task { await self?.loadUpdatedModel(at: outputURL) }
         }

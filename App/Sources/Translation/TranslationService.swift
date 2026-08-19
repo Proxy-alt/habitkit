@@ -34,12 +34,13 @@ public actor TranslationService {
         to targetLanguage: Locale.Language? = nil
     ) async -> String {
         guard !note.isEmpty else { return note }
+        let source = sourceLanguage ?? Locale.Language(identifier: "en")
         let target = targetLanguage ?? Locale.preferredLanguages.first.flatMap {
             Locale.Language(identifier: $0)
-        } ?? Locale.Language(identifier: "en")
+        }
 
         do {
-            let session = TranslationSession(source: sourceLanguage, target: target)
+            let session = TranslationSession(installedSource: source, target: target)
             let response = try await session.translate(note)
             return response.targetText
         } catch {
@@ -57,14 +58,10 @@ public actor TranslationService {
         from source: Locale.Language?,
         to target: Locale.Language
     ) async -> Bool {
-        do {
-            let availability = try await LanguageAvailability().status(
-                from: source ?? Locale.Language(identifier: ""),
-                to: target
-            )
-            return availability == .unsupported || availability == .supportedWithDownload
-        } catch {
-            return false
-        }
+        let availability = await LanguageAvailability().status(
+            from: source ?? Locale.Language(identifier: "en"),
+            to: target
+        )
+        return availability != .installed
     }
 }

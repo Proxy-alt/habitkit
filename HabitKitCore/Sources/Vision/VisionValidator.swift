@@ -50,7 +50,7 @@ public actor VisionValidator {
             let classificationResult = try await classifyImage(cgImage)
             let topLabels = classificationResult
                 .prefix(10)
-                .map { $0.identifier.lowercased() }
+                .map { $0.lowercased() }
 
             let matched = expectedLabels.filter { expected in
                 topLabels.contains { $0.contains(expected.lowercased()) }
@@ -94,15 +94,19 @@ public actor VisionValidator {
         return image
     }
 
-    private func classifyImage(_ image: CGImage) async throws -> [VNClassificationObservation] {
+    private func classifyImage(_ image: CGImage) async throws -> [String] {
         try await withCheckedThrowingContinuation { continuation in
             let request = VNClassifyImageRequest { request, error in
                 if let error {
                     continuation.resume(throwing: error)
                     return
                 }
-                let observations = request.results as? [VNClassificationObservation] ?? []
-                continuation.resume(returning: observations)
+                // Extract just the (Sendable) identifiers here — the
+                // VNClassificationObservation results themselves are not
+                // Sendable and must not cross the continuation boundary.
+                let identifiers = (request.results as? [VNClassificationObservation])?
+                    .map { $0.identifier } ?? []
+                continuation.resume(returning: identifiers)
             }
             let handler = VNImageRequestHandler(cgImage: image, options: [:])
             do {

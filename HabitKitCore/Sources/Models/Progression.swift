@@ -136,6 +136,7 @@ public enum ProgressionSource: String, Codable, Sendable {
 /// Progression always moves toward restriction: the ceiling lowers over time.
 /// Loosening the threshold requires a higher CoreML confidence threshold and
 /// a mandatory two-tap confirmation flow.
+@available(iOS 26.0, macOS 26.0, watchOS 26.0, *)
 @Model
 public class NegativeProgressionPlan: ProgressionPlan {
 

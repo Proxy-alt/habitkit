@@ -19,8 +19,8 @@ struct HabitWidgetEntry: TimelineEntry {
 // MARK: - Intent Configuration
 
 struct HabitWidgetConfigurationIntent: WidgetConfigurationIntent {
-    static var title: LocalizedStringResource = "Habit Widget"
-    static var description = IntentDescription("Shows your habit progress for today.")
+    static let title: LocalizedStringResource = "Habit Widget"
+    static let description = IntentDescription("Shows your habit progress for today.")
 }
 
 // MARK: - Provider

@@ -31,6 +31,7 @@ struct HabitKitApp: App {
             ContentView()
                 .environment(themeManager)
                 .modelContainer(modelContainer)
+                .preferredColorScheme(themeManager.current.isDark ? .dark : .light)
                 .onAppear {
                     DefaultsKeys.registerDefaults()
                 }

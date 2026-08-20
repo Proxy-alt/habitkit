@@ -65,7 +65,7 @@ struct AddHabitView: View {
                                             in: RoundedRectangle(cornerRadius: HKRadius.sm)
                                         )
                                 }
-                                .buttonStyle(.plain)
+                                .buttonStyle(.borderless)
                             }
                         }
                         .padding(.vertical, HKSpacing.sm)
@@ -155,7 +155,7 @@ struct AddHabitView: View {
                             in: RoundedRectangle(cornerRadius: HKRadius.sm)
                         )
                 }
-                .buttonStyle(.plain)
+                .buttonStyle(.borderless)
             }
         }
     }

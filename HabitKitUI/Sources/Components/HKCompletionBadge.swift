@@ -80,7 +80,7 @@ public struct HKCompletionBadge: View {
             }
             .animation(HKAnimation.quick, value: isCompleted)
         }
-        .buttonStyle(.plain)
+        .buttonStyle(.borderless)
         .scaleEffect(isCompleted ? 1.0 : 0.95)
         .animation(HKAnimation.quick, value: isCompleted)
         .accessibilityLabel(isCompleted ? "Completed" : "Not completed")

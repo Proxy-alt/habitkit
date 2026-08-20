@@ -9,6 +9,10 @@ public actor ModelContainerConfiguration {
     /// All `PersistentModel` types that make up the HabitKitCore schema.
     private static let allModelTypes: [any PersistentModel.Type] = [
         Habit.self,
+        TimedHabit.self,
+        QuantityHabit.self,
+        ChecklistHabit.self,
+        NegativeHabit.self,
         HabitCompletion.self,
         HabitSchedule.self,
         ProgressionPlan.self,

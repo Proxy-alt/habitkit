@@ -2,14 +2,11 @@ import Foundation
 import SwiftData
 
 /// A habit that is completed by performing an activity for a target duration.
+@available(iOS 26, *)
+@Model
 public class TimedHabit: Habit {
     /// The number of seconds the user should spend on this habit per session.
     public var targetDurationSeconds: Int
-
-    required init(backingData: any SwiftData.BackingData<Habit>) {
-        self.targetDurationSeconds = 0
-        super.init(backingData: backingData)
-    }
 
     public init(
         id: UUID = UUID(),
@@ -41,18 +38,14 @@ public class TimedHabit: Habit {
 }
 
 /// A habit that is completed by reaching a measurable quantity (e.g. 8 glasses of water).
+@available(iOS 26, *)
+@Model
 public class QuantityHabit: Habit {
     /// The numeric amount the user must reach to consider the habit complete.
     public var targetQuantity: Double
 
     /// Human-readable unit label for the quantity (e.g. "glasses", "km", "reps").
     public var unit: String
-
-    required init(backingData: any SwiftData.BackingData<Habit>) {
-        self.targetQuantity = 1
-        self.unit = ""
-        super.init(backingData: backingData)
-    }
 
     public init(
         id: UUID = UUID(),
@@ -86,14 +79,11 @@ public class QuantityHabit: Habit {
 }
 
 /// A habit that is completed by checking off every step in an ordered list.
+@available(iOS 26, *)
+@Model
 public class ChecklistHabit: Habit {
     /// Ordered list of step descriptions the user must complete.
     public var steps: [String]
-
-    required init(backingData: any SwiftData.BackingData<Habit>) {
-        self.steps = []
-        super.init(backingData: backingData)
-    }
 
     public init(
         id: UUID = UUID(),
@@ -125,14 +115,11 @@ public class ChecklistHabit: Habit {
 }
 
 /// A habit that tracks avoidance of a behaviour rather than performing one.
+@available(iOS 26, *)
+@Model
 public class NegativeHabit: Habit {
     /// Description of what the user is trying to avoid (e.g. "Avoid social media").
     public var avoidTarget: String
-
-    required init(backingData: any SwiftData.BackingData<Habit>) {
-        self.avoidTarget = ""
-        super.init(backingData: backingData)
-    }
 
     public init(
         id: UUID = UUID(),

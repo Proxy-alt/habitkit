@@ -44,12 +44,11 @@ struct HabitRow: View {
                         .font(.title2)
                         .foregroundStyle(themes.current.primaryColor)
                 }
-                .buttonStyle(.plain)
+                .buttonStyle(.borderless)
                 .accessibilityLabel("Start \(habit.name) timer")
             }
         }
         .padding(.vertical, HKSpacing.xs)
-        .contentShape(Rectangle())
     }
 
     private var streakLabel: some View {

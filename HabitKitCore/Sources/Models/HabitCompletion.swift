@@ -29,6 +29,7 @@ public class HabitCompletion {
     public var paperMarkup: Data?
 
     /// The habit this completion belongs to.
+    @Relationship(inverse: \Habit.completions)
     public var habit: Habit
 
     public init(

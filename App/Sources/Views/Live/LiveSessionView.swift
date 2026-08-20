@@ -2,32 +2,42 @@ import SwiftUI
 import SwiftData
 import ActivityKit
 import HabitKitCore
+import HabitKitIntents
 import HabitKitUI
 
 struct LiveSessionView: View {
     @Environment(HKThemeManager.self) private var themes
     @Environment(\.modelContext) private var modelContext
+    @Environment(AppNavigator.self) private var navigator
     @Query(sort: \Habit.sortOrder) private var habits: [Habit]
 
     @State private var activeHabit: TimedHabit?
-    @State private var sessionStartDate: Date?
-    @State private var elapsed: TimeInterval = 0
+    @State private var timerAlarmID: UUID?
+    @State private var fireDate: Date?
+    @State private var pausedRemaining: TimeInterval?
+    @State private var now = Date()
     @State private var note = ""
     @State private var isComplete = false
-    @State private var timer: Timer?
+    @State private var uiTimer: Timer?
 
     private var activeTimedHabits: [TimedHabit] {
         habits.compactMap { $0 as? TimedHabit }.filter { !$0.isArchived }
     }
 
-    private var progress: Double {
-        guard let habit = activeHabit, habit.targetDurationSeconds > 0 else { return 0 }
-        return min(elapsed / Double(habit.targetDurationSeconds), 1.0)
+    private var isPaused: Bool { pausedRemaining != nil }
+
+    /// Mirrors AlarmKit's own countdown: computed from `fireDate` rather than
+    /// tracked separately, so it can't drift from the alarm actually driving
+    /// the system Live Activity/Dynamic Island UI.
+    private var remaining: TimeInterval {
+        if let pausedRemaining { return pausedRemaining }
+        guard let fireDate else { return 0 }
+        return max(fireDate.timeIntervalSince(now), 0)
     }
 
-    private var remaining: TimeInterval {
-        guard let habit = activeHabit else { return 0 }
-        return max(Double(habit.targetDurationSeconds) - elapsed, 0)
+    private var progress: Double {
+        guard let habit = activeHabit, habit.targetDurationSeconds > 0 else { return 0 }
+        return 1.0 - (remaining / Double(habit.targetDurationSeconds))
     }
 
     var body: some View {
@@ -44,6 +54,14 @@ struct LiveSessionView: View {
             .navigationTitle("Live")
             .navigationBarTitleDisplayMode(.inline)
         }
+        .onAppear { consumePendingTimer() }
+        .onChange(of: navigator.pendingTimerHabit) { _, _ in consumePendingTimer() }
+    }
+
+    private func consumePendingTimer() {
+        guard let habit = navigator.pendingTimerHabit else { return }
+        navigator.pendingTimerHabit = nil
+        startSession(for: habit)
     }
 
     private func activeSession(for habit: TimedHabit) -> some View {
@@ -73,6 +91,12 @@ struct LiveSessionView: View {
             HStack(spacing: HKSpacing.md) {
                 HKButton("Abandon", variant: .secondary) {
                     stopSession()
+                }
+
+                if !isComplete {
+                    HKButton(isPaused ? "Resume" : "Pause", variant: .secondary) {
+                        isPaused ? resumeSession() : pauseSession()
+                    }
                 }
 
                 HKButton(isComplete ? "Done!" : "Complete", variant: .primary) {
@@ -146,47 +170,21 @@ struct LiveSessionView: View {
 
     private func startSession(for habit: TimedHabit) {
         activeHabit = habit
-        sessionStartDate = Date()
-        elapsed = 0
         isComplete = false
+        pausedRemaining = nil
+        now = Date()
+        fireDate = now.addingTimeInterval(Double(habit.targetDurationSeconds))
+
+        let alarmID = UUID()
+        timerAlarmID = alarmID
+        startCountdownAlarm(id: alarmID, habit: habit)
         startLiveActivity(for: habit)
     }
 
-    private func startTimer() {
-        timer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { _ in
-            guard let start = sessionStartDate else { return }
-            elapsed = Date().timeIntervalSince(start)
-            if let habit = activeHabit, elapsed >= Double(habit.targetDurationSeconds) {
-                isComplete = true
-            }
-        }
-    }
-
-    private func stopTimer() {
-        timer?.invalidate()
-        timer = nil
-    }
-
-    private func completeSession(for habit: TimedHabit) {
-        let completion = HabitCompletion(
-            completedAt: Date(),
-            durationSeconds: Int(elapsed),
-            note: note.isEmpty ? nil : note,
-            habit: habit
-        )
-        modelContext.insert(completion)
-        stopSession()
-        endLiveActivity(completed: true)
-    }
-
-    private func stopSession() {
-        stopTimer()
-        activeHabit = nil
-        sessionStartDate = nil
-        elapsed = 0
-        note = ""
-    }
-
+    /// AlarmKit's own countdown presentation only shows up as an alert once
+    /// the timer fires — it doesn't render an ongoing Live Activity while
+    /// counting down. This app-owned activity fills that gap; its content
+    /// state is pushed on every tick in `startTimer` so it stays in sync.
     private func startLiveActivity(for habit: TimedHabit) {
         guard ActivityAuthorizationInfo().areActivitiesEnabled else { return }
         let attributes = HabitLiveActivityAttributes(
@@ -205,12 +203,104 @@ struct LiveSessionView: View {
         )
     }
 
-    private func endLiveActivity(completed: Bool) {
+    private func updateLiveActivity() {
+        guard let habit = activeHabit else { return }
+        let remainingSeconds = Int(remaining.rounded())
+        let habitName = habit.name
+        let complete = isComplete
+        Task {
+            for activity in Activity<HabitLiveActivityAttributes>.activities {
+                let state = HabitLiveActivityAttributes.ContentState(
+                    remainingSeconds: remainingSeconds,
+                    habitName: habitName,
+                    isComplete: complete
+                )
+                await activity.update(.init(state: state, staleDate: nil))
+            }
+        }
+    }
+
+    private func endLiveActivity() {
         Task {
             for activity in Activity<HabitLiveActivityAttributes>.activities {
                 await activity.end(nil, dismissalPolicy: .immediate)
             }
         }
+    }
+
+    private func startCountdownAlarm(id: UUID, habit: TimedHabit) {
+        let habitID = habit.id
+        let habitName = habit.name
+        let icon = habit.icon
+        let tintColor = Color(hex: habit.colorHex) ?? themes.current.primaryColor
+        let duration = TimeInterval(habit.targetDurationSeconds)
+        Task {
+            try? await HabitAlarmScheduler.startCountdownTimer(
+                id: id,
+                habitID: habitID,
+                habitName: habitName,
+                duration: duration,
+                tintColor: tintColor,
+                stopIntent: CompleteHabitAlarmIntent(habit: HabitEntity(id: habitID, name: habitName, icon: icon))
+            )
+        }
+    }
+
+    private func pauseSession() {
+        guard let alarmID = timerAlarmID, pausedRemaining == nil else { return }
+        pausedRemaining = remaining
+        try? HabitAlarmScheduler.pauseCountdown(for: alarmID)
+        updateLiveActivity()
+    }
+
+    private func resumeSession() {
+        guard let alarmID = timerAlarmID, let paused = pausedRemaining else { return }
+        now = Date()
+        fireDate = now.addingTimeInterval(paused)
+        pausedRemaining = nil
+        try? HabitAlarmScheduler.resumeCountdown(for: alarmID)
+        updateLiveActivity()
+    }
+
+    private func startTimer() {
+        uiTimer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { _ in
+            now = Date()
+            if !isPaused, remaining <= 0 {
+                isComplete = true
+            }
+            updateLiveActivity()
+        }
+    }
+
+    private func stopTimer() {
+        uiTimer?.invalidate()
+        uiTimer = nil
+    }
+
+    private func completeSession(for habit: TimedHabit) {
+        let elapsedSeconds = max(habit.targetDurationSeconds - Int(remaining), 0)
+        let completion = HabitCompletion(
+            completedAt: Date(),
+            durationSeconds: elapsedSeconds,
+            note: note.isEmpty ? nil : note,
+            habit: habit
+        )
+        modelContext.insert(completion)
+        stopSession()
+    }
+
+    private func stopSession() {
+        stopTimer()
+        if let alarmID = timerAlarmID {
+            try? HabitAlarmScheduler.cancelAlarm(for: alarmID)
+        }
+        endLiveActivity()
+        activeHabit = nil
+        timerAlarmID = nil
+        fireDate = nil
+        pausedRemaining = nil
+        note = ""
+        isComplete = false
     }
 
     private func timeString(_ interval: TimeInterval) -> String {

@@ -1,6 +1,7 @@
 import SwiftUI
 import SwiftData
 import HabitKitCore
+import HabitKitIntents
 import HabitKitUI
 
 struct AddHabitView: View {
@@ -17,6 +18,7 @@ struct AddHabitView: View {
     @State private var steps: [String] = [""]
     @State private var selectedDays: Set<Int> = [0, 1, 2, 3, 4, 5, 6]
     @State private var selectedColorHex = ""
+    @State private var reminders: [HabitReminder] = []
 
     enum HabitType: String, CaseIterable, Identifiable {
         case yesNo = "Yes/No"
@@ -84,6 +86,10 @@ struct AddHabitView: View {
 
                     Section("Schedule") {
                         scheduleFields
+                    }
+
+                    Section("Reminders") {
+                        reminderFields
                     }
                 }
                 .scrollContentBackground(.hidden)
@@ -160,15 +166,40 @@ struct AddHabitView: View {
         }
     }
 
+    @ViewBuilder
+    private var reminderFields: some View {
+        ForEach($reminders) { $reminder in
+            HStack {
+                DatePicker("Reminder time", selection: $reminder.time, displayedComponents: .hourAndMinute)
+                    .labelsHidden()
+                    .foregroundStyle(themes.current.textColor)
+                Spacer()
+                Button {
+                    reminders.removeAll { $0.id == reminder.id }
+                } label: {
+                    Image(systemName: "minus.circle.fill")
+                        .foregroundStyle(themes.current.dangerColor)
+                }
+                .buttonStyle(.borderless)
+                .accessibilityLabel("Remove reminder")
+            }
+        }
+        Button("Add Reminder") {
+            reminders.append(HabitReminder(time: Date()))
+        }
+        .foregroundStyle(themes.current.primaryColor)
+        .font(.hkBody)
+    }
+
     private func saveHabit() {
         let trimmedName = name.trimmingCharacters(in: .whitespaces)
         guard !trimmedName.isEmpty else { return }
 
         let schedule = HabitSchedule(
             frequency: .weekly(days: selectedDays),
-            reminderTimes: [],
             habit: nil
         )
+        schedule.reminders = reminders
 
         let habit: Habit
         switch selectedType {
@@ -198,6 +229,26 @@ struct AddHabitView: View {
 
         schedule.habit = habit
         modelContext.insert(habit)
+        scheduleReminderAlarms(for: habit)
         dismiss()
+    }
+
+    private func scheduleReminderAlarms(for habit: Habit) {
+        let habitID = habit.id
+        let habitName = habit.name
+        let icon = habit.icon
+        let tintColor = Color(hex: habit.colorHex) ?? themes.current.primaryColor
+        Task {
+            for reminder in reminders {
+                try? await HabitAlarmScheduler.scheduleAlarm(
+                    id: reminder.id,
+                    habitID: habitID,
+                    habitName: habitName,
+                    at: reminder.time,
+                    tintColor: tintColor,
+                    stopIntent: CompleteHabitAlarmIntent(habit: HabitEntity(id: habitID, name: habitName, icon: icon))
+                )
+            }
+        }
     }
 }

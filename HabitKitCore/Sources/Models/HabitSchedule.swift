@@ -9,9 +9,9 @@ public class HabitSchedule {
     /// uses Builtin.BridgeObject internally, which crashes SchemaProperty).
     private var frequencyData: Data
 
-    /// JSON-encoded `[Date]`. Stored as `Data` for the same reason: Array<Date>
-    /// also uses Builtin.BridgeObject for its CoW storage buffer.
-    private var reminderTimesData: Data
+    /// JSON-encoded `[HabitReminder]`. Stored as `Data` for the same reason:
+    /// Array<HabitReminder> also uses Builtin.BridgeObject for its CoW storage buffer.
+    private var remindersData: Data
 
     /// The habit this schedule belongs to. `nil` only during object-graph
     /// construction (e.g. previews and tests); always non-`nil` in production.
@@ -27,15 +27,22 @@ public class HabitSchedule {
         }
     }
 
-    /// List of times during the day when the user should receive a reminder.
-    /// Only the hour and minute components of each Date are meaningful.
-    public var reminderTimes: [Date] {
+    /// Times during the day when the user should receive a reminder, each
+    /// backed by its own AlarmKit alarm. Computed over `remindersData`.
+    public var reminders: [HabitReminder] {
         get {
-            (try? JSONDecoder().decode([Date].self, from: reminderTimesData)) ?? []
+            (try? JSONDecoder().decode([HabitReminder].self, from: remindersData)) ?? []
         }
         set {
-            reminderTimesData = (try? JSONEncoder().encode(newValue)) ?? Data()
+            remindersData = (try? JSONEncoder().encode(newValue)) ?? Data()
         }
+    }
+
+    /// Convenience view of `reminders` as bare times, for callers that don't
+    /// need per-reminder ids. Setting this replaces `reminders` with fresh ids.
+    public var reminderTimes: [Date] {
+        get { reminders.map(\.time) }
+        set { reminders = newValue.map { HabitReminder(time: $0) } }
     }
 
     public init(
@@ -44,7 +51,8 @@ public class HabitSchedule {
         habit: Habit? = nil
     ) {
         self.frequencyData = (try? JSONEncoder().encode(frequency)) ?? Data()
-        self.reminderTimesData = (try? JSONEncoder().encode(reminderTimes)) ?? Data()
+        let reminders = reminderTimes.map { HabitReminder(time: $0) }
+        self.remindersData = (try? JSONEncoder().encode(reminders)) ?? Data()
         self.habit = habit
     }
 

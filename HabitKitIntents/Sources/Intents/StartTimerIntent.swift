@@ -1,11 +1,16 @@
 import AppIntents
 import Foundation
+import HabitKitCore
+import SwiftData
 
 /// Brings HabitKit to the foreground and starts a Live Activity timer for a timed habit.
 ///
-/// Because `openAppWhenRun` is `true`, the system foregrounds the app before
-/// `perform()` is called. The app observes the result and starts the
-/// `ActivityKit` Live Activity for the given habit.
+/// Because `openAppWhenRun` is `true`, `perform()` runs in the host app's own
+/// process (StartTimerIntent is linked directly into the app target, not a
+/// separate extension). This lets it resolve the app's `AppNavigator` — via
+/// the `TimerLaunching` dependency registered in `HabitKitApp` — and hand it
+/// the resolved `TimedHabit`, which switches to the Live tab and starts the
+/// `ActivityKit` Live Activity.
 public struct StartTimerIntent: AppIntent {
     public static let title: LocalizedStringResource = "Start Habit Timer"
     public static let description = IntentDescription(
@@ -17,16 +22,23 @@ public struct StartTimerIntent: AppIntent {
     @Parameter(title: "Habit")
     public var habit: HabitEntity
 
+    @Dependency private var navigator: any TimerLaunching
+    @Dependency private var modelContainer: ModelContainer
+
     public init() {}
 
     public init(habit: HabitEntity) {
         self.habit = habit
     }
 
+    @MainActor
     public func perform() async throws -> some IntentResult & ProvidesDialog {
-        // The app is brought to the foreground by the system before perform()
-        // is called (because openAppWhenRun == true). The app itself observes
-        // the intent result and starts the Live Activity for the given habit.
+        let habitID = habit.id
+        let descriptor = FetchDescriptor<TimedHabit>(predicate: #Predicate { $0.id == habitID })
+        guard let timedHabit = try modelContainer.mainContext.fetch(descriptor).first else {
+            return .result(dialog: "Couldn't find a timed habit named \(habit.name).")
+        }
+        navigator.startTimer(for: timedHabit)
         return .result(dialog: "Starting timer for \(habit.name).")
     }
 }

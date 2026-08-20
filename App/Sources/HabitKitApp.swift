@@ -1,11 +1,14 @@
 import SwiftUI
 import SwiftData
+import AppIntents
 import HabitKitCore
 import HabitKitUI
 
 @main
 struct HabitKitApp: App {
     @State private var themeManager = HKThemeManager()
+    @State private var navigator = AppNavigator()
+    @State private var alarmMonitor = InAppAlarmMonitor()
     @AppStorage(DefaultsKeys.iCloudSync) private var icloudSyncEnabled = true
 
     private let modelContainer: ModelContainer = {
@@ -30,10 +33,15 @@ struct HabitKitApp: App {
         WindowGroup {
             ContentView()
                 .environment(themeManager)
+                .environment(navigator)
+                .environment(alarmMonitor)
                 .modelContainer(modelContainer)
                 .preferredColorScheme(themeManager.current.isDark ? .dark : .light)
                 .onAppear {
                     DefaultsKeys.registerDefaults()
+                    AppDependencyManager.shared.add(dependency: navigator as any TimerLaunching)
+                    AppDependencyManager.shared.add(dependency: modelContainer)
+                    alarmMonitor.start(modelContainer: modelContainer)
                 }
         }
     }

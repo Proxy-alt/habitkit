@@ -3,6 +3,12 @@ import SwiftData
 import HabitKitCore
 import HabitKitUI
 
+private func cancelReminderAlarms(for habit: Habit) {
+    for reminder in habit.schedule.reminders {
+        try? HabitAlarmScheduler.cancelAlarm(for: reminder.id)
+    }
+}
+
 struct HabitsView: View {
     @Environment(HKThemeManager.self) private var themes
     @Environment(\.modelContext) private var modelContext
@@ -91,7 +97,9 @@ struct HabitsView: View {
 
     private func deleteHabits(at offsets: IndexSet) {
         for index in offsets {
-            modelContext.delete(activeHabits[index])
+            let habit = activeHabits[index]
+            cancelReminderAlarms(for: habit)
+            modelContext.delete(habit)
         }
     }
 }

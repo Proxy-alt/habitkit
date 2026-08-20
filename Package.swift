@@ -18,10 +18,6 @@ let package = Package(
             name: "HabitKitCore",
             path: "HabitKitCore/Sources",
             exclude: [
-                // Coded against a speculative AlarmKit API shape that does not
-                // match the real framework (Alarm/AlarmManager/AlarmConfiguration<Metadata>).
-                // Needs a rewrite against the actual API before re-enabling.
-                "Alarms/AlarmManager.swift",
                 // Coded against a speculative EnergyKit API shape (ElectricityGuidance.shared,
                 // .lowCarbonWindows, .currentCarbonIntensity) that does not match the real,
                 // venue/query-based ElectricityGuidance.Service AsyncSequence API.

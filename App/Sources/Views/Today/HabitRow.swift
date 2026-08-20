@@ -6,6 +6,7 @@ import HabitKitUI
 struct HabitRow: View {
     @Environment(HKThemeManager.self) private var themes
     @Environment(\.modelContext) private var modelContext
+    @Environment(AppNavigator.self) private var navigator
     let habit: Habit
     var muted: Bool = false
 
@@ -36,9 +37,9 @@ struct HabitRow: View {
 
             Spacer()
 
-            if habit is TimedHabit {
+            if let timedHabit = habit as? TimedHabit {
                 Button {
-                    // Start timer via StartTimerIntent
+                    navigator.startTimer(for: timedHabit)
                 } label: {
                     Image(systemName: HKSymbol.play)
                         .font(.title2)

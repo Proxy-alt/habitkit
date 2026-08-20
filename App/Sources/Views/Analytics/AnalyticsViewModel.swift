@@ -7,6 +7,58 @@ final class AnalyticsViewModel {
     var selectedPeriod: AnalyticsPeriod = .thirtyDays
     var selectedHabitID: UUID?
 
+    /// On-device Apple Intelligence summary of the week, from `HabitCoach`.
+    /// Empty until `refreshCoachingSummary` completes.
+    var coachingSummary: String = ""
+    var isLoadingCoachingSummary = false
+
+    /// CoreML behavior-cluster insight per habit, from `HabitMLManager`.
+    /// Populated lazily as `HabitDetailView`/`AnalyticsView` request each habit;
+    /// `nil` for a habit means either "not yet predicted" or "model unavailable" —
+    /// both render as no insight shown.
+    private(set) var clusterInsights: [UUID: HabitCluster] = [:]
+
+    /// Generates a fresh weekly coaching summary from the current habit set.
+    /// Safe to call repeatedly (e.g. on every `AnalyticsView` appearance) —
+    /// `HabitCoach` reuses its prewarmed session.
+    func refreshCoachingSummary(habits: [Habit]) async {
+        guard !habits.isEmpty else {
+            coachingSummary = ""
+            return
+        }
+        isLoadingCoachingSummary = true
+        defer { isLoadingCoachingSummary = false }
+
+        let rates = habits.map { ($0.name, completionRate(for: $0, period: .sevenDays)) }
+        let overallRate = Int((rates.map(\.1).reduce(0, +) / Double(rates.count)) * 100)
+        let topHabit = rates.max { $0.1 < $1.1 }?.0 ?? habits[0].name
+        let missedHabits = rates.filter { $0.1 < 0.5 }.map(\.0)
+
+        coachingSummary = await HabitCoach.shared.weeklyCoachingSummary(
+            completionRate: overallRate,
+            topHabit: topHabit,
+            missedHabits: missedHabits
+        )
+    }
+
+    /// Predicts and caches the behavior cluster for a single habit.
+    func refreshClusterInsight(for habit: Habit) async {
+        let rate = completionRate(for: habit, period: .thirtyDays)
+        let avgHour = averageCompletionHour(for: habit)
+        let streak = StreakCalculator.currentStreak(completions: habit.completions, schedule: habit.schedule)
+        clusterInsights[habit.id] = await HabitMLManager.shared.predictCluster(
+            completionRate: rate,
+            avgCompletionHour: avgHour,
+            streakLength: streak
+        )
+    }
+
+    private func averageCompletionHour(for habit: Habit) -> Double {
+        let hours = habit.completions.map { Double(Calendar.current.component(.hour, from: $0.completedAt)) }
+        guard !hours.isEmpty else { return 12 }
+        return hours.reduce(0, +) / Double(hours.count)
+    }
+
     func completionRate(for habit: Habit, period: AnalyticsPeriod) -> Double {
         let days: Int
         switch period {

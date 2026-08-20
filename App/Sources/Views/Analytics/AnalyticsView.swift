@@ -27,6 +27,7 @@ struct AnalyticsView: View {
                 } else {
                     ScrollView {
                         VStack(spacing: HKSpacing.lg) {
+                            coachingSection
                             periodPicker
                             overviewSection
                             habitPicker
@@ -40,6 +41,30 @@ struct AnalyticsView: View {
                 }
             }
             .navigationTitle("Analytics")
+            .task { await viewModel.refreshCoachingSummary(habits: activeHabits) }
+        }
+    }
+
+    private var coachingSection: some View {
+        HKCard {
+            VStack(alignment: .leading, spacing: HKSpacing.sm) {
+                HStack {
+                    Image(systemName: HKSymbol.sparkles)
+                        .foregroundStyle(themes.current.primaryColor)
+                    Text("Your Week")
+                        .font(.hkHeadline)
+                        .foregroundStyle(themes.current.textColor)
+                }
+
+                if viewModel.isLoadingCoachingSummary {
+                    ProgressView()
+                        .tint(themes.current.primaryColor)
+                } else if !viewModel.coachingSummary.isEmpty {
+                    Text(viewModel.coachingSummary)
+                        .font(.hkBody)
+                        .foregroundStyle(themes.current.textColor)
+                }
+            }
         }
     }
 
@@ -178,7 +203,20 @@ struct AnalyticsView: View {
                     HeatmapView(habit: habit)
                 }
             }
+
+            if let insight = viewModel.clusterInsights[habit.id] {
+                HKCard {
+                    HStack(alignment: .top, spacing: HKSpacing.sm) {
+                        Image(systemName: "wand.and.stars")
+                            .foregroundStyle(themes.current.primaryColor)
+                        Text(insight.insightText)
+                            .font(.hkBody)
+                            .foregroundStyle(themes.current.textColor)
+                    }
+                }
+            }
         }
+        .task(id: habit.id) { await viewModel.refreshClusterInsight(for: habit) }
     }
 
     private var correlationSection: some View {

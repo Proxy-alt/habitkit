@@ -19,6 +19,24 @@ public class HabitCompletion {
     /// Optional user note attached to this completion.
     public var note: String?
 
+    /// JSON-encoded `[String]` of tags. Stored as `Data` for the same reason
+    /// as other array-typed `@Model` properties in this codebase: Array<String>
+    /// uses Builtin.BridgeObject for its CoW storage buffer, which crashes
+    /// SchemaProperty during SwiftData's schema analysis.
+    private var tagsData: Data = Data()
+
+    /// Tags describing this completion's note, generated on-device by
+    /// `HabitCoach.tagNote` when a note is present. Empty until tagging
+    /// finishes (or if there was no note to tag).
+    public var tags: [String] {
+        get {
+            (try? JSONDecoder().decode([String].self, from: tagsData)) ?? []
+        }
+        set {
+            tagsData = (try? JSONEncoder().encode(newValue)) ?? Data()
+        }
+    }
+
     /// Security-scoped bookmark data referencing a photo attached to this completion.
     public var photoBookmark: Data?
 
@@ -38,6 +56,7 @@ public class HabitCompletion {
         value: Double? = nil,
         durationSeconds: Int? = nil,
         note: String? = nil,
+        tags: [String] = [],
         photoBookmark: Data? = nil,
         paperMarkup: Data? = nil,
         habit: Habit
@@ -47,6 +66,7 @@ public class HabitCompletion {
         self.value = value
         self.durationSeconds = durationSeconds
         self.note = note
+        self.tagsData = (try? JSONEncoder().encode(tags)) ?? Data()
         self.photoBookmark = photoBookmark
         self.paperMarkup = paperMarkup
         self.habit = habit

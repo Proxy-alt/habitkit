@@ -42,6 +42,7 @@ struct HabitKitApp: App {
                     AppDependencyManager.shared.add(dependency: navigator as any TimerLaunching)
                     AppDependencyManager.shared.add(dependency: modelContainer)
                     alarmMonitor.start(modelContainer: modelContainer)
+                    Task { await HabitCoach.shared.prewarm() }
                 }
         }
     }

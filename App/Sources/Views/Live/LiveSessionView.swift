@@ -279,14 +279,33 @@ struct LiveSessionView: View {
 
     private func completeSession(for habit: TimedHabit) {
         let elapsedSeconds = max(habit.targetDurationSeconds - Int(remaining), 0)
+        let trimmedNote = note.trimmingCharacters(in: .whitespacesAndNewlines)
         let completion = HabitCompletion(
             completedAt: Date(),
             durationSeconds: elapsedSeconds,
-            note: note.isEmpty ? nil : note,
+            note: trimmedNote.isEmpty ? nil : trimmedNote,
             habit: habit
         )
         modelContext.insert(completion)
+        tagNoteIfNeeded(trimmedNote, for: completion)
         stopSession()
+    }
+
+    /// Tags run on-device via `HabitCoach` after the completion is already
+    /// saved, so logging a habit never waits on model inference.
+    private func tagNoteIfNeeded(_ note: String, for completion: HabitCompletion) {
+        guard !note.isEmpty else { return }
+        let completionID = completion.id
+        Task {
+            let tags = await HabitCoach.shared.tagNote(note)
+            guard !tags.isEmpty else { return }
+            let descriptor = FetchDescriptor<HabitCompletion>(
+                predicate: #Predicate { $0.id == completionID }
+            )
+            guard let saved = try? modelContext.fetch(descriptor).first else { return }
+            saved.tags = tags
+            try? modelContext.save()
+        }
     }
 
     private func stopSession() {

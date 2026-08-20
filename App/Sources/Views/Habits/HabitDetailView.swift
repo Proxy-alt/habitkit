@@ -267,19 +267,42 @@ private struct CompletionRow: View {
     let completion: HabitCompletion
 
     var body: some View {
-        HStack {
-            Image(systemName: HKSymbol.checkmark)
-                .foregroundStyle(themes.current.successColor)
+        VStack(alignment: .leading, spacing: HKSpacing.xs) {
+            HStack {
+                Image(systemName: HKSymbol.checkmark)
+                    .foregroundStyle(themes.current.successColor)
 
-            Text(completion.completedAt, style: .date)
-                .font(.hkBody)
-                .foregroundStyle(themes.current.textColor)
+                Text(completion.completedAt, style: .date)
+                    .font(.hkBody)
+                    .foregroundStyle(themes.current.textColor)
 
-            Spacer()
+                Spacer()
 
-            Text(completion.completedAt, style: .time)
-                .font(.hkCaption)
-                .foregroundStyle(themes.current.subtextColor)
+                Text(completion.completedAt, style: .time)
+                    .font(.hkCaption)
+                    .foregroundStyle(themes.current.subtextColor)
+            }
+
+            if let note = completion.note, !note.isEmpty {
+                Text(note)
+                    .font(.hkCaption)
+                    .foregroundStyle(themes.current.subtextColor)
+                    .padding(.leading, HKSpacing.lg)
+            }
+
+            if !completion.tags.isEmpty {
+                HStack(spacing: HKSpacing.xs) {
+                    ForEach(completion.tags, id: \.self) { tag in
+                        Text(tag)
+                            .font(.hkCaption)
+                            .foregroundStyle(themes.current.primaryColor)
+                            .padding(.horizontal, HKSpacing.sm)
+                            .padding(.vertical, 2)
+                            .background(themes.current.primaryColor.opacity(0.12), in: Capsule())
+                    }
+                }
+                .padding(.leading, HKSpacing.lg)
+            }
         }
         .padding(.vertical, 2)
     }

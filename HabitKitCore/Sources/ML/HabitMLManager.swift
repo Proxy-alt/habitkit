@@ -117,4 +117,15 @@ public enum HabitCluster: Int, Sendable {
     case improving = 3
     /// High completion rate but declining streak.
     case declining = 4
+
+    /// A short, user-facing description of this cluster for display in Analytics.
+    public var insightText: String {
+        switch self {
+        case .morningConsistent: return "You're highly consistent with this habit in the mornings."
+        case .eveningModerate: return "You tend to complete this in the evening, with some room to be more consistent."
+        case .sporadic: return "Completions are sporadic — a reminder might help this stick."
+        case .improving: return "You're trending upward on this habit lately. Keep it up!"
+        case .declining: return "Your streak has been slipping — worth a fresh look at when you schedule this."
+        }
+    }
 }

@@ -8,7 +8,9 @@ struct AddHabitView: View {
     @Environment(HKThemeManager.self) private var themes
     @Environment(\.modelContext) private var modelContext
     @Environment(\.dismiss) private var dismiss
+    @Query(sort: \Habit.sortOrder) private var existingHabits: [Habit]
 
+    @State private var showSuggestions = false
     @State private var name = ""
     @State private var selectedIcon = "star.fill"
     @State private var selectedType: HabitType = .yesNo
@@ -44,6 +46,14 @@ struct AddHabitView: View {
                 Form {
                     Section("Name") {
                         HKTextField("e.g. Morning Run", text: $name)
+
+                        Button {
+                            showSuggestions = true
+                        } label: {
+                            Label("Suggest a Habit", systemImage: HKSymbol.sparkles)
+                        }
+                        .buttonStyle(.borderless)
+                        .foregroundStyle(themes.current.primaryColor)
                     }
 
                     Section("Icon") {
@@ -105,6 +115,15 @@ struct AddHabitView: View {
                     Button("Add") { saveHabit() }
                         .foregroundStyle(themes.current.primaryColor)
                         .disabled(name.trimmingCharacters(in: .whitespaces).isEmpty)
+                }
+            }
+            .sheet(isPresented: $showSuggestions) {
+                HabitSuggestionsSheet(existingHabitNames: existingHabits.map(\.name)) { suggestion in
+                    name = suggestion.name
+                    if iconOptions.contains(suggestion.sfSymbol) {
+                        selectedIcon = suggestion.sfSymbol
+                    }
+                    showSuggestions = false
                 }
             }
         }
@@ -248,6 +267,77 @@ struct AddHabitView: View {
                     tintColor: tintColor,
                     stopIntent: CompleteHabitAlarmIntent(habit: HabitEntity(id: habitID, name: habitName, icon: icon))
                 )
+            }
+        }
+    }
+}
+
+// MARK: - HabitSuggestionsSheet
+
+/// Presents habit suggestions generated on-device by `HabitCoach`, based on
+/// what the user already tracks.
+private struct HabitSuggestionsSheet: View {
+    @Environment(HKThemeManager.self) private var themes
+    @Environment(\.dismiss) private var dismiss
+
+    let existingHabitNames: [String]
+    let onSelect: (HabitSuggestion) -> Void
+
+    @State private var suggestions: [HabitSuggestion] = []
+    @State private var isLoading = true
+
+    var body: some View {
+        NavigationStack {
+            ZStack {
+                themes.current.baseColor.ignoresSafeArea()
+
+                if isLoading {
+                    ProgressView("Thinking of ideas…")
+                        .tint(themes.current.primaryColor)
+                } else if suggestions.isEmpty {
+                    ContentUnavailableView(
+                        "No Suggestions",
+                        systemImage: HKSymbol.sparkles,
+                        description: Text("Couldn't come up with anything right now. Try again later.")
+                    )
+                } else {
+                    List {
+                        ForEach(suggestions.indices, id: \.self) { index in
+                            let suggestion = suggestions[index]
+                            Button {
+                                onSelect(suggestion)
+                            } label: {
+                                HStack(alignment: .top, spacing: HKSpacing.md) {
+                                    Image(systemName: suggestion.sfSymbol)
+                                        .foregroundStyle(themes.current.primaryColor)
+                                        .frame(width: 24)
+                                    VStack(alignment: .leading, spacing: HKSpacing.xs) {
+                                        Text(suggestion.name)
+                                            .font(.hkHeadline)
+                                            .foregroundStyle(themes.current.textColor)
+                                        Text(suggestion.rationale)
+                                            .font(.hkCaption)
+                                            .foregroundStyle(themes.current.subtextColor)
+                                    }
+                                }
+                            }
+                            .buttonStyle(.borderless)
+                        }
+                    }
+                    .scrollContentBackground(.hidden)
+                }
+            }
+            .navigationTitle("Suggestions")
+            .navigationBarTitleDisplayMode(.inline)
+            .toolbar {
+                ToolbarItem(placement: .cancellationAction) {
+                    Button("Cancel") { dismiss() }
+                        .foregroundStyle(themes.current.subtextColor)
+                }
+            }
+            .task {
+                suggestions = await HabitCoach.shared.suggestHabits(existingHabitNames: existingHabitNames)
+                isLoading = false
             }
         }
     }

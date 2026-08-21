@@ -7,14 +7,15 @@ public class HabitSchedule {
     /// JSON-encoded `ScheduleFrequency`. Stored as `Data` so SwiftData's schema
     /// analyser never traverses the enum's associated-value payload (Set<Int>
     /// uses Builtin.BridgeObject internally, which crashes SchemaProperty).
-    private var frequencyData: Data
+    private var frequencyData: Data = Data()
 
     /// JSON-encoded `[HabitReminder]`. Stored as `Data` for the same reason:
     /// Array<HabitReminder> also uses Builtin.BridgeObject for its CoW storage buffer.
-    private var remindersData: Data
+    private var remindersData: Data = Data()
 
     /// The habit this schedule belongs to. `nil` only during object-graph
     /// construction (e.g. previews and tests); always non-`nil` in production.
+    @Relationship(inverse: \Habit.scheduleStorage)
     public var habit: Habit?
 
     /// The scheduling rule for this habit. Computed over `frequencyData`.

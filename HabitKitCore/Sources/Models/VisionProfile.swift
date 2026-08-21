@@ -20,7 +20,7 @@ public class VisionProfile {
     /// expected to match for this habit's completion photo.
     ///
     /// Stored as JSON to avoid CoW storage issues with SwiftData schema analysis.
-    private var expectedLabelsData: Data
+    private var expectedLabelsData: Data = Data()
 
     /// The `VNClassificationObservation` identifiers to match.
     public var expectedLabels: [String] {
@@ -34,15 +34,20 @@ public class VisionProfile {
 
     /// Minimum `VNClassificationObservation.confidence` required for a match.
     /// Typical values: 0.6–0.8.
-    public var threshold: Float
+    public var threshold: Float = 0.7
 
     // MARK: - OCR
 
     /// When `true`, `VNRecognizeTextRequest` is also run alongside classification.
-    public var useOCR: Bool
+    public var useOCR: Bool = false
 
     /// If `useOCR` is `true`, the text pattern to look for in recognition results.
     public var expectedText: String?
+
+    /// The habit this profile belongs to. CloudKit requires every relationship
+    /// to declare an inverse; `Habit.visionProfile` is the other side.
+    @Relationship(inverse: \Habit.visionProfile)
+    public var habit: Habit?
 
     // MARK: - Init
 

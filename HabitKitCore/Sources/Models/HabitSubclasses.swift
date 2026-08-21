@@ -6,7 +6,7 @@ import SwiftData
 @Model
 public class TimedHabit: Habit {
     /// The number of seconds the user should spend on this habit per session.
-    public var targetDurationSeconds: Int
+    public var targetDurationSeconds: Int = 0
 
     public init(
         id: UUID = UUID(),
@@ -42,10 +42,10 @@ public class TimedHabit: Habit {
 @Model
 public class QuantityHabit: Habit {
     /// The numeric amount the user must reach to consider the habit complete.
-    public var targetQuantity: Double
+    public var targetQuantity: Double = 0
 
     /// Human-readable unit label for the quantity (e.g. "glasses", "km", "reps").
-    public var unit: String
+    public var unit: String = ""
 
     public init(
         id: UUID = UUID(),
@@ -83,7 +83,7 @@ public class QuantityHabit: Habit {
 @Model
 public class ChecklistHabit: Habit {
     /// Ordered list of step descriptions the user must complete.
-    public var steps: [String]
+    public var steps: [String] = []
 
     public init(
         id: UUID = UUID(),
@@ -119,7 +119,7 @@ public class ChecklistHabit: Habit {
 @Model
 public class NegativeHabit: Habit {
     /// Description of what the user is trying to avoid (e.g. "Avoid social media").
-    public var avoidTarget: String
+    public var avoidTarget: String = ""
 
     public init(
         id: UUID = UUID(),

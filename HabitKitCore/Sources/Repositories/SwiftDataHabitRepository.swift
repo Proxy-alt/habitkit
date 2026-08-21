@@ -60,7 +60,7 @@ final class SwiftDataCompletionRepository: CompletionRepository {
     func fetchCompletions(for habit: Habit) async throws -> [HabitCompletion] {
         let habitID = habit.id
         let descriptor = FetchDescriptor<HabitCompletion>(
-            predicate: #Predicate { $0.habit.id == habitID },
+            predicate: #Predicate { $0.habit?.id == habitID },
             sortBy: [SortDescriptor(\.completedAt, order: .reverse)]
         )
         return try context.fetch(descriptor)

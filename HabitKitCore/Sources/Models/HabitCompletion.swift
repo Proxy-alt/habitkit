@@ -5,10 +5,10 @@ import SwiftData
 @Model
 public class HabitCompletion {
     /// Stable unique identifier for this completion record.
-    public var id: UUID
+    public var id: UUID = UUID()
 
     /// The exact date and time the completion was recorded.
-    public var completedAt: Date
+    public var completedAt: Date = Date()
 
     /// For quantity habits: the amount logged in this session.
     public var value: Double?
@@ -46,9 +46,11 @@ public class HabitCompletion {
     @Attribute(.externalStorage)
     public var paperMarkup: Data?
 
-    /// The habit this completion belongs to.
-    @Relationship(inverse: \Habit.completions)
-    public var habit: Habit
+    /// The habit this completion belongs to. Optional because CloudKit
+    /// requires to-one relationships to be Optional; always non-`nil` for a
+    /// completion constructed through `init`.
+    @Relationship(inverse: \Habit.completionsStorage)
+    public var habit: Habit?
 
     public init(
         id: UUID = UUID(),

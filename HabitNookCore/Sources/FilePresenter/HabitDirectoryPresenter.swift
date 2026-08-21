@@ -70,5 +70,5 @@ public final class HabitDirectoryPresenter: NSObject, NSFilePresenter, Sendable 
 public extension Notification.Name {
     /// Posted when the `.habit` file directory changes.
     /// `userInfo["changedURL"]` may contain the specific URL that changed.
-    static let habitDirectoryDidChange = Notification.Name("com.habitkit.habitDirectoryDidChange")
+    static let habitDirectoryDidChange = Notification.Name("com.habitnook.habitDirectoryDidChange")
 }

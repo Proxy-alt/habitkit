@@ -8,10 +8,10 @@
     <string>$(PRODUCT_BUNDLE_IDENTIFIER)</string>
 
     <key>CFBundleName</key>
-    <string>HabitKitWidgets</string>
+    <string>HabitNookWidgets</string>
 
     <key>CFBundleDisplayName</key>
-    <string>HabitKit Widgets</string>
+    <string>HabitNook Widgets</string>
 
     <key>CFBundleShortVersionString</key>
     <string>$(MARKETING_VERSION)</string>

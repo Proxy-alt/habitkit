@@ -4,7 +4,7 @@ import TipKit
 
 /// Tip shown when the user has 3+ habits but hasn't used the Focus Filter yet.
 public struct FocusFilterTip: Tip {
-    public static let tipID = "com.habitkit.tip.focusFilter"
+    public static let tipID = "com.habitnook.tip.focusFilter"
 
     public var title: Text {
         Text("Focus your habits")
@@ -34,7 +34,7 @@ public struct FocusFilterTip: Tip {
 
 /// Tip shown on first streak milestone (7 days).
 public struct StreakMilestoneTip: Tip {
-    public static let tipID = "com.habitkit.tip.streakMilestone"
+    public static let tipID = "com.habitnook.tip.streakMilestone"
 
     public var title: Text {
         Text("Keep your streak alive")
@@ -61,7 +61,7 @@ public struct StreakMilestoneTip: Tip {
 
 /// Tip shown when the user has never used habit templates.
 public struct TemplateTip: Tip {
-    public static let tipID = "com.habitkit.tip.template"
+    public static let tipID = "com.habitnook.tip.template"
 
     public var title: Text {
         Text("Start faster with templates")
@@ -88,7 +88,7 @@ public struct TemplateTip: Tip {
 
 /// Tip shown after the user's first archive export.
 public struct ArchiveEncryptionTip: Tip {
-    public static let tipID = "com.habitkit.tip.archiveEncryption"
+    public static let tipID = "com.habitnook.tip.archiveEncryption"
 
     public var title: Text {
         Text("Encrypt your backups")
@@ -117,11 +117,11 @@ public struct ArchiveEncryptionTip: Tip {
 
 /// Centralised tip event types used in `Rule` closures.
 public enum HabitNookTipEvents {
-    public static let habitCount = Tips.Event(id: "habitkit.habitCount")
-    public static let focusFilterConfigured = Tips.Event(id: "habitkit.focusFilterConfigured")
-    public static let streakReached7Days = Tips.Event(id: "habitkit.streakReached7Days")
-    public static let streakCalendarViewed = Tips.Event(id: "habitkit.streakCalendarViewed")
-    public static let templatesViewed = Tips.Event(id: "habitkit.templatesViewed")
-    public static let archiveExported = Tips.Event(id: "habitkit.archiveExported")
-    public static let encryptionEnabled = Tips.Event(id: "habitkit.encryptionEnabled")
+    public static let habitCount = Tips.Event(id: "habitnook.habitCount")
+    public static let focusFilterConfigured = Tips.Event(id: "habitnook.focusFilterConfigured")
+    public static let streakReached7Days = Tips.Event(id: "habitnook.streakReached7Days")
+    public static let streakCalendarViewed = Tips.Event(id: "habitnook.streakCalendarViewed")
+    public static let templatesViewed = Tips.Event(id: "habitnook.templatesViewed")
+    public static let archiveExported = Tips.Event(id: "habitnook.archiveExported")
+    public static let encryptionEnabled = Tips.Event(id: "habitnook.encryptionEnabled")
 }

@@ -15,7 +15,7 @@ public enum ArchiveCrypto {
     // MARK: - Key management
 
     /// The label used to retrieve the Secure Enclave key from the Keychain.
-    private static let seKeyLabel = "com.habitkit.archive.sekey"
+    private static let seKeyLabel = "com.habitnook.archive.sekey"
 
     /// Returns (or generates) the Secure Enclave P-256 signing key for archive encryption.
     ///
@@ -76,7 +76,7 @@ public enum ArchiveCrypto {
         )
         let symmetricKey = sharedSecret.hkdfDerivedSymmetricKey(
             using: SHA256.self,
-            salt: "habitkit.archive.v1".data(using: .utf8) ?? Data(),
+            salt: "habitnook.archive.v1".data(using: .utf8) ?? Data(),
             sharedInfo: Data(),
             outputByteCount: 32
         )
@@ -108,7 +108,7 @@ public enum ArchiveCrypto {
         )
         let symmetricKey = sharedSecret.hkdfDerivedSymmetricKey(
             using: SHA256.self,
-            salt: "habitkit.archive.v1".data(using: .utf8) ?? Data(),
+            salt: "habitnook.archive.v1".data(using: .utf8) ?? Data(),
             sharedInfo: Data(),
             outputByteCount: 32
         )

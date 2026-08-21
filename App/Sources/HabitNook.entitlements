@@ -22,7 +22,7 @@
 
     <key>com.apple.developer.icloud-container-identifiers</key>
     <array>
-        <string>iCloud.com.habitkit.app</string>
+        <string>iCloud.com.habitnook.app</string>
     </array>
 
     <key>com.apple.developer.icloud-services</key>
@@ -33,11 +33,11 @@
 
     <key>com.apple.developer.ubiquity-container-identifiers</key>
     <array>
-        <string>iCloud.com.habitkit.app</string>
+        <string>iCloud.com.habitnook.app</string>
     </array>
 
     <key>com.apple.developer.ubiquity-kvstore-identifier</key>
-    <string>$(TeamIdentifierPrefix)com.habitkit.app</string>
+    <string>$(TeamIdentifierPrefix)com.habitnook.app</string>
 
     <!-- ═══════════════════════════════════════════════════════════
          HEALTHKIT (§8.6, §8.26)
@@ -95,9 +95,9 @@
 
     <key>com.apple.developer.associated-domains</key>
     <array>
-        <string>applinks:habitkit.app</string>
-        <string>webcredentials:habitkit.app</string>
-        <string>activitycontinuation:habitkit.app</string>
+        <string>applinks:habitnook.app</string>
+        <string>webcredentials:habitnook.app</string>
+        <string>activitycontinuation:habitnook.app</string>
     </array>
 
     <!-- ═══════════════════════════════════════════════════════════
@@ -117,7 +117,7 @@
 
     <key>keychain-access-groups</key>
     <array>
-        <string>$(AppIdentifierPrefix)com.habitkit.app</string>
+        <string>$(AppIdentifierPrefix)com.habitnook.app</string>
     </array>
 
     <!-- ═══════════════════════════════════════════════════════════

@@ -102,7 +102,7 @@ public actor LocationManager: NSObject {
 
     private func getOrCreateMonitor() async throws -> CLMonitor {
         if let existing = monitor { return existing }
-        let newMonitor = await CLMonitor("com.habitkit.geofence")
+        let newMonitor = await CLMonitor("com.habitnook.geofence")
         self.monitor = newMonitor
         return newMonitor
     }

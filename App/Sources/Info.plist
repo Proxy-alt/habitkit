@@ -12,10 +12,10 @@
     <string>$(PRODUCT_BUNDLE_IDENTIFIER)</string>
 
     <key>CFBundleName</key>
-    <string>HabitKit</string>
+    <string>HabitNook</string>
 
     <key>CFBundleDisplayName</key>
-    <string>HabitKit</string>
+    <string>HabitNook</string>
 
     <key>CFBundleShortVersionString</key>
     <string>$(MARKETING_VERSION)</string>
@@ -170,8 +170,8 @@
 
     <key>BGTaskSchedulerPermittedIdentifiers</key>
     <array>
-        <string>com.habitkit.bg.archiveExport</string>
-        <string>com.habitkit.bg.healthBackfill</string>
+        <string>com.habitnook.bg.archiveExport</string>
+        <string>com.habitnook.bg.healthBackfill</string>
     </array>
 
     <!-- ═══════════════════════════════════════════════════════════
@@ -180,12 +180,12 @@
 
     <key>NSUserActivityTypes</key>
     <array>
-        <string>com.habitkit.activity.viewHabit</string>
-        <string>com.habitkit.activity.liveSession</string>
+        <string>com.habitnook.activity.viewHabit</string>
+        <string>com.habitnook.activity.liveSession</string>
     </array>
 
     <!-- ═══════════════════════════════════════════════════════════
-         URL SCHEMES — habitkit:// deep links
+         URL SCHEMES — habitnook:// deep links
          Used by Handoff, NFC tags, QR codes, SharedWithYou (§8.11,
          §8.32, §8.34, §8.43).
     ═══════════════════════════════════════════════════════════ -->
@@ -196,10 +196,10 @@
             <key>CFBundleTypeRole</key>
             <string>Editor</string>
             <key>CFBundleURLName</key>
-            <string>com.habitkit.app</string>
+            <string>com.habitnook.app</string>
             <key>CFBundleURLSchemes</key>
             <array>
-                <string>habitkit</string>
+                <string>habitnook</string>
             </array>
         </dict>
     </array>
@@ -207,7 +207,7 @@
     <!-- ═══════════════════════════════════════════════════════════
          UNIVERSAL LINKS — Associated Domains
          Declared in entitlements; mirrored here for reference.
-         habitkit.app/.well-known/apple-app-site-association
+         habitnook.app/.well-known/apple-app-site-association
     ═══════════════════════════════════════════════════════════ -->
 
     <!-- ═══════════════════════════════════════════════════════════
@@ -218,10 +218,10 @@
     <array>
         <dict>
             <key>UTTypeIdentifier</key>
-            <string>com.habitkit.habitarchive</string>
+            <string>com.habitnook.habitarchive</string>
 
             <key>UTTypeDescription</key>
-            <string>HabitKit Archive</string>
+            <string>HabitNook Archive</string>
 
             <key>UTTypeConformsTo</key>
             <array>
@@ -252,14 +252,14 @@
     <array>
         <dict>
             <key>CFBundleTypeName</key>
-            <string>HabitKit Archive</string>
+            <string>HabitNook Archive</string>
 
             <key>CFBundleTypeRole</key>
             <string>Editor</string>
 
             <key>LSItemContentTypes</key>
             <array>
-                <string>com.habitkit.habitarchive</string>
+                <string>com.habitnook.habitarchive</string>
             </array>
 
             <key>CFBundleTypeIconSystemFile</key>
@@ -269,7 +269,7 @@
 
     <!-- ═══════════════════════════════════════════════════════════
          SPOTLIGHT / CORE SPOTLIGHT (§8.14)
-         Enables CSSearchableItem links to open HabitKit.
+         Enables CSSearchableItem links to open HabitNook.
     ═══════════════════════════════════════════════════════════ -->
 
     <key>CoreSpotlightContinuation</key>
@@ -283,14 +283,14 @@
 
     <key>NSUbiquitousContainers</key>
     <dict>
-        <key>iCloud.com.habitkit.app</key>
+        <key>iCloud.com.habitnook.app</key>
         <dict>
             <key>NSUbiquitousContainerIsDocumentScopePublic</key>
             <true/>
             <key>NSUbiquitousContainerSupportedFolderLevels</key>
             <string>Any</string>
             <key>NSUbiquitousContainerName</key>
-            <string>HabitKit</string>
+            <string>HabitNook</string>
         </dict>
     </dict>
 
@@ -299,13 +299,13 @@
     ═══════════════════════════════════════════════════════════ -->
 
     <key>NSLocalNetworkUsageDescription</key>
-    <string>HabitKit uses your local network to exchange habit templates with nearby devices running HabitKit.</string>
+    <string>HabitNook uses your local network to exchange habit templates with nearby devices running HabitNook.</string>
 
     <key>NSBonjourServices</key>
     <array>
-        <!-- MCNearbyServiceAdvertiser service type: _habitkit-share._tcp -->
-        <string>_habitkit-share._tcp</string>
-        <string>_habitkit-share._udp</string>
+        <!-- MCNearbyServiceAdvertiser service type: _habitnook-share._tcp -->
+        <string>_habitnook-share._tcp</string>
+        <string>_habitnook-share._udp</string>
     </array>
 
     <!-- ═══════════════════════════════════════════════════════════
@@ -316,7 +316,7 @@
 
     <!-- AlarmKit — full-screen habit reminder alarms -->
     <key>NSAlarmKitUsageDescription</key>
-    <string>HabitKit schedules alarms for habit reminders you set, so you get a prominent alert even when your phone is silenced.</string>
+    <string>HabitNook schedules alarms for habit reminders you set, so you get a prominent alert even when your phone is silenced.</string>
 
     <!-- ActivityKit — required for Activity.request() to succeed at all -->
     <key>NSSupportsLiveActivities</key>
@@ -324,59 +324,59 @@
 
     <!-- Bluetooth — MultipeerConnectivity uses BT for peer discovery (§8.30) -->
     <key>NSBluetoothAlwaysUsageDescription</key>
-    <string>HabitKit uses Bluetooth to find nearby devices for habit template sharing.</string>
+    <string>HabitNook uses Bluetooth to find nearby devices for habit template sharing.</string>
 
     <!-- Calendar / EventKit — habit ↔ event sync, busy-day detection (§8.16) -->
     <key>NSCalendarsWriteOnlyAccessUsageDescription</key>
-    <string>HabitKit can add completed habits to your calendar so they appear alongside other events.</string>
+    <string>HabitNook can add completed habits to your calendar so they appear alongside other events.</string>
 
     <key>NSCalendarsFullAccessUsageDescription</key>
-    <string>HabitKit reads your calendar to detect busy days and suggest when to reschedule missed habits.</string>
+    <string>HabitNook reads your calendar to detect busy days and suggest when to reschedule missed habits.</string>
 
     <!-- Camera — completion photos, PaperKit markup (§8.42) -->
     <key>NSCameraUsageDescription</key>
-    <string>HabitKit uses your camera to attach a photo to a habit completion or to annotate it with PaperKit markup.</string>
+    <string>HabitNook uses your camera to attach a photo to a habit completion or to annotate it with PaperKit markup.</string>
 
     <!-- Face ID / Touch ID — per-habit biometric lock (§8.35) -->
     <key>NSFaceIDUsageDescription</key>
-    <string>HabitKit uses Face ID to protect habits you have marked as sensitive.</string>
+    <string>HabitNook uses Face ID to protect habits you have marked as sensitive.</string>
 
     <!-- HealthKit — read/write workout, sleep, steps, water, meditation (§8.6, §8.26) -->
     <key>NSHealthShareUsageDescription</key>
-    <string>HabitKit reads your health data — steps, sleep, stand time, and workouts — to automatically complete linked habits when you meet your daily goal.</string>
+    <string>HabitNook reads your health data — steps, sleep, stand time, and workouts — to automatically complete linked habits when you meet your daily goal.</string>
 
     <key>NSHealthUpdateUsageDescription</key>
-    <string>HabitKit saves your habit completions to Health so your history is visible in the Health app alongside other activity data.</string>
+    <string>HabitNook saves your habit completions to Health so your history is visible in the Health app alongside other activity data.</string>
 
     <!-- Location — geofence habit triggers (§8.8) -->
     <key>NSLocationWhenInUseUsageDescription</key>
-    <string>HabitKit uses your location to complete location-triggered habits automatically when you arrive at a saved place, such as the gym or your desk.</string>
+    <string>HabitNook uses your location to complete location-triggered habits automatically when you arrive at a saved place, such as the gym or your desk.</string>
 
     <key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
-    <string>HabitKit uses your location in the background to detect when you arrive at a saved place and complete the linked habit, even when the app is not open.</string>
+    <string>HabitNook uses your location in the background to detect when you arrive at a saved place and complete the linked habit, even when the app is not open.</string>
 
     <!-- Microphone — ShazamKit acoustic matching, CoreMIDI input (§8.22, §8.38) -->
     <key>NSMicrophoneUsageDescription</key>
-    <string>HabitKit uses the microphone to recognise instrument practice audio for music habits and to match ambient audio cues for custom habit triggers.</string>
+    <string>HabitNook uses the microphone to recognise instrument practice audio for music habits and to match ambient audio cues for custom habit triggers.</string>
 
     <!-- Motion — step counting, activity classification (§8.7) -->
     <key>NSMotionUsageDescription</key>
-    <string>HabitKit uses motion data to count your steps and detect physical activity so exercise habits can be completed automatically.</string>
+    <string>HabitNook uses motion data to count your steps and detect physical activity so exercise habits can be completed automatically.</string>
 
     <!-- NFC — habit tag read/write (§8.34) -->
     <key>NFCReaderUsageDescription</key>
-    <string>HabitKit can read and write NFC stickers so tapping a tag instantly logs the linked habit.</string>
+    <string>HabitNook can read and write NFC stickers so tapping a tag instantly logs the linked habit.</string>
 
     <!-- Photo Library — completion photo attachment -->
     <key>NSPhotoLibraryUsageDescription</key>
-    <string>HabitKit accesses your photo library so you can attach a photo to a habit completion.</string>
+    <string>HabitNook accesses your photo library so you can attach a photo to a habit completion.</string>
 
     <key>NSPhotoLibraryAddUsageDescription</key>
-    <string>HabitKit can save annotated completion photos to your photo library.</string>
+    <string>HabitNook can save annotated completion photos to your photo library.</string>
 
     <!-- Siri / App Intents — Siri shortcut phrases (§8.3) -->
     <key>NSSiriUsageDescription</key>
-    <string>HabitKit works with Siri so you can log habits, check your streak, and get your daily summary without opening the app.</string>
+    <string>HabitNook works with Siri so you can log habits, check your streak, and get your daily summary without opening the app.</string>
 
     <!-- Speech Recognition — not used; omitted intentionally -->
 
@@ -387,7 +387,7 @@
     <!-- Allows the system to call AppIntents from Shortcuts and Siri -->
     <key>NSAppTransportSecurity</key>
     <dict>
-        <!-- All HabitKit network calls use HTTPS; no exceptions required -->
+        <!-- All HabitNook network calls use HTTPS; no exceptions required -->
         <key>NSAllowsArbitraryLoads</key>
         <false/>
     </dict>
@@ -403,7 +403,7 @@
         <integer>524288</integer><!-- 512 KB for initial themes.json -->
         <key>BADownloadDomainAllowList</key>
         <array>
-            <string>habitkit.app</string>
+            <string>habitnook.app</string>
         </array>
     </dict>
 
@@ -455,8 +455,8 @@
 
     <key>UIActivityTypes</key>
     <array>
-        <string>com.habitkit.activity.viewHabit</string>
-        <string>com.habitkit.activity.liveSession</string>
+        <string>com.habitnook.activity.viewHabit</string>
+        <string>com.habitnook.activity.liveSession</string>
     </array>
 
 </dict>

@@ -13,10 +13,10 @@ public final class HandoffManager: NSObject, Sendable {
     // MARK: - Activity types
 
     /// Unique activity type for viewing a specific habit's detail screen.
-    public static let viewHabitActivityType = "com.habitkit.activity.viewHabit"
+    public static let viewHabitActivityType = "com.habitnook.activity.viewHabit"
 
     /// Unique activity type for a live timed session.
-    public static let liveSessionActivityType = "com.habitkit.activity.liveSession"
+    public static let liveSessionActivityType = "com.habitnook.activity.liveSession"
 
     // MARK: - Donation
 

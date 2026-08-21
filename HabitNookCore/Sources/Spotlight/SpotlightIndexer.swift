@@ -16,8 +16,8 @@ public actor SpotlightIndexer {
 
     // MARK: - Domain identifiers
 
-    private static let habitDomain = "com.habitkit.spotlight.habit"
-    private static let completionDomain = "com.habitkit.spotlight.completion"
+    private static let habitDomain = "com.habitnook.spotlight.habit"
+    private static let completionDomain = "com.habitnook.spotlight.completion"
 
     // MARK: - Init
 
@@ -33,7 +33,7 @@ public actor SpotlightIndexer {
             let attribute = CSSearchableItemAttributeSet(contentType: .content)
             attribute.title = habit.name
             attribute.contentDescription = "Habit · \(habit.streak) day streak"
-            attribute.keywords = ["habit", "habitkit", habit.name]
+            attribute.keywords = ["habit", "habitnook", habit.name]
             attribute.relatedUniqueIdentifier = habit.id.uuidString
 
             let item = CSSearchableItem(
@@ -78,7 +78,7 @@ public actor SpotlightIndexer {
         attribute.title = habitName
         attribute.contentDescription = note
         attribute.contentCreationDate = completedAt
-        attribute.keywords = ["habitkit", "completion", habitName]
+        attribute.keywords = ["habitnook", "completion", habitName]
 
         let item = CSSearchableItem(
             uniqueIdentifier: "completion.\(completionID.uuidString)",

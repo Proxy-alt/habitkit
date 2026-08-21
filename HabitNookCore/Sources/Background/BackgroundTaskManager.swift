@@ -7,10 +7,10 @@ import Foundation
 /// background tasks for HabitNook (§8.19).
 ///
 /// Two tasks are registered:
-/// - **Archive export** (`com.habitkit.bg.archiveExport`): A
+/// - **Archive export** (`com.habitnook.bg.archiveExport`): A
 ///   `BGContinuedProcessingTask` that runs a full archive export after the
 ///   user starts the process in the foreground.
-/// - **HealthKit backfill** (`com.habitkit.bg.healthBackfill`): A
+/// - **HealthKit backfill** (`com.habitnook.bg.healthBackfill`): A
 ///   `BGProcessingTask` that writes queued HealthKit samples that could not
 ///   be written while the app was in the foreground.
 public final class BackgroundTaskManager: Sendable {
@@ -21,8 +21,8 @@ public final class BackgroundTaskManager: Sendable {
 
     // MARK: - Task identifiers
 
-    public static let archiveExportIdentifier = "com.habitkit.bg.archiveExport"
-    public static let healthBackfillIdentifier = "com.habitkit.bg.healthBackfill"
+    public static let archiveExportIdentifier = "com.habitnook.bg.archiveExport"
+    public static let healthBackfillIdentifier = "com.habitnook.bg.healthBackfill"
 
     // MARK: - Init
 
@@ -115,10 +115,10 @@ public final class BackgroundTaskManager: Sendable {
 public extension Notification.Name {
     /// Posted when the system wakes the app to run an archive export.
     static let backgroundArchiveExportRequested = Notification.Name(
-        "com.habitkit.backgroundArchiveExportRequested"
+        "com.habitnook.backgroundArchiveExportRequested"
     )
     /// Posted when the system wakes the app to backfill HealthKit data.
     static let backgroundHealthBackfillRequested = Notification.Name(
-        "com.habitkit.backgroundHealthBackfillRequested"
+        "com.habitnook.backgroundHealthBackfillRequested"
     )
 }

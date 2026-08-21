@@ -5,7 +5,7 @@
 .swiftpm/
 
 # xcodegen — regenerate from project.yml via `xcodegen generate`
-HabitKit.xcodeproj/
+HabitNook.xcodeproj/
 
 # Xcode
 xcuserdata/

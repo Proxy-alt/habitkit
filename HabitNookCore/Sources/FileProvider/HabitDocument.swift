@@ -5,7 +5,7 @@ import UniformTypeIdentifiers
 
 /// A `FileDocument`-compatible wrapper for the `.habitarchive` file type (§8.15).
 ///
-/// HabitNook declares the `com.habitkit.habitarchive` UTType so archives appear
+/// HabitNook declares the `com.habitnook.habitarchive` UTType so archives appear
 /// as first-class documents in Files.app and can be shared via the share sheet.
 /// The document wraps a JSON-encoded `ArchivePayload`.
 public struct HabitDocument: Sendable {
@@ -13,7 +13,7 @@ public struct HabitDocument: Sendable {
     // MARK: - UTType
 
     /// The uniform type identifier for HabitNook archive files.
-    public static let archiveType = UTType(exportedAs: "com.habitkit.habitarchive")
+    public static let archiveType = UTType(exportedAs: "com.habitnook.habitarchive")
 
     // MARK: - Properties
 

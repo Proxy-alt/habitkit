@@ -6,7 +6,7 @@ import SharedWithYou
 /// Surfaces habit templates shared via iMessage in the "Shared With You"
 /// shelf (§8.32).
 ///
-/// When someone shares a habitkit:// deep link via iMessage, the link appears
+/// When someone shares a habitnook:// deep link via iMessage, the link appears
 /// in the app's "Shared With You" section using `SWHighlightCenter`.
 public final class SharedWithYouCoordinator: NSObject, SWHighlightCenterDelegate, ObservableObject, @unchecked Sendable {
 
@@ -33,7 +33,7 @@ public final class SharedWithYouCoordinator: NSObject, SWHighlightCenterDelegate
 
     public func highlightCenterHighlightsDidChange(_ highlightCenter: SWHighlightCenter) {
         nonisolated(unsafe) let currentHighlights = highlightCenter.highlights.filter { highlight in
-            highlight.url.scheme == "habitkit"
+            highlight.url.scheme == "habitnook"
         }
         Task { @MainActor in
             self.highlights = currentHighlights
@@ -42,12 +42,12 @@ public final class SharedWithYouCoordinator: NSObject, SWHighlightCenterDelegate
 
     // MARK: - Handling deep links
 
-    /// Processes a `habitkit://` URL from a Shared With You highlight.
+    /// Processes a `habitnook://` URL from a Shared With You highlight.
     ///
     /// - Parameter url: The URL from the highlight.
     /// - Returns: A `SharedWithYouDeepLink` if the URL is a valid HabitNook link.
     public static func deepLink(from url: URL) -> SharedWithYouDeepLink? {
-        guard url.scheme == "habitkit" else { return nil }
+        guard url.scheme == "habitnook" else { return nil }
 
         switch url.host {
         case "template":
@@ -67,7 +67,7 @@ public final class SharedWithYouCoordinator: NSObject, SWHighlightCenterDelegate
 
 // MARK: - SharedWithYouDeepLink
 
-/// The destination described by a Shared With You habitkit:// URL.
+/// The destination described by a Shared With You habitnook:// URL.
 public enum SharedWithYouDeepLink: Sendable {
     /// Open a habit template from the library.
     case template(id: String)

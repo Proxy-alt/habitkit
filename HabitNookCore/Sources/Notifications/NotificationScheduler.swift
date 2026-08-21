@@ -97,14 +97,14 @@ public actor NotificationScheduler {
         let pending = await center.pendingNotificationRequests()
         let habitKitIDs = pending
             .map(\.identifier)
-            .filter { $0.hasPrefix("habitkit.reminder.") }
+            .filter { $0.hasPrefix("habitnook.reminder.") }
         center.removePendingNotificationRequests(withIdentifiers: habitKitIDs)
     }
 
     // MARK: - Private helpers
 
     private func notificationID(for habitID: UUID) -> String {
-        "habitkit.reminder.\(habitID.uuidString)"
+        "habitnook.reminder.\(habitID.uuidString)"
     }
 
     private func registerCategories() {

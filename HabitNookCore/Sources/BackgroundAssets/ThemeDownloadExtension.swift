@@ -15,7 +15,7 @@ public final class ThemeDownloadExtension: BADownloaderExtension {
 
     /// URL of the hosted themes manifest.
     private static let themesManifestURL = URL(
-        string: "https://habitkit.app/assets/themes.json"
+        string: "https://habitnook.app/assets/themes.json"
     )
 
     // MARK: - Init
@@ -31,7 +31,7 @@ public final class ThemeDownloadExtension: BADownloaderExtension {
     ) -> Set<BADownload> {
         guard let url = Self.themesManifestURL else { return [] }
         let download = BAURLDownload(
-            identifier: "com.habitkit.themes.json",
+            identifier: "com.habitnook.themes.json",
             request: URLRequest(url: url),
             essential: false,
             fileSize: 65_536,

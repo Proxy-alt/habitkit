@@ -5,7 +5,7 @@ import UIKit
 
 /// Donates and receives NSUserActivity continuations for Handoff (§8.11).
 ///
-/// HabitKit donates activities when the user views a specific habit or starts
+/// HabitNook donates activities when the user views a specific habit or starts
 /// a timed session. Receiving the activity on another device restores the
 /// same screen via deep-link.
 public final class HandoffManager: NSObject, Sendable {

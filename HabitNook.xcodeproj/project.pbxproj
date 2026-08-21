@@ -1,0 +1,762 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 77;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		0ECFD03C20096991D397315B /* LiveSessionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B7D2B3D950F563E3441C6444 /* LiveSessionView.swift */; };
+		1C1379C226E4736A4D29CD64 /* AppNavigator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86632886671DBD8960FE148E /* AppNavigator.swift */; };
+		22A6AD5E03974C883029C9B4 /* TodayViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C6C64133780EA1103C4F2293 /* TodayViewModel.swift */; };
+		2E1A9DE064C97CA7BC5D61A0 /* HabitsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04F3A08D2A1C733EFE653E84 /* HabitsViewModel.swift */; };
+		3001871127044065BCC28CAF /* HabitRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 473B5FAB40A1FCC903860C42 /* HabitRow.swift */; };
+		40AED35D8FB98C20491179A4 /* HabitDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A19DF29D002986FE2DA776A1 /* HabitDetailView.swift */; };
+		47CE252B41B55412146EF43C /* HabitsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C943A8CDDAA3C842CF6B12C /* HabitsView.swift */; };
+		51F85BC6A9BD1D98F73B16CC /* TranslationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 69C4D7A0E5E6AB27C174DC8A /* TranslationService.swift */; };
+		536C0335BA96F8CC2E2C8E05 /* TodayView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 496C2E7CBA8C55D0940C7FB3 /* TodayView.swift */; };
+		577E6CCBEFD16FB449F45061 /* HabitNookUI in Frameworks */ = {isa = PBXBuildFile; productRef = 59B96E624BCD8CE5BDDDC5F9 /* HabitNookUI */; };
+		57BA430DB1FC04D021FA0EA8 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 478C1607AB59F647026FF784 /* ContentView.swift */; };
+		5ED5A03EEB0A3EA7EC9CDBE7 /* SharedWithYouCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = E73BE2B2C106BB26FEAEA5E8 /* SharedWithYouCoordinator.swift */; };
+		674270759FB5AC496382BE1E /* HabitNookApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = F12AF6AC65653A790F86DA61 /* HabitNookApp.swift */; };
+		81FCF4A042BDF64C8EBDCAA1 /* HabitNookCore in Frameworks */ = {isa = PBXBuildFile; productRef = 6217452F8B1A26C265EB5E50 /* HabitNookCore */; };
+		911858DDDDEF0CC6BCFC9BF8 /* HabitLinkPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73AFE26B86F061FCD066255D /* HabitLinkPresenter.swift */; };
+		96E46BD58506F042F9FAE99E /* InAppAlarmMonitor.swift in Sources */ = {isa = PBXBuildFile; fileRef = ACEEA68C155958519DAC84DA /* InAppAlarmMonitor.swift */; };
+		99C9A711D9D206913D90EB8C /* AddHabitView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 06C5A0D0AB17A2098620B31C /* AddHabitView.swift */; };
+		A4D3185592BAD9EEDE811373 /* HeatmapView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7A0A50B503E0760EE5152EC /* HeatmapView.swift */; };
+		A8DBB15CC67E354EDD560285 /* HabitNookIntents in Frameworks */ = {isa = PBXBuildFile; productRef = 68410699DD68755BB1DCC517 /* HabitNookIntents */; };
+		A8F31D429127ACDC77EA76F4 /* JournalingSuggestionsCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 69332541BD55290FEF1E7D2B /* JournalingSuggestionsCoordinator.swift */; };
+		AA4DD07A3E5A970958D418A3 /* HabitNookUI in Frameworks */ = {isa = PBXBuildFile; productRef = 9EAEF156F4457DF6099C0F52 /* HabitNookUI */; };
+		AB1CE1CF3656B31C0E7BEBF2 /* HabitNookTips.swift in Sources */ = {isa = PBXBuildFile; fileRef = 197B63816F95C99AC6F629F5 /* HabitNookTips.swift */; };
+		B0630AF0252501EFCEC5A0F6 /* HabitNookWidgetsBundle.swift in Sources */ = {isa = PBXBuildFile; fileRef = D77682873A00EA12C5380E28 /* HabitNookWidgetsBundle.swift */; };
+		B21EA85CDA763C16FDB3ED0A /* HandoffManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB8BCCAF34FD526439A03D9D /* HandoffManager.swift */; };
+		B979089274CBFED106E57F15 /* HabitLiveActivityWidget.swift in Sources */ = {isa = PBXBuildFile; fileRef = F342E441B1E7D0690313C876 /* HabitLiveActivityWidget.swift */; };
+		BEDA55189AE4AB11B28B290E /* HabitNookWidgets.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = F2B286183E57CD5F0D4926AD /* HabitNookWidgets.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		C815B4454EABB8CD25A7B962 /* AnalyticsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA715C43D431DAD0EDD52DD7 /* AnalyticsView.swift */; };
+		C8B7CB82D819C17498B386E1 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F35857FAB67FE82B1FF448A /* SettingsView.swift */; };
+		CF52ADB57A91EFFE7BD836CF /* AnalyticsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A76EDD3BB25795D295245C16 /* AnalyticsViewModel.swift */; };
+		D110E893FB12F5862587C213 /* HabitNookCore in Frameworks */ = {isa = PBXBuildFile; productRef = 87506979D7320B65302D8AA3 /* HabitNookCore */; };
+		ECA67CD061E30A55407EE4E4 /* ThemePickerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8D99056758715AD4F0E0AFA /* ThemePickerView.swift */; };
+		ED67EDE5619B6FD17657B1A4 /* CarPlaySceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFFCBAF34206193A0B77BDB8 /* CarPlaySceneDelegate.swift */; };
+		F059DFBA31A747B397B06182 /* HabitWidget.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67E2E0BA9680811E41BE36A8 /* HabitWidget.swift */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		9F85DD3BEA4D598AA2A745DB /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 8DA355CD31ADACCADDA7BF20 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 8469D0CEDA8837BB8FE3C4E2;
+			remoteInfo = HabitNookWidgets;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		E0EE19620D2CC3571B4542BE /* Embed Foundation Extensions */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 13;
+			files = (
+				BEDA55189AE4AB11B28B290E /* HabitNookWidgets.appex in Embed Foundation Extensions */,
+			);
+			name = "Embed Foundation Extensions";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
+/* Begin PBXFileReference section */
+		04F3A08D2A1C733EFE653E84 /* HabitsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HabitsViewModel.swift; sourceTree = "<group>"; };
+		06C5A0D0AB17A2098620B31C /* AddHabitView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddHabitView.swift; sourceTree = "<group>"; };
+		0DD40F2A12F3C214F22D989B /* HabitNook.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = HabitNook.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		197B63816F95C99AC6F629F5 /* HabitNookTips.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HabitNookTips.swift; sourceTree = "<group>"; };
+		473B5FAB40A1FCC903860C42 /* HabitRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HabitRow.swift; sourceTree = "<group>"; };
+		478C1607AB59F647026FF784 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
+		496C2E7CBA8C55D0940C7FB3 /* TodayView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodayView.swift; sourceTree = "<group>"; };
+		67E2E0BA9680811E41BE36A8 /* HabitWidget.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HabitWidget.swift; sourceTree = "<group>"; };
+		69332541BD55290FEF1E7D2B /* JournalingSuggestionsCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JournalingSuggestionsCoordinator.swift; sourceTree = "<group>"; };
+		69C4D7A0E5E6AB27C174DC8A /* TranslationService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TranslationService.swift; sourceTree = "<group>"; };
+		6F35857FAB67FE82B1FF448A /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
+		73AFE26B86F061FCD066255D /* HabitLinkPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HabitLinkPresenter.swift; sourceTree = "<group>"; };
+		7C943A8CDDAA3C842CF6B12C /* HabitsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HabitsView.swift; sourceTree = "<group>"; };
+		86632886671DBD8960FE148E /* AppNavigator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppNavigator.swift; sourceTree = "<group>"; };
+		A19DF29D002986FE2DA776A1 /* HabitDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HabitDetailView.swift; sourceTree = "<group>"; };
+		A76EDD3BB25795D295245C16 /* AnalyticsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnalyticsViewModel.swift; sourceTree = "<group>"; };
+		AA715C43D431DAD0EDD52DD7 /* AnalyticsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnalyticsView.swift; sourceTree = "<group>"; };
+		AB8BCCAF34FD526439A03D9D /* HandoffManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HandoffManager.swift; sourceTree = "<group>"; };
+		ACEEA68C155958519DAC84DA /* InAppAlarmMonitor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InAppAlarmMonitor.swift; sourceTree = "<group>"; };
+		AFFCBAF34206193A0B77BDB8 /* CarPlaySceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CarPlaySceneDelegate.swift; sourceTree = "<group>"; };
+		B7D2B3D950F563E3441C6444 /* LiveSessionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LiveSessionView.swift; sourceTree = "<group>"; };
+		BC8EEC36E113B1D1430A26FF /* habitkit */ = {isa = PBXFileReference; lastKnownFileType = folder; name = habitkit; path = .; sourceTree = SOURCE_ROOT; };
+		C6C64133780EA1103C4F2293 /* TodayViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodayViewModel.swift; sourceTree = "<group>"; };
+		D77682873A00EA12C5380E28 /* HabitNookWidgetsBundle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HabitNookWidgetsBundle.swift; sourceTree = "<group>"; };
+		D7A0A50B503E0760EE5152EC /* HeatmapView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HeatmapView.swift; sourceTree = "<group>"; };
+		E73BE2B2C106BB26FEAEA5E8 /* SharedWithYouCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SharedWithYouCoordinator.swift; sourceTree = "<group>"; };
+		E8D99056758715AD4F0E0AFA /* ThemePickerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThemePickerView.swift; sourceTree = "<group>"; };
+		F12AF6AC65653A790F86DA61 /* HabitNookApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HabitNookApp.swift; sourceTree = "<group>"; };
+		F2B286183E57CD5F0D4926AD /* HabitNookWidgets.appex */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = "wrapper.app-extension"; path = HabitNookWidgets.appex; sourceTree = BUILT_PRODUCTS_DIR; };
+		F342E441B1E7D0690313C876 /* HabitLiveActivityWidget.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HabitLiveActivityWidget.swift; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		604CF55064E576725187446A /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				D110E893FB12F5862587C213 /* HabitNookCore in Frameworks */,
+				577E6CCBEFD16FB449F45061 /* HabitNookUI in Frameworks */,
+				A8DBB15CC67E354EDD560285 /* HabitNookIntents in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		B7A5D48826FFC2EDE45C8FEF /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				81FCF4A042BDF64C8EBDCAA1 /* HabitNookCore in Frameworks */,
+				AA4DD07A3E5A970958D418A3 /* HabitNookUI in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		124540FC1FBED694FEA9C0B7 /* App */ = {
+			isa = PBXGroup;
+			children = (
+				B3A46F07FAF92EBC50BB4934 /* Sources */,
+			);
+			path = App;
+			sourceTree = "<group>";
+		};
+		184ACE6AC2967AB92CA7A828 /* Settings */ = {
+			isa = PBXGroup;
+			children = (
+				6F35857FAB67FE82B1FF448A /* SettingsView.swift */,
+				E8D99056758715AD4F0E0AFA /* ThemePickerView.swift */,
+			);
+			path = Settings;
+			sourceTree = "<group>";
+		};
+		287A1F7E13A7A04E47FF1A45 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				DDED27EB0DD3075FCF295777 /* Analytics */,
+				E306DA1E8F642D7BAFCFA417 /* Habits */,
+				BE5DB2E99E81E4448C234335 /* Live */,
+				184ACE6AC2967AB92CA7A828 /* Settings */,
+				993872A7B2E3947D98F7A1A5 /* Today */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		2D2E44330D95C7000337391C /* Sources */ = {
+			isa = PBXGroup;
+			children = (
+				F342E441B1E7D0690313C876 /* HabitLiveActivityWidget.swift */,
+				D77682873A00EA12C5380E28 /* HabitNookWidgetsBundle.swift */,
+			);
+			path = Sources;
+			sourceTree = "<group>";
+		};
+		51A193C920ABEBFE2752F640 /* Journaling */ = {
+			isa = PBXGroup;
+			children = (
+				69332541BD55290FEF1E7D2B /* JournalingSuggestionsCoordinator.swift */,
+			);
+			path = Journaling;
+			sourceTree = "<group>";
+		};
+		5D753225CDEAE5145D36D7D9 /* SharedWithYou */ = {
+			isa = PBXGroup;
+			children = (
+				E73BE2B2C106BB26FEAEA5E8 /* SharedWithYouCoordinator.swift */,
+			);
+			path = SharedWithYou;
+			sourceTree = "<group>";
+		};
+		6911D23DF104B24B20A55F9F /* Navigation */ = {
+			isa = PBXGroup;
+			children = (
+				86632886671DBD8960FE148E /* AppNavigator.swift */,
+			);
+			path = Navigation;
+			sourceTree = "<group>";
+		};
+		6DA59694B8AB82DDEDB51B57 /* Tips */ = {
+			isa = PBXGroup;
+			children = (
+				197B63816F95C99AC6F629F5 /* HabitNookTips.swift */,
+			);
+			path = Tips;
+			sourceTree = "<group>";
+		};
+		8DA24E0F12AF2959A179DCE1 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				0DD40F2A12F3C214F22D989B /* HabitNook.app */,
+				F2B286183E57CD5F0D4926AD /* HabitNookWidgets.appex */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		993872A7B2E3947D98F7A1A5 /* Today */ = {
+			isa = PBXGroup;
+			children = (
+				473B5FAB40A1FCC903860C42 /* HabitRow.swift */,
+				496C2E7CBA8C55D0940C7FB3 /* TodayView.swift */,
+				C6C64133780EA1103C4F2293 /* TodayViewModel.swift */,
+			);
+			path = Today;
+			sourceTree = "<group>";
+		};
+		9A286BEB39EECA59FB7E3BF2 /* LinkPresentation */ = {
+			isa = PBXGroup;
+			children = (
+				73AFE26B86F061FCD066255D /* HabitLinkPresenter.swift */,
+			);
+			path = LinkPresentation;
+			sourceTree = "<group>";
+		};
+		A4FF113040172F56D927350D /* Widgets */ = {
+			isa = PBXGroup;
+			children = (
+				67E2E0BA9680811E41BE36A8 /* HabitWidget.swift */,
+			);
+			path = Widgets;
+			sourceTree = "<group>";
+		};
+		ADF156D658703FA760A4469B /* Widgets */ = {
+			isa = PBXGroup;
+			children = (
+				2D2E44330D95C7000337391C /* Sources */,
+			);
+			path = Widgets;
+			sourceTree = "<group>";
+		};
+		B3A46F07FAF92EBC50BB4934 /* Sources */ = {
+			isa = PBXGroup;
+			children = (
+				478C1607AB59F647026FF784 /* ContentView.swift */,
+				F12AF6AC65653A790F86DA61 /* HabitNookApp.swift */,
+				F00E628361B7D5F9CB6C5131 /* Alarms */,
+				F9041CD736F83050E4B2A6EF /* CarPlay */,
+				B8E6EAB31E17C3D40511F18B /* Handoff */,
+				51A193C920ABEBFE2752F640 /* Journaling */,
+				9A286BEB39EECA59FB7E3BF2 /* LinkPresentation */,
+				6911D23DF104B24B20A55F9F /* Navigation */,
+				5D753225CDEAE5145D36D7D9 /* SharedWithYou */,
+				6DA59694B8AB82DDEDB51B57 /* Tips */,
+				C0AF992655F06AE2EEA9D141 /* Translation */,
+				287A1F7E13A7A04E47FF1A45 /* Views */,
+				A4FF113040172F56D927350D /* Widgets */,
+			);
+			path = Sources;
+			sourceTree = "<group>";
+		};
+		B8E6EAB31E17C3D40511F18B /* Handoff */ = {
+			isa = PBXGroup;
+			children = (
+				AB8BCCAF34FD526439A03D9D /* HandoffManager.swift */,
+			);
+			path = Handoff;
+			sourceTree = "<group>";
+		};
+		BE5DB2E99E81E4448C234335 /* Live */ = {
+			isa = PBXGroup;
+			children = (
+				B7D2B3D950F563E3441C6444 /* LiveSessionView.swift */,
+			);
+			path = Live;
+			sourceTree = "<group>";
+		};
+		C0AF992655F06AE2EEA9D141 /* Translation */ = {
+			isa = PBXGroup;
+			children = (
+				69C4D7A0E5E6AB27C174DC8A /* TranslationService.swift */,
+			);
+			path = Translation;
+			sourceTree = "<group>";
+		};
+		DDED27EB0DD3075FCF295777 /* Analytics */ = {
+			isa = PBXGroup;
+			children = (
+				AA715C43D431DAD0EDD52DD7 /* AnalyticsView.swift */,
+				A76EDD3BB25795D295245C16 /* AnalyticsViewModel.swift */,
+				D7A0A50B503E0760EE5152EC /* HeatmapView.swift */,
+			);
+			path = Analytics;
+			sourceTree = "<group>";
+		};
+		E306DA1E8F642D7BAFCFA417 /* Habits */ = {
+			isa = PBXGroup;
+			children = (
+				06C5A0D0AB17A2098620B31C /* AddHabitView.swift */,
+				A19DF29D002986FE2DA776A1 /* HabitDetailView.swift */,
+				7C943A8CDDAA3C842CF6B12C /* HabitsView.swift */,
+				04F3A08D2A1C733EFE653E84 /* HabitsViewModel.swift */,
+			);
+			path = Habits;
+			sourceTree = "<group>";
+		};
+		EAACE41356B4BFE2FEF4D85E = {
+			isa = PBXGroup;
+			children = (
+				124540FC1FBED694FEA9C0B7 /* App */,
+				EE959B7D510D8DFD298F7347 /* Packages */,
+				ADF156D658703FA760A4469B /* Widgets */,
+				8DA24E0F12AF2959A179DCE1 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		EE959B7D510D8DFD298F7347 /* Packages */ = {
+			isa = PBXGroup;
+			children = (
+				BC8EEC36E113B1D1430A26FF /* habitkit */,
+			);
+			name = Packages;
+			sourceTree = "<group>";
+		};
+		F00E628361B7D5F9CB6C5131 /* Alarms */ = {
+			isa = PBXGroup;
+			children = (
+				ACEEA68C155958519DAC84DA /* InAppAlarmMonitor.swift */,
+			);
+			path = Alarms;
+			sourceTree = "<group>";
+		};
+		F9041CD736F83050E4B2A6EF /* CarPlay */ = {
+			isa = PBXGroup;
+			children = (
+				AFFCBAF34206193A0B77BDB8 /* CarPlaySceneDelegate.swift */,
+			);
+			path = CarPlay;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		683B4F249F78124846CE9D82 /* HabitNook */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 88D6F38FB8EA2679B659B3E8 /* Build configuration list for PBXNativeTarget "HabitNook" */;
+			buildPhases = (
+				AB33A3E69548704A040D385C /* Sources */,
+				604CF55064E576725187446A /* Frameworks */,
+				E0EE19620D2CC3571B4542BE /* Embed Foundation Extensions */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				BA92286DCC1A968443B668A9 /* PBXTargetDependency */,
+			);
+			name = HabitNook;
+			packageProductDependencies = (
+				87506979D7320B65302D8AA3 /* HabitNookCore */,
+				59B96E624BCD8CE5BDDDC5F9 /* HabitNookUI */,
+				68410699DD68755BB1DCC517 /* HabitNookIntents */,
+			);
+			productName = HabitNook;
+			productReference = 0DD40F2A12F3C214F22D989B /* HabitNook.app */;
+			productType = "com.apple.product-type.application";
+		};
+		8469D0CEDA8837BB8FE3C4E2 /* HabitNookWidgets */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 5B04582337750F408E3F0A85 /* Build configuration list for PBXNativeTarget "HabitNookWidgets" */;
+			buildPhases = (
+				422170BA2E749FF7B0B730DD /* Sources */,
+				B7A5D48826FFC2EDE45C8FEF /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = HabitNookWidgets;
+			packageProductDependencies = (
+				6217452F8B1A26C265EB5E50 /* HabitNookCore */,
+				9EAEF156F4457DF6099C0F52 /* HabitNookUI */,
+			);
+			productName = HabitNookWidgets;
+			productReference = F2B286183E57CD5F0D4926AD /* HabitNookWidgets.appex */;
+			productType = "com.apple.product-type.app-extension";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		8DA355CD31ADACCADDA7BF20 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = YES;
+				LastUpgradeCheck = 1430;
+				TargetAttributes = {
+					683B4F249F78124846CE9D82 = {
+						ProvisioningStyle = Automatic;
+					};
+					8469D0CEDA8837BB8FE3C4E2 = {
+						ProvisioningStyle = Automatic;
+					};
+				};
+			};
+			buildConfigurationList = 68B2F221FE3F531884D03415 /* Build configuration list for PBXProject "HabitNook" */;
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				Base,
+				en,
+			);
+			mainGroup = EAACE41356B4BFE2FEF4D85E;
+			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				114616F381031AD846E85F27 /* XCLocalSwiftPackageReference "." */,
+			);
+			preferredProjectObjectVersion = 77;
+			productRefGroup = 8DA24E0F12AF2959A179DCE1 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				683B4F249F78124846CE9D82 /* HabitNook */,
+				8469D0CEDA8837BB8FE3C4E2 /* HabitNookWidgets */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXSourcesBuildPhase section */
+		422170BA2E749FF7B0B730DD /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				B979089274CBFED106E57F15 /* HabitLiveActivityWidget.swift in Sources */,
+				B0630AF0252501EFCEC5A0F6 /* HabitNookWidgetsBundle.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		AB33A3E69548704A040D385C /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				99C9A711D9D206913D90EB8C /* AddHabitView.swift in Sources */,
+				C815B4454EABB8CD25A7B962 /* AnalyticsView.swift in Sources */,
+				CF52ADB57A91EFFE7BD836CF /* AnalyticsViewModel.swift in Sources */,
+				1C1379C226E4736A4D29CD64 /* AppNavigator.swift in Sources */,
+				ED67EDE5619B6FD17657B1A4 /* CarPlaySceneDelegate.swift in Sources */,
+				57BA430DB1FC04D021FA0EA8 /* ContentView.swift in Sources */,
+				40AED35D8FB98C20491179A4 /* HabitDetailView.swift in Sources */,
+				911858DDDDEF0CC6BCFC9BF8 /* HabitLinkPresenter.swift in Sources */,
+				674270759FB5AC496382BE1E /* HabitNookApp.swift in Sources */,
+				AB1CE1CF3656B31C0E7BEBF2 /* HabitNookTips.swift in Sources */,
+				3001871127044065BCC28CAF /* HabitRow.swift in Sources */,
+				F059DFBA31A747B397B06182 /* HabitWidget.swift in Sources */,
+				47CE252B41B55412146EF43C /* HabitsView.swift in Sources */,
+				2E1A9DE064C97CA7BC5D61A0 /* HabitsViewModel.swift in Sources */,
+				B21EA85CDA763C16FDB3ED0A /* HandoffManager.swift in Sources */,
+				A4D3185592BAD9EEDE811373 /* HeatmapView.swift in Sources */,
+				96E46BD58506F042F9FAE99E /* InAppAlarmMonitor.swift in Sources */,
+				A8F31D429127ACDC77EA76F4 /* JournalingSuggestionsCoordinator.swift in Sources */,
+				0ECFD03C20096991D397315B /* LiveSessionView.swift in Sources */,
+				C8B7CB82D819C17498B386E1 /* SettingsView.swift in Sources */,
+				5ED5A03EEB0A3EA7EC9CDBE7 /* SharedWithYouCoordinator.swift in Sources */,
+				ECA67CD061E30A55407EE4E4 /* ThemePickerView.swift in Sources */,
+				536C0335BA96F8CC2E2C8E05 /* TodayView.swift in Sources */,
+				22A6AD5E03974C883029C9B4 /* TodayViewModel.swift in Sources */,
+				51F85BC6A9BD1D98F73B16CC /* TranslationService.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		BA92286DCC1A968443B668A9 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 8469D0CEDA8837BB8FE3C4E2 /* HabitNookWidgets */;
+			targetProxy = 9F85DD3BEA4D598AA2A745DB /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin XCBuildConfiguration section */
+		01EFD02B45E0E9AD9A9AB184 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGNING_ALLOWED = NO;
+				CODE_SIGNING_REQUIRED = NO;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				ENABLE_USER_SCRIPT_SANDBOXING = NO;
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = Widgets/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 26.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.habitnook.app.widgets;
+				PRODUCT_MODULE_NAME = HabitNookWidgets;
+				SDKROOT = iphoneos;
+				SWIFT_VERSION = 6.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		158D4D1078B687878150AF02 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGNING_ALLOWED = NO;
+				CODE_SIGNING_REQUIRED = NO;
+				CODE_SIGN_ENTITLEMENTS = App/Sources/HabitNook.entitlements;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				ENABLE_USER_SCRIPT_SANDBOXING = NO;
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = App/Sources/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 26.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.habitnook.app;
+				PRODUCT_MODULE_NAME = HabitNook;
+				SDKROOT = iphoneos;
+				SWIFT_VERSION = 6.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		57652466FD5A9E82AD307DC8 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGNING_ALLOWED = NO;
+				CODE_SIGNING_REQUIRED = NO;
+				CODE_SIGN_ENTITLEMENTS = App/Sources/HabitNook.entitlements;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				ENABLE_USER_SCRIPT_SANDBOXING = NO;
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = App/Sources/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 26.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.habitnook.app;
+				PRODUCT_MODULE_NAME = HabitNook;
+				SDKROOT = iphoneos;
+				SWIFT_VERSION = 6.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		8BEE80073EB17FCE28E73125 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGNING_ALLOWED = NO;
+				CODE_SIGNING_REQUIRED = NO;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				ENABLE_USER_SCRIPT_SANDBOXING = NO;
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = Widgets/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 26.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.habitnook.app.widgets;
+				PRODUCT_MODULE_NAME = HabitNookWidgets;
+				SDKROOT = iphoneos;
+				SWIFT_VERSION = 6.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		B878F9D114206221D05B55C7 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"$(inherited)",
+					"DEBUG=1",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 26.0;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
+			};
+			name = Debug;
+		};
+		C72D11793439B7395A45A39F /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 26.0;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				SWIFT_VERSION = 5.0;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		5B04582337750F408E3F0A85 /* Build configuration list for PBXNativeTarget "HabitNookWidgets" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				8BEE80073EB17FCE28E73125 /* Debug */,
+				01EFD02B45E0E9AD9A9AB184 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		68B2F221FE3F531884D03415 /* Build configuration list for PBXProject "HabitNook" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				B878F9D114206221D05B55C7 /* Debug */,
+				C72D11793439B7395A45A39F /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		88D6F38FB8EA2679B659B3E8 /* Build configuration list for PBXNativeTarget "HabitNook" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				57652466FD5A9E82AD307DC8 /* Debug */,
+				158D4D1078B687878150AF02 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+/* End XCConfigurationList section */
+
+/* Begin XCLocalSwiftPackageReference section */
+		114616F381031AD846E85F27 /* XCLocalSwiftPackageReference "." */ = {
+			isa = XCLocalSwiftPackageReference;
+			relativePath = .;
+		};
+/* End XCLocalSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		59B96E624BCD8CE5BDDDC5F9 /* HabitNookUI */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = HabitNookUI;
+		};
+		6217452F8B1A26C265EB5E50 /* HabitNookCore */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = HabitNookCore;
+		};
+		68410699DD68755BB1DCC517 /* HabitNookIntents */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = HabitNookIntents;
+		};
+		87506979D7320B65302D8AA3 /* HabitNookCore */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = HabitNookCore;
+		};
+		9EAEF156F4457DF6099C0F52 /* HabitNookUI */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = HabitNookUI;
+		};
+/* End XCSwiftPackageProductDependency section */
+	};
+	rootObject = 8DA355CD31ADACCADDA7BF20 /* Project object */;
+}

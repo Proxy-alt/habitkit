@@ -2,8 +2,8 @@ import WidgetKit
 import SwiftUI
 import AppIntents
 import SwiftData
-import HabitKitCore
-import HabitKitUI
+import HabitNookCore
+import HabitNookUI
 
 // MARK: - Widget Entry
 
@@ -13,7 +13,7 @@ struct HabitWidgetEntry: TimelineEntry {
     let totalCount: Int
     let nextIncomplete: String?
     let currentStreak: Int
-    let theme: HKTheme
+    let theme: NookTheme
 }
 
 // MARK: - Intent Configuration
@@ -30,7 +30,7 @@ struct HabitWidgetProvider: AppIntentTimelineProvider {
     typealias Entry = HabitWidgetEntry
 
     func placeholder(in context: Context) -> HabitWidgetEntry {
-        .init(date: .now, completedCount: 3, totalCount: 5, nextIncomplete: "Meditation", currentStreak: 7, theme: HKThemeManager().current)
+        .init(date: .now, completedCount: 3, totalCount: 5, nextIncomplete: "Meditation", currentStreak: 7, theme: NookThemeManager().current)
     }
 
     func snapshot(for configuration: HabitWidgetConfigurationIntent, in context: Context) async -> HabitWidgetEntry {
@@ -44,7 +44,7 @@ struct HabitWidgetProvider: AppIntentTimelineProvider {
     }
 
     private func makeEntry() async -> HabitWidgetEntry {
-        let themes = HKThemeManager()
+        let themes = NookThemeManager()
         // In a real extension, load from shared ModelContainer
         return .init(date: .now, completedCount: 0, totalCount: 0, nextIncomplete: nil, currentStreak: 0, theme: themes.current)
     }
@@ -65,18 +65,18 @@ struct HabitWidgetSmallView: View {
             entry.theme.baseColor
 
             VStack(spacing: 4) {
-                HKProgressRing(progress: progress, lineWidth: 8, size: 70) {
+                NookProgressRing(progress: progress, lineWidth: 8, size: 70) {
                     VStack(spacing: 0) {
                         Text("\(entry.completedCount)")
-                            .font(.hkTitle)
+                            .font(.nookTitle)
                             .foregroundStyle(entry.theme.textColor)
                         Text("/ \(entry.totalCount)")
-                            .font(.hkCaption)
+                            .font(.nookCaption)
                             .foregroundStyle(entry.theme.subtextColor)
                     }
                 }
                 Text("Today")
-                    .font(.hkCaption)
+                    .font(.nookCaption)
                     .foregroundStyle(entry.theme.subtextColor)
             }
         }
@@ -96,21 +96,21 @@ struct HabitWidgetMediumView: View {
             entry.theme.baseColor
 
             HStack(spacing: 16) {
-                HKProgressRing(progress: progress, lineWidth: 8, size: 80) {
+                NookProgressRing(progress: progress, lineWidth: 8, size: 80) {
                     VStack(spacing: 0) {
                         Text("\(Int(progress * 100))%")
-                            .font(.hkHeadline)
+                            .font(.nookHeadline)
                             .foregroundStyle(entry.theme.textColor)
                     }
                 }
 
                 VStack(alignment: .leading, spacing: 8) {
                     Text("Today")
-                        .font(.hkHeadline)
+                        .font(.nookHeadline)
                         .foregroundStyle(entry.theme.textColor)
 
                     Text("\(entry.completedCount) of \(entry.totalCount) done")
-                        .font(.hkBody)
+                        .font(.nookBody)
                         .foregroundStyle(entry.theme.subtextColor)
 
                     if let next = entry.nextIncomplete {
@@ -118,7 +118,7 @@ struct HabitWidgetMediumView: View {
                             Image(systemName: "chevron.right.circle.fill")
                                 .foregroundStyle(entry.theme.primaryColor)
                             Text(next)
-                                .font(.hkBody)
+                                .font(.nookBody)
                                 .foregroundStyle(entry.theme.textColor)
                                 .lineLimit(1)
                         }
@@ -128,7 +128,7 @@ struct HabitWidgetMediumView: View {
                         Image(systemName: "flame.fill")
                             .foregroundStyle(entry.theme.warningColor)
                         Text("\(entry.currentStreak) day streak")
-                            .font(.hkCaption)
+                            .font(.nookCaption)
                             .foregroundStyle(entry.theme.subtextColor)
                     }
                 }
@@ -165,7 +165,7 @@ struct HabitWidgetLockScreenRectangular: View {
         HStack {
             Image(systemName: "checkmark.circle.fill")
             Text("\(entry.completedCount) of \(entry.totalCount) habits done")
-                .font(.hkCaption)
+                .font(.nookCaption)
         }
     }
 }

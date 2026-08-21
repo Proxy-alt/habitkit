@@ -2,21 +2,21 @@
 import PackageDescription
 
 let package = Package(
-    name: "HabitKit",
+    name: "HabitNook",
     platforms: [
         .iOS(.v26),
         .watchOS(.v26),
         .macOS(.v26)
     ],
     products: [
-        .library(name: "HabitKitCore", targets: ["HabitKitCore"]),
-        .library(name: "HabitKitUI", targets: ["HabitKitUI"]),
-        .library(name: "HabitKitIntents", targets: ["HabitKitIntents"]),
+        .library(name: "HabitNookCore", targets: ["HabitNookCore"]),
+        .library(name: "HabitNookUI", targets: ["HabitNookUI"]),
+        .library(name: "HabitNookIntents", targets: ["HabitNookIntents"]),
     ],
     targets: [
         .target(
-            name: "HabitKitCore",
-            path: "HabitKitCore/Sources",
+            name: "HabitNookCore",
+            path: "HabitNookCore/Sources",
             exclude: [
                 // Coded against a speculative EnergyKit API shape (ElectricityGuidance.shared,
                 // .lowCarbonWindows, .currentCarbonIntensity) that does not match the real,
@@ -26,18 +26,18 @@ let package = Package(
             ]
         ),
         .target(
-            name: "HabitKitUI",
-            dependencies: ["HabitKitCore"],
-            path: "HabitKitUI/Sources",
+            name: "HabitNookUI",
+            dependencies: ["HabitNookCore"],
+            path: "HabitNookUI/Sources",
             resources: [
                 .process("Themes/Built-in"),
                 .process("Themes/Community"),
             ]
         ),
         .target(
-            name: "HabitKitIntents",
-            dependencies: ["HabitKitCore"],
-            path: "HabitKitIntents/Sources"
+            name: "HabitNookIntents",
+            dependencies: ["HabitNookCore"],
+            path: "HabitNookIntents/Sources"
         ),
     ]
 )

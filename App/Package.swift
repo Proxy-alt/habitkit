@@ -2,25 +2,25 @@
 import PackageDescription
 
 let package = Package(
-    name: "HabitKitApp",
+    name: "HabitNookApp",
     platforms: [
         .iOS(.v26),
         .watchOS(.v26),
         .macOS(.v26)
     ],
     products: [
-        .library(name: "HabitKitApp", targets: ["HabitKitApp"]),
+        .library(name: "HabitNookApp", targets: ["HabitNookApp"]),
     ],
     dependencies: [
         .package(path: ".."),
     ],
     targets: [
         .target(
-            name: "HabitKitApp",
+            name: "HabitNookApp",
             dependencies: [
-                .product(name: "HabitKitCore", package: "HabitKit"),
-                .product(name: "HabitKitUI", package: "HabitKit"),
-                .product(name: "HabitKitIntents", package: "HabitKit"),
+                .product(name: "HabitNookCore", package: "HabitNook"),
+                .product(name: "HabitNookUI", package: "HabitNook"),
+                .product(name: "HabitNookIntents", package: "HabitNook"),
             ],
             path: "Sources"
         ),

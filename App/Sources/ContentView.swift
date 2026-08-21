@@ -1,8 +1,8 @@
 import SwiftUI
-import HabitKitUI
+import HabitNookUI
 
 struct ContentView: View {
-    @Environment(HKThemeManager.self) private var themes
+    @Environment(NookThemeManager.self) private var themes
     @Environment(\.colorScheme) private var colorScheme
     @Environment(AppNavigator.self) private var navigator
     @Environment(InAppAlarmMonitor.self) private var alarmMonitor
@@ -12,23 +12,23 @@ struct ContentView: View {
 
         TabView(selection: $navigator.selectedTab) {
             TodayView()
-                .tabItem { Label("Today", systemImage: HKSymbol.checkmark) }
+                .tabItem { Label("Today", systemImage: NookSymbol.checkmark) }
                 .tag(AppTab.today)
 
             HabitsView()
-                .tabItem { Label("Habits", systemImage: HKSymbol.list) }
+                .tabItem { Label("Habits", systemImage: NookSymbol.list) }
                 .tag(AppTab.habits)
 
             AnalyticsView()
-                .tabItem { Label("Analytics", systemImage: HKSymbol.chartBar) }
+                .tabItem { Label("Analytics", systemImage: NookSymbol.chartBar) }
                 .tag(AppTab.analytics)
 
             LiveSessionView()
-                .tabItem { Label("Live", systemImage: HKSymbol.timer) }
+                .tabItem { Label("Live", systemImage: NookSymbol.timer) }
                 .tag(AppTab.live)
 
             SettingsView()
-                .tabItem { Label("Settings", systemImage: HKSymbol.gear) }
+                .tabItem { Label("Settings", systemImage: NookSymbol.gear) }
                 .tag(AppTab.settings)
         }
         .tint(themes.current.primaryColor)

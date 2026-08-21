@@ -1,7 +1,7 @@
 import SwiftUI
 import SwiftData
-import HabitKitCore
-import HabitKitUI
+import HabitNookCore
+import HabitNookUI
 
 private func cancelReminderAlarms(for habit: Habit) {
     for reminder in habit.schedule.reminders {
@@ -10,7 +10,7 @@ private func cancelReminderAlarms(for habit: Habit) {
 }
 
 struct HabitsView: View {
-    @Environment(HKThemeManager.self) private var themes
+    @Environment(NookThemeManager.self) private var themes
     @Environment(\.modelContext) private var modelContext
     @Query(sort: \Habit.sortOrder) private var habits: [Habit]
     @State private var showAddHabit = false
@@ -42,10 +42,10 @@ struct HabitsView: View {
                                     viewModel.showArchived
                                         ? "Hide Archived"
                                         : "Show Archived (\(archivedHabits.count))",
-                                    systemImage: HKSymbol.archivebox
+                                    systemImage: NookSymbol.archivebox
                                 )
                                 .foregroundStyle(themes.current.subtextColor)
-                                .font(.hkBody)
+                                .font(.nookBody)
                             }
                             .accessibilityLabel(
                                 viewModel.showArchived
@@ -70,7 +70,7 @@ struct HabitsView: View {
             .toolbar {
                 ToolbarItem(placement: .topBarTrailing) {
                     Button { showAddHabit = true } label: {
-                        Image(systemName: HKSymbol.plus)
+                        Image(systemName: NookSymbol.plus)
                             .foregroundStyle(themes.current.primaryColor)
                     }
                     .accessibilityLabel("Add habit")
@@ -105,15 +105,15 @@ struct HabitsView: View {
 }
 
 private struct HabitListRow: View {
-    @Environment(HKThemeManager.self) private var themes
+    @Environment(NookThemeManager.self) private var themes
     let habit: Habit
     let viewModel: HabitsViewModel
     var archived: Bool = false
 
     var body: some View {
-        HStack(spacing: HKSpacing.md) {
+        HStack(spacing: NookSpacing.md) {
             ZStack {
-                RoundedRectangle(cornerRadius: HKRadius.sm)
+                RoundedRectangle(cornerRadius: NookRadius.sm)
                     .fill(accentColor.opacity(0.15))
                     .frame(width: 36, height: 36)
                 Image(systemName: habit.icon)
@@ -122,23 +122,23 @@ private struct HabitListRow: View {
 
             VStack(alignment: .leading, spacing: 2) {
                 Text(habit.name)
-                    .font(.hkHeadline)
+                    .font(.nookHeadline)
                     .foregroundStyle(archived ? themes.current.subtextColor : themes.current.textColor)
 
                 Text(viewModel.scheduleDescription(for: habit))
-                    .font(.hkCaption)
+                    .font(.nookCaption)
                     .foregroundStyle(themes.current.subtextColor)
             }
 
             Spacer()
 
             if archived {
-                Image(systemName: HKSymbol.archivebox)
-                    .font(.hkCaption)
+                Image(systemName: NookSymbol.archivebox)
+                    .font(.nookCaption)
                     .foregroundStyle(themes.current.overlay0Color)
             }
         }
-        .padding(.vertical, HKSpacing.xs)
+        .padding(.vertical, NookSpacing.xs)
     }
 
     private var accentColor: Color {

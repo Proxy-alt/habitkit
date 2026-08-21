@@ -1,16 +1,16 @@
-name: HabitKit
+name: HabitNook
 options:
-  bundleIdPrefix: com.habitkit
+  bundleIdPrefix: com.habitnook
   deploymentTarget:
     iOS: "26.0"
   createIntermediateGroups: true
 
 packages:
-  HabitKit:
+  HabitNook:
     path: .
 
 targets:
-  HabitKit:
+  HabitNook:
     type: application
     platform: iOS
     deploymentTarget: "26.0"
@@ -18,7 +18,7 @@ targets:
       - path: App/Sources
         excludes:
           - Info.plist
-          - HabitKit.entitlements
+          - HabitNook.entitlements
           - PrivacyInfo.xcprivacy
           # Coded against a "finish/cancel" delegate flow that PaperKit's real
           # PaperMarkupViewController.Delegate does not have (it only reports
@@ -31,8 +31,8 @@ targets:
       - path: App/Sources/PrivacyInfo.xcprivacy
     settings:
       base:
-        PRODUCT_BUNDLE_IDENTIFIER: com.habitkit.app
-        PRODUCT_MODULE_NAME: HabitKit
+        PRODUCT_BUNDLE_IDENTIFIER: com.habitnook.app
+        PRODUCT_MODULE_NAME: HabitNook
         MARKETING_VERSION: "1.0"
         CURRENT_PROJECT_VERSION: "1"
         SWIFT_VERSION: "6.0"
@@ -42,18 +42,19 @@ targets:
         ENABLE_USER_SCRIPT_SANDBOXING: NO
         GENERATE_INFOPLIST_FILE: NO
         INFOPLIST_FILE: App/Sources/Info.plist
-        CODE_SIGN_ENTITLEMENTS: App/Sources/HabitKit.entitlements
+        CODE_SIGN_ENTITLEMENTS: App/Sources/HabitNook.entitlements
+    scheme: {}
     dependencies:
-      - package: HabitKit
-        product: HabitKitCore
-      - package: HabitKit
-        product: HabitKitUI
-      - package: HabitKit
-        product: HabitKitIntents
-      - target: HabitKitWidgets
+      - package: HabitNook
+        product: HabitNookCore
+      - package: HabitNook
+        product: HabitNookUI
+      - package: HabitNook
+        product: HabitNookIntents
+      - target: HabitNookWidgets
         embed: true
 
-  HabitKitWidgets:
+  HabitNookWidgets:
     type: app-extension
     platform: iOS
     deploymentTarget: "26.0"
@@ -61,8 +62,8 @@ targets:
       - path: Widgets/Sources
     settings:
       base:
-        PRODUCT_BUNDLE_IDENTIFIER: com.habitkit.app.widgets
-        PRODUCT_MODULE_NAME: HabitKitWidgets
+        PRODUCT_BUNDLE_IDENTIFIER: com.habitnook.app.widgets
+        PRODUCT_MODULE_NAME: HabitNookWidgets
         MARKETING_VERSION: "1.0"
         CURRENT_PROJECT_VERSION: "1"
         SWIFT_VERSION: "6.0"
@@ -72,8 +73,9 @@ targets:
         ENABLE_USER_SCRIPT_SANDBOXING: NO
         GENERATE_INFOPLIST_FILE: NO
         INFOPLIST_FILE: Widgets/Info.plist
+    scheme: {}
     dependencies:
-      - package: HabitKit
-        product: HabitKitCore
-      - package: HabitKit
-        product: HabitKitUI
+      - package: HabitNook
+        product: HabitNookCore
+      - package: HabitNook
+        product: HabitNookUI

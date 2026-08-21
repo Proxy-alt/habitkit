@@ -45,7 +45,7 @@ public final class SharedWithYouCoordinator: NSObject, SWHighlightCenterDelegate
     /// Processes a `habitkit://` URL from a Shared With You highlight.
     ///
     /// - Parameter url: The URL from the highlight.
-    /// - Returns: A `SharedWithYouDeepLink` if the URL is a valid HabitKit link.
+    /// - Returns: A `SharedWithYouDeepLink` if the URL is a valid HabitNook link.
     public static func deepLink(from url: URL) -> SharedWithYouDeepLink? {
         guard url.scheme == "habitkit" else { return nil }
 

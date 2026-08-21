@@ -4,7 +4,7 @@ import UIKit
 
 // MARK: - CarPlaySceneDelegate
 
-/// Implements the CarPlay application template scene for HabitKit (§8.43).
+/// Implements the CarPlay application template scene for HabitNook (§8.43).
 ///
 /// Tier architecture (v1 = WidgetKit Smart Stack; Tier 2 = CPListTemplate):
 /// - `CPListTemplate` shows today's incomplete habits.
@@ -69,7 +69,7 @@ public final class CarPlaySceneDelegate: UIResponder, CPTemplateApplicationScene
         )
 
         let template = CPListTemplate(
-            title: "HabitKit",
+            title: "HabitNook",
             sections: [incompleteSection, completeSection]
         )
         template.emptyViewTitleVariants = ["All habits done! 🎉"]

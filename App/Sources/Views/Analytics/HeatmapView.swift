@@ -1,9 +1,9 @@
 import SwiftUI
-import HabitKitCore
-import HabitKitUI
+import HabitNookCore
+import HabitNookUI
 
 struct HeatmapView: View {
-    @Environment(HKThemeManager.self) private var themes
+    @Environment(NookThemeManager.self) private var themes
     let habit: Habit
 
     private let calendar = Calendar.current

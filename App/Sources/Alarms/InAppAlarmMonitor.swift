@@ -1,6 +1,6 @@
 import AlarmKit
 import Foundation
-import HabitKitCore
+import HabitNookCore
 import SwiftData
 import SwiftUI
 
@@ -8,7 +8,7 @@ import SwiftUI
 /// of a habit's reminders starts alerting.
 ///
 /// AlarmKit's own full-screen alert only presents when the app is backgrounded
-/// or the device is locked — while HabitKit is in the foreground, an alerting
+/// or the device is locked — while HabitNook is in the foreground, an alerting
 /// alarm is otherwise invisible. This fills that gap.
 @Observable
 @MainActor

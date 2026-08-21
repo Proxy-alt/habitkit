@@ -1,5 +1,5 @@
 import Observation
-import HabitKitCore
+import HabitNookCore
 
 enum AppTab {
     case today, habits, analytics, live, settings

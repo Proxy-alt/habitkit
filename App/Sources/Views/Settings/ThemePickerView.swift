@@ -1,8 +1,8 @@
 import SwiftUI
-import HabitKitUI
+import HabitNookUI
 
 struct ThemePickerView: View {
-    @Environment(HKThemeManager.self) private var themes
+    @Environment(NookThemeManager.self) private var themes
     @Environment(\.dismiss) private var dismiss
 
     var body: some View {
@@ -11,14 +11,14 @@ struct ThemePickerView: View {
                 themes.current.baseColor.ignoresSafeArea()
 
                 ScrollView {
-                    LazyVStack(spacing: HKSpacing.sm) {
+                    LazyVStack(spacing: NookSpacing.sm) {
                         ForEach(themes.available) { theme in
                             ThemeCard(theme: theme, isSelected: theme.id == themes.current.id) {
                                 themes.select(theme)
                             }
                         }
                     }
-                    .padding(HKSpacing.md)
+                    .padding(NookSpacing.md)
                 }
             }
             .navigationTitle("Choose Theme")
@@ -35,33 +35,33 @@ struct ThemePickerView: View {
 }
 
 private struct ThemeCard: View {
-    @Environment(HKThemeManager.self) private var themes
-    let theme: HKTheme
+    @Environment(NookThemeManager.self) private var themes
+    let theme: NookTheme
     let isSelected: Bool
     let onSelect: () -> Void
 
     var body: some View {
         Button(action: onSelect) {
-            HStack(spacing: HKSpacing.md) {
+            HStack(spacing: NookSpacing.md) {
                 ThemePreview(theme: theme)
                     .frame(width: 80, height: 60)
-                    .clipShape(RoundedRectangle(cornerRadius: HKRadius.sm))
+                    .clipShape(RoundedRectangle(cornerRadius: NookRadius.sm))
 
-                VStack(alignment: .leading, spacing: HKSpacing.xs) {
+                VStack(alignment: .leading, spacing: NookSpacing.xs) {
                     Text(theme.name)
-                        .font(.hkHeadline)
+                        .font(.nookHeadline)
                         .foregroundStyle(themes.current.textColor)
                     HStack(spacing: 4) {
-                        Image(systemName: theme.isDark ? HKSymbol.moon : HKSymbol.sun)
-                            .font(.hkCaption)
+                        Image(systemName: theme.isDark ? NookSymbol.moon : NookSymbol.sun)
+                            .font(.nookCaption)
                         Text(theme.isDark ? "Dark" : "Light")
-                            .font(.hkCaption)
+                            .font(.nookCaption)
                     }
                     .foregroundStyle(themes.current.subtextColor)
 
                     if let author = theme.author {
                         Text("@\(author)")
-                            .font(.hkCaption)
+                            .font(.nookCaption)
                             .foregroundStyle(themes.current.subtextColor)
                     }
                 }
@@ -69,17 +69,17 @@ private struct ThemeCard: View {
                 Spacer()
 
                 if isSelected {
-                    Image(systemName: HKSymbol.checkmark)
+                    Image(systemName: NookSymbol.checkmark)
                         .foregroundStyle(themes.current.primaryColor)
                         .font(.title2)
                 }
             }
-            .padding(HKSpacing.md)
+            .padding(NookSpacing.md)
             .background(
-                RoundedRectangle(cornerRadius: HKRadius.card)
+                RoundedRectangle(cornerRadius: NookRadius.card)
                     .fill(themes.current.surface0Color)
                     .overlay(
-                        RoundedRectangle(cornerRadius: HKRadius.card)
+                        RoundedRectangle(cornerRadius: NookRadius.card)
                             .strokeBorder(
                                 isSelected ? themes.current.primaryColor : Color.clear,
                                 lineWidth: 2
@@ -93,7 +93,7 @@ private struct ThemeCard: View {
 }
 
 private struct ThemePreview: View {
-    let theme: HKTheme
+    let theme: NookTheme
 
     var body: some View {
         ZStack {

@@ -1,9 +1,9 @@
 import SwiftUI
-import HabitKitCore
-import HabitKitUI
+import HabitNookCore
+import HabitNookUI
 
 struct SettingsView: View {
-    @Environment(HKThemeManager.self) private var themes
+    @Environment(NookThemeManager.self) private var themes
     @AppStorage(DefaultsKeys.iCloudSync) private var icloudSync = true
     @AppStorage(DefaultsKeys.hapticsEnabled) private var hapticsEnabled = true
     @AppStorage(DefaultsKeys.notificationSound) private var notificationSound = "default"
@@ -21,14 +21,14 @@ struct SettingsView: View {
                             showThemePicker = true
                         } label: {
                             HStack {
-                                Label("Theme", systemImage: HKSymbol.paintpalette)
+                                Label("Theme", systemImage: NookSymbol.paintpalette)
                                     .foregroundStyle(themes.current.textColor)
                                 Spacer()
                                 Text(themes.current.name)
-                                    .font(.hkBody)
+                                    .font(.nookBody)
                                     .foregroundStyle(themes.current.subtextColor)
-                                Image(systemName: HKSymbol.chevronRight)
-                                    .font(.hkCaption)
+                                Image(systemName: NookSymbol.chevronRight)
+                                    .font(.nookCaption)
                                     .foregroundStyle(themes.current.overlay0Color)
                             }
                         }
@@ -37,7 +37,7 @@ struct SettingsView: View {
 
                     Section("Sync") {
                         Toggle(isOn: $icloudSync) {
-                            Label("iCloud Sync", systemImage: HKSymbol.icloud)
+                            Label("iCloud Sync", systemImage: NookSymbol.icloud)
                                 .foregroundStyle(themes.current.textColor)
                         }
                         .tint(themes.current.primaryColor)
@@ -46,7 +46,7 @@ struct SettingsView: View {
 
                     Section("Feedback") {
                         Toggle(isOn: $hapticsEnabled) {
-                            Label("Haptics", systemImage: HKSymbol.handTap)
+                            Label("Haptics", systemImage: NookSymbol.handTap)
                                 .foregroundStyle(themes.current.textColor)
                         }
                         .tint(themes.current.primaryColor)
@@ -57,7 +57,7 @@ struct SettingsView: View {
                         NavigationLink {
                             NotificationSettingsView()
                         } label: {
-                            Label("Notification Settings", systemImage: HKSymbol.bell)
+                            Label("Notification Settings", systemImage: NookSymbol.bell)
                                 .foregroundStyle(themes.current.textColor)
                         }
                         .accessibilityLabel("Notification Settings")
@@ -67,7 +67,7 @@ struct SettingsView: View {
                         NavigationLink {
                             DataExportView()
                         } label: {
-                            Label("Export Data", systemImage: HKSymbol.squareArrowUp)
+                            Label("Export Data", systemImage: NookSymbol.squareArrowUp)
                                 .foregroundStyle(themes.current.textColor)
                         }
                         .accessibilityLabel("Export Data")
@@ -75,7 +75,7 @@ struct SettingsView: View {
                         NavigationLink {
                             HealthKitSettingsView()
                         } label: {
-                            Label("HealthKit", systemImage: HKSymbol.heart)
+                            Label("HealthKit", systemImage: NookSymbol.heart)
                                 .foregroundStyle(themes.current.textColor)
                         }
                         .accessibilityLabel("HealthKit")
@@ -85,7 +85,7 @@ struct SettingsView: View {
                         NavigationLink {
                             CommunityThemeGalleryView()
                         } label: {
-                            Label("Theme Gallery", systemImage: HKSymbol.sparkles)
+                            Label("Theme Gallery", systemImage: NookSymbol.sparkles)
                                 .foregroundStyle(themes.current.textColor)
                         }
                         .accessibilityLabel("Theme Gallery")
@@ -93,18 +93,18 @@ struct SettingsView: View {
 
                     Section("About") {
                         HStack {
-                            Label("Version", systemImage: HKSymbol.infoCircle)
+                            Label("Version", systemImage: NookSymbol.infoCircle)
                                 .foregroundStyle(themes.current.textColor)
                             Spacer()
                             Text(appVersion)
-                                .font(.hkMono)
+                                .font(.nookMono)
                                 .foregroundStyle(themes.current.subtextColor)
                         }
                         .accessibilityLabel("Version \(appVersion)")
 
                         if let githubURL = URL(string: "https://github.com/habitkit/habitkit") {
                             Link(destination: githubURL) {
-                                Label("GitHub", systemImage: HKSymbol.link)
+                                Label("GitHub", systemImage: NookSymbol.link)
                                     .foregroundStyle(themes.current.primaryColor)
                             }
                             .accessibilityLabel("GitHub repository")
@@ -115,7 +115,7 @@ struct SettingsView: View {
                         Button(role: .destructive) {
                             showResetConfirm = true
                         } label: {
-                            Label("Reset All Data", systemImage: HKSymbol.trash)
+                            Label("Reset All Data", systemImage: NookSymbol.trash)
                                 .foregroundStyle(themes.current.dangerColor)
                         }
                         .accessibilityLabel("Reset All Data")
@@ -147,17 +147,17 @@ struct SettingsView: View {
 }
 
 private struct NotificationSettingsView: View {
-    @Environment(HKThemeManager.self) private var themes
+    @Environment(NookThemeManager.self) private var themes
 
     var body: some View {
         ZStack {
             themes.current.baseColor.ignoresSafeArea()
             VStack {
                 Text("Notification settings are managed in the iOS Settings app.")
-                    .font(.hkBody)
+                    .font(.nookBody)
                     .foregroundStyle(themes.current.subtextColor)
                     .multilineTextAlignment(.center)
-                    .padding(HKSpacing.xl)
+                    .padding(NookSpacing.xl)
 
                 Button("Open Settings") {
                     if let url = URL(string: UIApplication.openSettingsURLString) {
@@ -174,74 +174,74 @@ private struct NotificationSettingsView: View {
 }
 
 private struct DataExportView: View {
-    @Environment(HKThemeManager.self) private var themes
+    @Environment(NookThemeManager.self) private var themes
 
     var body: some View {
         ZStack {
             themes.current.baseColor.ignoresSafeArea()
-            VStack(spacing: HKSpacing.lg) {
-                HKButton("Export as JSON", variant: .primary) { }
-                HKButton("Export as CSV", variant: .secondary) { }
-                HKButton("Export Full Archive (.habitarchive)", variant: .secondary) { }
+            VStack(spacing: NookSpacing.lg) {
+                NookButton("Export as JSON", variant: .primary) { }
+                NookButton("Export as CSV", variant: .secondary) { }
+                NookButton("Export Full Archive (.habitarchive)", variant: .secondary) { }
             }
-            .padding(HKSpacing.xl)
+            .padding(NookSpacing.xl)
         }
         .navigationTitle("Export Data")
     }
 }
 
 private struct HealthKitSettingsView: View {
-    @Environment(HKThemeManager.self) private var themes
+    @Environment(NookThemeManager.self) private var themes
 
     var body: some View {
         ZStack {
             themes.current.baseColor.ignoresSafeArea()
-            VStack(spacing: HKSpacing.md) {
-                Image(systemName: HKSymbol.heart)
-                    .font(HKIconSize.lg)
+            VStack(spacing: NookSpacing.md) {
+                Image(systemName: NookSymbol.heart)
+                    .font(NookIconSize.lg)
                     .foregroundStyle(themes.current.dangerColor)
                 Text("HealthKit permissions are managed per-habit when you create or edit a habit.")
-                    .font(.hkBody)
+                    .font(.nookBody)
                     .foregroundStyle(themes.current.subtextColor)
                     .multilineTextAlignment(.center)
             }
-            .padding(HKSpacing.xl)
+            .padding(NookSpacing.xl)
         }
         .navigationTitle("HealthKit")
     }
 }
 
 private struct CommunityThemeGalleryView: View {
-    @Environment(HKThemeManager.self) private var themes
+    @Environment(NookThemeManager.self) private var themes
 
     var body: some View {
         ZStack {
             themes.current.baseColor.ignoresSafeArea()
             ScrollView {
-                LazyVStack(spacing: HKSpacing.sm) {
+                LazyVStack(spacing: NookSpacing.sm) {
                     ForEach(themes.available.filter { $0.author != nil }) { theme in
-                        HKCard {
+                        NookCard {
                             HStack {
-                                VStack(alignment: .leading, spacing: HKSpacing.xs) {
+                                VStack(alignment: .leading, spacing: NookSpacing.xs) {
                                     Text(theme.name)
-                                        .font(.hkHeadline)
+                                        .font(.nookHeadline)
                                         .foregroundStyle(themes.current.textColor)
                                     if let author = theme.author {
                                         Text("by @\(author)")
-                                            .font(.hkCaption)
+                                            .font(.nookCaption)
                                             .foregroundStyle(themes.current.subtextColor)
                                     }
                                 }
                                 Spacer()
                                 ThemeColorDots(theme: theme)
-                                HKButton("Use", variant: .primary) {
+                                NookButton("Use", variant: .primary) {
                                     themes.select(theme)
                                 }
                             }
                         }
                     }
                 }
-                .padding(HKSpacing.md)
+                .padding(NookSpacing.md)
             }
         }
         .navigationTitle("Theme Gallery")
@@ -249,7 +249,7 @@ private struct CommunityThemeGalleryView: View {
 }
 
 private struct ThemeColorDots: View {
-    let theme: HKTheme
+    let theme: NookTheme
 
     var body: some View {
         HStack(spacing: 4) {

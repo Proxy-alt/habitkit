@@ -1,10 +1,10 @@
 import SwiftUI
 import SwiftData
-import HabitKitCore
-import HabitKitUI
+import HabitNookCore
+import HabitNookUI
 
 struct HabitRow: View {
-    @Environment(HKThemeManager.self) private var themes
+    @Environment(NookThemeManager.self) private var themes
     @Environment(\.modelContext) private var modelContext
     @Environment(AppNavigator.self) private var navigator
     let habit: Habit
@@ -15,20 +15,20 @@ struct HabitRow: View {
     }
 
     var body: some View {
-        HStack(spacing: HKSpacing.md) {
-            HKCompletionBadge(isCompleted: isCompletedToday) {
+        HStack(spacing: NookSpacing.md) {
+            NookCompletionBadge(isCompleted: isCompletedToday) {
                 toggleCompletion()
             }
             .accessibilityLabel(isCompletedToday ? "Mark \(habit.name) incomplete" : "Mark \(habit.name) complete")
 
             Image(systemName: habit.icon)
-                .font(.hkHeadline)
+                .font(.nookHeadline)
                 .foregroundStyle(accentColor)
                 .frame(width: 28)
 
             VStack(alignment: .leading, spacing: 2) {
                 Text(habit.name)
-                    .font(.hkHeadline)
+                    .font(.nookHeadline)
                     .foregroundStyle(muted ? themes.current.subtextColor : themes.current.textColor)
                     .strikethrough(muted)
 
@@ -41,7 +41,7 @@ struct HabitRow: View {
                 Button {
                     navigator.startTimer(for: timedHabit)
                 } label: {
-                    Image(systemName: HKSymbol.play)
+                    Image(systemName: NookSymbol.play)
                         .font(.title2)
                         .foregroundStyle(themes.current.primaryColor)
                 }
@@ -49,7 +49,7 @@ struct HabitRow: View {
                 .accessibilityLabel("Start \(habit.name) timer")
             }
         }
-        .padding(.vertical, HKSpacing.xs)
+        .padding(.vertical, NookSpacing.xs)
     }
 
     private var streakLabel: some View {
@@ -57,11 +57,11 @@ struct HabitRow: View {
         if streak > 0 {
             return AnyView(
                 HStack(spacing: 2) {
-                    Image(systemName: HKSymbol.flame)
-                        .font(.hkCaption)
+                    Image(systemName: NookSymbol.flame)
+                        .font(.nookCaption)
                         .foregroundStyle(themes.current.warningColor)
                     Text("\(streak) day streak")
-                        .font(.hkCaption)
+                        .font(.nookCaption)
                         .foregroundStyle(themes.current.subtextColor)
                 }
             )

@@ -1,10 +1,10 @@
 import SwiftUI
 import SwiftData
-import HabitKitCore
-import HabitKitUI
+import HabitNookCore
+import HabitNookUI
 
 struct TodayView: View {
-    @Environment(HKThemeManager.self) private var themes
+    @Environment(NookThemeManager.self) private var themes
     @Query private var habits: [Habit]
     @State private var showAddHabit = false
     @State private var viewModel = TodayViewModel()
@@ -29,7 +29,7 @@ struct TodayView: View {
                     Button {
                         showAddHabit = true
                     } label: {
-                        Image(systemName: HKSymbol.plus)
+                        Image(systemName: NookSymbol.plus)
                             .foregroundStyle(themes.current.primaryColor)
                     }
                     .accessibilityLabel("Add habit")
@@ -70,57 +70,57 @@ struct TodayView: View {
 }
 
 private struct EmptyTodayView: View {
-    @Environment(HKThemeManager.self) private var themes
+    @Environment(NookThemeManager.self) private var themes
     @Binding var showAddHabit: Bool
 
     var body: some View {
-        VStack(spacing: HKSpacing.lg) {
-            Image(systemName: HKSymbol.sparkles)
-                .font(HKIconSize.xxl)
+        VStack(spacing: NookSpacing.lg) {
+            Image(systemName: NookSymbol.sparkles)
+                .font(NookIconSize.xxl)
                 .foregroundStyle(themes.current.primaryColor)
 
             Text("No habits yet")
-                .font(.hkTitle)
+                .font(.nookTitle)
                 .foregroundStyle(themes.current.textColor)
 
             Text("Add your first habit to get started.")
-                .font(.hkBody)
+                .font(.nookBody)
                 .foregroundStyle(themes.current.subtextColor)
                 .multilineTextAlignment(.center)
 
-            HKButton("Add a Habit", variant: .primary) {
+            NookButton("Add a Habit", variant: .primary) {
                 showAddHabit = true
             }
         }
-        .padding(HKSpacing.xl)
+        .padding(NookSpacing.xl)
     }
 }
 
 private struct AllCompleteView: View {
-    @Environment(HKThemeManager.self) private var themes
+    @Environment(NookThemeManager.self) private var themes
     @State private var animating = false
 
     var body: some View {
-        VStack(spacing: HKSpacing.lg) {
-            Image(systemName: HKSymbol.checkmarkSeal)
-                .font(HKIconSize.hero)
+        VStack(spacing: NookSpacing.lg) {
+            Image(systemName: NookSymbol.checkmarkSeal)
+                .font(NookIconSize.hero)
                 .foregroundStyle(themes.current.successColor)
                 .scaleEffect(animating ? 1.05 : 1.0)
                 .onAppear {
-                    withAnimation(HKAnimation.slow.repeatForever(autoreverses: true)) {
+                    withAnimation(NookAnimation.slow.repeatForever(autoreverses: true)) {
                         animating = true
                     }
                 }
 
             Text("All done!")
-                .font(.hkLargeTitle)
+                .font(.nookLargeTitle)
                 .foregroundStyle(themes.current.textColor)
 
             Text("Every habit complete for today. Come back tomorrow.")
-                .font(.hkBody)
+                .font(.nookBody)
                 .foregroundStyle(themes.current.subtextColor)
                 .multilineTextAlignment(.center)
         }
-        .padding(HKSpacing.xl)
+        .padding(NookSpacing.xl)
     }
 }

@@ -15,7 +15,7 @@ public struct JournalingSuggestion: Sendable {}
 /// Presents the JournalingSuggestionsPicker after habit milestones (§8.25).
 ///
 /// After a streak milestone (7, 30, 100 days) or when completing all habits
-/// for the day, HabitKit can offer the JournalingSuggestionsPicker so the
+/// for the day, HabitNook can offer the JournalingSuggestionsPicker so the
 /// user can add their completion as a journal-worthy moment.
 public final class JournalingSuggestionsCoordinator: ObservableObject, @unchecked Sendable {
 

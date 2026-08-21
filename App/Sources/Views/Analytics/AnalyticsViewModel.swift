@@ -1,5 +1,5 @@
 import Foundation
-import HabitKitCore
+import HabitNookCore
 
 @Observable
 @MainActor

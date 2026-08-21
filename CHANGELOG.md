@@ -1,11 +1,11 @@
 # Changelog
 
-All notable changes to HabitKit are documented here.
+All notable changes to HabitNook are documented here.
 Contributors are credited by GitHub handle.
 
 ## Unreleased
 
-- Initial codebase: HabitKitCore, HabitKitUI, HabitKitIntents, App target
+- Initial codebase: HabitNookCore, HabitNookUI, HabitNookIntents, App target
 
 ---
 

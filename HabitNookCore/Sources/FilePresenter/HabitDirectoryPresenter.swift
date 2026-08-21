@@ -18,7 +18,7 @@ public final class HabitDirectoryPresenter: NSObject, NSFilePresenter, Sendable 
 
     public var presentedItemURL: URL? {
         FileManager.default.containerURL(
-            forSecurityApplicationGroupIdentifier: "group.com.habitkit.app"
+            forSecurityApplicationGroupIdentifier: AppGroupIdentifier.value
         )
     }
 

@@ -88,7 +88,7 @@ public actor ScreenTimeManager {
     ) {
         // Usage thresholds are handled in the DeviceActivityReport extension.
         // Register the selection in shared UserDefaults so the extension can read it.
-        let defaults = UserDefaults(suiteName: "group.com.habitkit.app")
+        let defaults = UserDefaults(suiteName: AppGroupIdentifier.value)
         let encoded = try? JSONEncoder().encode(selection.applicationTokens.map { "\($0)" })
         defaults?.set(encoded, forKey: "screentime.observed.apps")
         defaults?.set(thresholdMinutes, forKey: "screentime.threshold.minutes")

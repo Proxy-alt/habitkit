@@ -56,12 +56,12 @@ extension HabitMessageFilter: ILMessageFilterQueryHandling {
     // MARK: - Private helpers
 
     private func loadSuppressedSenders() -> [String] {
-        let defaults = UserDefaults(suiteName: "group.com.habitkit.app")
+        let defaults = UserDefaults(suiteName: AppGroupIdentifier.value)
         return defaults?.stringArray(forKey: "filter.suppressedSenders") ?? []
     }
 
     private func loadHabitKeywords() -> [String] {
-        let defaults = UserDefaults(suiteName: "group.com.habitkit.app")
+        let defaults = UserDefaults(suiteName: AppGroupIdentifier.value)
         return defaults?.stringArray(forKey: "filter.habitKeywords") ?? [
             "class confirmed",
             "booking confirmed",
@@ -81,7 +81,7 @@ public enum HabitMessageFilterManager {
     ///
     /// - Parameter sender: Partial sender string (e.g. "GymCo", "+447700").
     public static func suppressSender(_ sender: String) {
-        let defaults = UserDefaults(suiteName: "group.com.habitkit.app")
+        let defaults = UserDefaults(suiteName: AppGroupIdentifier.value)
         var current = defaults?.stringArray(forKey: "filter.suppressedSenders") ?? []
         let lowercased = sender.lowercased()
         if !current.contains(lowercased) {
@@ -94,7 +94,7 @@ public enum HabitMessageFilterManager {
     ///
     /// - Parameter sender: The sender string to remove.
     public static func unsuppressSender(_ sender: String) {
-        let defaults = UserDefaults(suiteName: "group.com.habitkit.app")
+        let defaults = UserDefaults(suiteName: AppGroupIdentifier.value)
         var current = defaults?.stringArray(forKey: "filter.suppressedSenders") ?? []
         current.removeAll { $0 == sender.lowercased() }
         defaults?.set(current, forKey: "filter.suppressedSenders")
@@ -104,7 +104,7 @@ public enum HabitMessageFilterManager {
     ///
     /// - Parameter keywords: New set of lowercase keywords.
     public static func updateKeywords(_ keywords: [String]) {
-        let defaults = UserDefaults(suiteName: "group.com.habitkit.app")
+        let defaults = UserDefaults(suiteName: AppGroupIdentifier.value)
         defaults?.set(keywords.map { $0.lowercased() }, forKey: "filter.habitKeywords")
     }
 }

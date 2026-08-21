@@ -1,10 +1,11 @@
 import Foundation
+import HabitNookCore
 
 /// Persists today's skipped habit IDs in the shared App Group `UserDefaults`.
 ///
 /// Skips are stored per calendar day so they expire naturally at midnight.
 enum SkipStore {
-    private static let suiteName = "group.com.habitkit.app"
+    private static let suiteName = AppGroupIdentifier.value
 
     private static func key(for date: Date = Date()) -> String {
         let formatter = DateFormatter()

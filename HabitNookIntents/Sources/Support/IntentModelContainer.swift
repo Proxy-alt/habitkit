@@ -10,7 +10,7 @@ enum IntentModelContainer {
     static func make() throws -> ModelContainer {
         let schema = Schema([Habit.self, HabitCompletion.self, HabitSchedule.self])
         let groupURL = FileManager.default
-            .containerURL(forSecurityApplicationGroupIdentifier: "group.com.habitkit.app")?
+            .containerURL(forSecurityApplicationGroupIdentifier: AppGroupIdentifier.value)?
             .appendingPathComponent("HabitNook.store")
         let config: ModelConfiguration
         if let url = groupURL {

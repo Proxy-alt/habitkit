@@ -97,7 +97,7 @@ public actor HabitMLManager {
 
     private func updatedModelURL() -> URL {
         let container = FileManager.default.containerURL(
-            forSecurityApplicationGroupIdentifier: "group.com.habitkit.app"
+            forSecurityApplicationGroupIdentifier: AppGroupIdentifier.value
         ) ?? FileManager.default.temporaryDirectory
         return container.appendingPathComponent("HabitCluster_updated.mlmodelc")
     }

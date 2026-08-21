@@ -35,7 +35,7 @@ public final class ThemeDownloadExtension: BADownloaderExtension {
             request: URLRequest(url: url),
             essential: false,
             fileSize: 65_536,
-            applicationGroupIdentifier: "group.com.habitkit.app",
+            applicationGroupIdentifier: AppGroupIdentifier.value,
             priority: .default
         )
         return [download]
@@ -64,7 +64,7 @@ public final class ThemeDownloadExtension: BADownloaderExtension {
 
     private func sharedThemesURL() -> URL {
         let container = FileManager.default.containerURL(
-            forSecurityApplicationGroupIdentifier: "group.com.habitkit.app"
+            forSecurityApplicationGroupIdentifier: AppGroupIdentifier.value
         ) ?? FileManager.default.temporaryDirectory
         return container.appendingPathComponent("themes.json")
     }

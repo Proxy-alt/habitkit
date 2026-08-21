@@ -45,7 +45,7 @@ public final class MetricKitSubscriber: NSObject, MXMetricManagerSubscriber, Sen
     public func didReceive(_ payloads: [MXMetricPayload]) {
         guard let payload = payloads.last else { return }
         let summary = MetricSummary(from: payload)
-        let defaults = UserDefaults(suiteName: "group.com.habitkit.app")
+        let defaults = UserDefaults(suiteName: AppGroupIdentifier.value)
         if let data = try? JSONEncoder().encode(summary) {
             defaults?.set(data, forKey: Self.latestMetricsKey)
         }
@@ -55,7 +55,7 @@ public final class MetricKitSubscriber: NSObject, MXMetricManagerSubscriber, Sen
         // Diagnostic payloads (crashes, hang reports) are stored separately.
         guard let payload = payloads.last,
               let data = try? payload.jsonRepresentation() else { return }
-        let defaults = UserDefaults(suiteName: "group.com.habitkit.app")
+        let defaults = UserDefaults(suiteName: AppGroupIdentifier.value)
         defaults?.set(data, forKey: "metrickit.latestDiagnostic")
     }
 
@@ -63,7 +63,7 @@ public final class MetricKitSubscriber: NSObject, MXMetricManagerSubscriber, Sen
 
     /// Returns the most recently received `MetricSummary`, if available.
     public static func latestSummary() -> MetricSummary? {
-        let defaults = UserDefaults(suiteName: "group.com.habitkit.app")
+        let defaults = UserDefaults(suiteName: AppGroupIdentifier.value)
         guard let data = defaults?.data(forKey: latestMetricsKey) else { return nil }
         return try? JSONDecoder().decode(MetricSummary.self, from: data)
     }

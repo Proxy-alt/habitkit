@@ -318,6 +318,10 @@
     <key>NSAlarmKitUsageDescription</key>
     <string>HabitKit schedules alarms for habit reminders you set, so you get a prominent alert even when your phone is silenced.</string>
 
+    <!-- ActivityKit — required for Activity.request() to succeed at all -->
+    <key>NSSupportsLiveActivities</key>
+    <true/>
+
     <!-- Bluetooth — MultipeerConnectivity uses BT for peer discovery (§8.30) -->
     <key>NSBluetoothAlwaysUsageDescription</key>
     <string>HabitKit uses Bluetooth to find nearby devices for habit template sharing.</string>

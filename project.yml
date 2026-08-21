@@ -50,3 +50,30 @@ targets:
         product: HabitKitUI
       - package: HabitKit
         product: HabitKitIntents
+      - target: HabitKitWidgets
+        embed: true
+
+  HabitKitWidgets:
+    type: app-extension
+    platform: iOS
+    deploymentTarget: "26.0"
+    sources:
+      - path: Widgets/Sources
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.habitkit.app.widgets
+        PRODUCT_MODULE_NAME: HabitKitWidgets
+        MARKETING_VERSION: "1.0"
+        CURRENT_PROJECT_VERSION: "1"
+        SWIFT_VERSION: "6.0"
+        CODE_SIGN_STYLE: Automatic
+        CODE_SIGNING_ALLOWED: NO
+        CODE_SIGNING_REQUIRED: NO
+        ENABLE_USER_SCRIPT_SANDBOXING: NO
+        GENERATE_INFOPLIST_FILE: NO
+        INFOPLIST_FILE: Widgets/Info.plist
+    dependencies:
+      - package: HabitKit
+        product: HabitKitCore
+      - package: HabitKit
+        product: HabitKitUI

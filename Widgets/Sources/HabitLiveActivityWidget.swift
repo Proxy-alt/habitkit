@@ -4,24 +4,6 @@ import WidgetKit
 import HabitKitCore
 import HabitKitUI
 
-public struct HabitLiveActivityAttributes: ActivityAttributes {
-    public struct ContentState: Codable, Hashable {
-        public var remainingSeconds: Int
-        public var habitName: String
-        public var isComplete: Bool
-    }
-
-    public var habitID: UUID
-    public var habitName: String
-    public var targetSeconds: Int
-
-    public init(habitID: UUID, habitName: String, targetSeconds: Int) {
-        self.habitID = habitID
-        self.habitName = habitName
-        self.targetSeconds = targetSeconds
-    }
-}
-
 struct HabitLiveActivityView: View {
     let context: ActivityViewContext<HabitLiveActivityAttributes>
 
@@ -38,10 +20,10 @@ struct HabitLiveActivityView: View {
 
             VStack(alignment: .leading, spacing: 2) {
                 Text(context.attributes.habitName)
-                    .font(.hkHeadline)
+                    .font(HKFont.headline)
                 if context.state.isComplete {
                     Text("Complete!")
-                        .font(.hkCaption)
+                        .font(HKFont.caption)
                         .foregroundStyle(.green)
                 } else {
                     Text(timerString(context.state.remainingSeconds))
@@ -67,6 +49,10 @@ struct HabitLiveActivityWidget: Widget {
         ActivityConfiguration(for: HabitLiveActivityAttributes.self) { context in
             HabitLiveActivityView(context: context)
                 .background(.black.opacity(0.85))
+                // The extension is a separate process from the app, so it never
+                // gets the .environment(themeManager) injected at the app root —
+                // without this, HKProgressRing crashes looking for an ancestor.
+                .environment(HKThemeManager())
         } dynamicIsland: { context in
             DynamicIsland {
                 DynamicIslandExpandedRegion(.leading) {
@@ -81,7 +67,7 @@ struct HabitLiveActivityWidget: Widget {
                 }
                 DynamicIslandExpandedRegion(.center) {
                     Text(context.attributes.habitName)
-                        .font(.hkHeadline)
+                        .font(HKFont.headline)
                 }
                 DynamicIslandExpandedRegion(.bottom) {
                     ProgressView(value: expandedProgress(context))
@@ -92,7 +78,7 @@ struct HabitLiveActivityWidget: Widget {
                     .foregroundStyle(.purple)
             } compactTrailing: {
                 Text(timerString(context.state.remainingSeconds))
-                    .font(.hkCaption)
+                    .font(HKFont.caption)
                     .monospacedDigit()
             } minimal: {
                 Image(systemName: "timer")

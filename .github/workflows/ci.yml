@@ -21,7 +21,7 @@ jobs:
         run: |
           ajv validate \
             -s .github/theme-schema.json \
-            -d HabitKitUI/Sources/Themes/Community/themes.json
+            -d HabitNookUI/Sources/Themes/Community/themes.json
 
   # ── Hardcoded color enforcement ─────────────────────────────────────────────
   lint-colors:
@@ -40,12 +40,12 @@ jobs:
             --include="*.swift" \
             --exclude-dir=".build" \
             --exclude-dir="Tests" \
-            . | grep -v "HKTheme.swift" || true)
+            . | grep -v "NookTheme.swift" || true)
           if [ -n "$VIOLATIONS" ]; then
             echo "❌ Hardcoded color literals found:"
             echo "$VIOLATIONS"
             echo ""
-            echo "Use HKTheme tokens (theme.colors.primary etc.) instead."
+            echo "Use NookTheme tokens (theme.colors.primary etc.) instead."
             exit 1
           fi
           echo "✅ No hardcoded colors."
@@ -63,13 +63,13 @@ jobs:
             --include="*.swift" \
             --exclude-dir=".build" \
             --exclude-dir="Tests" \
-            --exclude="HKIconSize.swift" \
+            --exclude="NookIconSize.swift" \
             . || true)
           if [ -n "$VIOLATIONS" ]; then
             echo "❌ Hardcoded font sizes found:"
             echo "$VIOLATIONS"
             echo ""
-            echo "Use HKIconSize or HKFont constants instead of .font(.system(size:))."
+            echo "Use NookIconSize or NookFont constants instead of .font(.system(size:))."
             exit 1
           fi
           echo "✅ No hardcoded font sizes."
@@ -121,38 +121,38 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: HabitKitCore must not import SwiftUI
+      - name: HabitNookCore must not import SwiftUI
         run: |
           VIOLATIONS=$(grep -rn '^import SwiftUI' \
-            HabitKitCore/Sources/ || true)
+            HabitNookCore/Sources/ || true)
           if [ -n "$VIOLATIONS" ]; then
-            echo "❌ HabitKitCore imports SwiftUI (forbidden):"
+            echo "❌ HabitNookCore imports SwiftUI (forbidden):"
             echo "$VIOLATIONS"
             exit 1
           fi
-          echo "✅ HabitKitCore has no SwiftUI imports."
+          echo "✅ HabitNookCore has no SwiftUI imports."
 
-      - name: HabitKitCore must not import HabitKitUI or HabitKitIntents
+      - name: HabitNookCore must not import HabitNookUI or HabitNookIntents
         run: |
-          VIOLATIONS=$(grep -rn -e '^import HabitKitUI' -e '^import HabitKitIntents' \
-            HabitKitCore/Sources/ || true)
+          VIOLATIONS=$(grep -rn -e '^import HabitNookUI' -e '^import HabitNookIntents' \
+            HabitNookCore/Sources/ || true)
           if [ -n "$VIOLATIONS" ]; then
-            echo "❌ HabitKitCore imports a downstream package:"
+            echo "❌ HabitNookCore imports a downstream package:"
             echo "$VIOLATIONS"
             exit 1
           fi
-          echo "✅ HabitKitCore has no downstream package imports."
+          echo "✅ HabitNookCore has no downstream package imports."
 
-      - name: HabitKitIntents must not import SwiftUI or HabitKitUI
+      - name: HabitNookIntents must not import SwiftUI or HabitNookUI
         run: |
-          VIOLATIONS=$(grep -rn -e '^import SwiftUI' -e '^import HabitKitUI' \
-            HabitKitIntents/Sources/ || true)
+          VIOLATIONS=$(grep -rn -e '^import SwiftUI' -e '^import HabitNookUI' \
+            HabitNookIntents/Sources/ || true)
           if [ -n "$VIOLATIONS" ]; then
-            echo "❌ HabitKitIntents imports a forbidden package:"
+            echo "❌ HabitNookIntents imports a forbidden package:"
             echo "$VIOLATIONS"
             exit 1
           fi
-          echo "✅ HabitKitIntents import boundaries clean."
+          echo "✅ HabitNookIntents import boundaries clean."
 
   # ── swift-format ─────────────────────────────────────────────────────────────
   swift-format:
@@ -174,14 +174,14 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Build HabitKitCore
-        run: swift build --package-path HabitKitCore -Xswiftc -strict-concurrency=complete
+      - name: Build HabitNookCore
+        run: swift build --package-path HabitNookCore -Xswiftc -strict-concurrency=complete
 
-      - name: Build HabitKitUI
-        run: swift build --package-path HabitKitUI -Xswiftc -strict-concurrency=complete
+      - name: Build HabitNookUI
+        run: swift build --package-path HabitNookUI -Xswiftc -strict-concurrency=complete
 
-      - name: Build HabitKitIntents
-        run: swift build --package-path HabitKitIntents -Xswiftc -strict-concurrency=complete
+      - name: Build HabitNookIntents
+        run: swift build --package-path HabitNookIntents -Xswiftc -strict-concurrency=complete
 
   # ── Swift tests ───────────────────────────────────────────────────────────────
   test:
@@ -191,24 +191,24 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Test HabitKitCore
+      - name: Test HabitNookCore
         run: |
           swift test \
-            --package-path HabitKitCore \
+            --package-path HabitNookCore \
             --enable-code-coverage \
             -Xswiftc -strict-concurrency=complete
 
       - name: Check coverage thresholds
         run: |
-          # swift test --package-path writes build artifacts to HabitKitCore/.build/
-          PROFDATA="HabitKitCore/.build/debug/codecov/default.profdata"
+          # swift test --package-path writes build artifacts to HabitNookCore/.build/
+          PROFDATA="HabitNookCore/.build/debug/codecov/default.profdata"
           # On macOS the test binary lives inside an .xctest bundle
-          TEST_BINARY=$(find HabitKitCore/.build/debug \
-            -name "HabitKitCorePackageTests" \
+          TEST_BINARY=$(find HabitNookCore/.build/debug \
+            -name "HabitNookCorePackageTests" \
             -path "*/Contents/MacOS/*" 2>/dev/null | head -1)
           if [ -z "$TEST_BINARY" ]; then
-            TEST_BINARY=$(find HabitKitCore/.build/debug -maxdepth 1 \
-              -name "HabitKitCorePackageTests" -type f 2>/dev/null | head -1)
+            TEST_BINARY=$(find HabitNookCore/.build/debug -maxdepth 1 \
+              -name "HabitNookCorePackageTests" -type f 2>/dev/null | head -1)
           fi
 
           COVERAGE=0
@@ -229,9 +229,9 @@ print(int(covered * 100 / count) if count > 0 else 0)
 " 2>/dev/null || echo "0")
           fi
 
-          echo "HabitKitCore line coverage: ${COVERAGE}%"
+          echo "HabitNookCore line coverage: ${COVERAGE}%"
           if [ "$COVERAGE" -lt 80 ]; then
-            echo "❌ HabitKitCore coverage ${COVERAGE}% is below the 80% minimum."
+            echo "❌ HabitNookCore coverage ${COVERAGE}% is below the 80% minimum."
             exit 1
           fi
           echo "✅ Coverage threshold met."
@@ -243,10 +243,10 @@ print(int(covered * 100 / count) if count > 0 else 0)
     steps:
       - uses: actions/checkout@v4
 
-      - name: Verify #Preview in HabitKitUI component files
+      - name: Verify #Preview in HabitNookUI component files
         run: |
           MISSING=""
-          for f in HabitKitUI/Sources/Components/*.swift; do
+          for f in HabitNookUI/Sources/Components/*.swift; do
             if ! grep -q '#Preview' "$f"; then
               MISSING="$MISSING\n  $f"
             fi

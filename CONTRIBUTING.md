@@ -1,8 +1,8 @@
-# Contributing to HabitKit
+# Contributing to HabitNook
 
-HabitKit is MIT-licensed and open to community contributions. Read this document before opening a PR.
+HabitNook is MIT-licensed and open to community contributions. Read this document before opening a PR.
 
-## What belongs in HabitKit
+## What belongs in HabitNook
 
 **In scope:**
 - New habit completion types
@@ -25,9 +25,9 @@ HabitKit is MIT-licensed and open to community contributions. Read this document
 
 All PRs must satisfy these checks before review:
 
-1. **No hardcoded colors.** All UI uses `HKTheme` tokens via `@Environment(HKThemeManager.self)`. Raw hex values and system colors (`Color.blue`, `Color.red`) are banned in Swift files. CI enforces this with a grep check.
+1. **No hardcoded colors.** All UI uses `NookTheme` tokens via `@Environment(NookThemeManager.self)`. Raw hex values and system colors (`Color.blue`, `Color.red`) are banned in Swift files. CI enforces this with a grep check.
 
-2. **No hardcoded fonts.** Use `Font.hkBody`, `Font.hkHeadline`, etc. No `.font(.body)` or explicit `Font.system(size:)` calls with fixed sizes.
+2. **No hardcoded fonts.** Use `Font.nookBody`, `Font.nookHeadline`, etc. No `.font(.body)` or explicit `Font.system(size:)` calls with fixed sizes.
 
 3. **No third-party dependencies** without maintainer approval in an issue first.
 
@@ -39,7 +39,7 @@ All PRs must satisfy these checks before review:
 
 ## Submitting a community theme
 
-Themes are submitted as entries in `HabitKitUI/Sources/Themes/Community/themes.json`. CI validates every PR against the JSON schema in `.github/theme-schema.json`. Malformed or incomplete submissions are rejected automatically before manual review.
+Themes are submitted as entries in `HabitNookUI/Sources/Themes/Community/themes.json`. CI validates every PR against the JSON schema in `.github/theme-schema.json`. Malformed or incomplete submissions are rejected automatically before manual review.
 
 Required fields: `id`, `name`, `author` (your GitHub handle), `isDark`, and all 11 color roles.
 

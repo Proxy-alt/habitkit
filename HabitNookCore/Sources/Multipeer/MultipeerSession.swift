@@ -6,7 +6,7 @@ import MultipeerConnectivity
 /// Manages MCSession-based peer-to-peer communication for habit template
 /// trading and syncing live timer state between nearby devices (§8.30).
 ///
-/// HabitNook advertises itself as "habitkit-share" and discovers peers with
+/// HabitNook advertises itself as "habitnook-share" and discovers peers with
 /// the same service type. Template data is sent as JSON; live timer ticks
 /// are sent as small binary payloads.
 public final class MultipeerSession: NSObject, @unchecked Sendable {
@@ -17,7 +17,7 @@ public final class MultipeerSession: NSObject, @unchecked Sendable {
 
     // MARK: - Constants
 
-    private static let serviceType = "habitkit-share"
+    private static let serviceType = "habitnook-share"
 
     // MARK: - Private state (nonisolated access guarded by isolation below)
 

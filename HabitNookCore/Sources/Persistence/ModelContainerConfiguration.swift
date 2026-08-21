@@ -27,7 +27,7 @@ public actor ModelContainerConfiguration {
     ///
     /// - Parameter cloudKitEnabled: When `true` the container will sync with
     ///   iCloud via CloudKit using the container identifier
-    ///   `iCloud.com.habitkit.app`.
+    ///   `iCloud.com.habitnook.app`.
     /// - Returns: A ready-to-use `ModelContainer`.
     /// - Throws: Any error raised by `ModelContainer.init`.
     public static func makeContainer(cloudKitEnabled: Bool) throws -> ModelContainer {
@@ -38,7 +38,7 @@ public actor ModelContainerConfiguration {
             configuration = ModelConfiguration(
                 schema: schema,
                 isStoredInMemoryOnly: false,
-                cloudKitDatabase: .private("iCloud.com.habitkit.app")
+                cloudKitDatabase: .private("iCloud.com.habitnook.app")
             )
         } else {
             configuration = ModelConfiguration(

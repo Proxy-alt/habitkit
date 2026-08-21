@@ -136,5 +136,5 @@ public struct FocusFilterConfiguration: Sendable {
 
 public extension Notification.Name {
     /// Posted when the Focus Filter configuration changes.
-    static let focusFilterDidChange = Notification.Name("com.habitkit.focusFilterDidChange")
+    static let focusFilterDidChange = Notification.Name("com.habitnook.focusFilterDidChange")
 }

@@ -5,7 +5,7 @@ import Foundation
 
 /// Reads and writes NFC NDEF tags to encode habit deep links (§8.34).
 ///
-/// A user can write a `habitkit://habit/<uuid>` URL to an NFC sticker.
+/// A user can write a `habitnook://habit/<uuid>` URL to an NFC sticker.
 /// Tapping the sticker while HabitNook is in the foreground logs the habit
 /// instantly. Tapping when HabitNook is not running launches the app via
 /// Universal Links.
@@ -36,7 +36,7 @@ public final class NFCManager: NSObject, NFCNDEFReaderSessionDelegate, @unchecke
 
     /// Starts an NFC reading session.
     ///
-    /// When a habitkit:// tag is detected, `onHabitTagRead` is called with
+    /// When a habitnook:// tag is detected, `onHabitTagRead` is called with
     /// the habit UUID.
     public func startReadingSession() {
         guard NFCNDEFReaderSession.readingAvailable else { return }
@@ -59,8 +59,8 @@ public final class NFCManager: NSObject, NFCNDEFReaderSessionDelegate, @unchecke
     ///   - habitName: Display name for the NDEF record title.
     public func writeHabitTag(habitID: UUID, habitName: String) {
         guard NFCNDEFReaderSession.readingAvailable else { return }
-        let url = URL(string: "habitkit://habit/\(habitID.uuidString)")
-        let uriPayload = NFCNDEFPayload.wellKnownTypeURIPayload(url: url ?? URL(string: "habitkit://")!)
+        let url = URL(string: "habitnook://habit/\(habitID.uuidString)")
+        let uriPayload = NFCNDEFPayload.wellKnownTypeURIPayload(url: url ?? URL(string: "habitnook://")!)
         let message = NFCNDEFMessage(records: [uriPayload].compactMap { $0 })
         pendingWritePayload = message
 
@@ -91,7 +91,7 @@ public final class NFCManager: NSObject, NFCNDEFReaderSessionDelegate, @unchecke
         for message in messages {
             for record in message.records {
                 guard let url = record.wellKnownTypeURIPayload() else { continue }
-                if url.scheme == "habitkit",
+                if url.scheme == "habitnook",
                    url.host == "habit",
                    let idString = url.pathComponents.dropFirst().first,
                    let habitID = UUID(uuidString: idString) {

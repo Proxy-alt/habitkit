@@ -115,5 +115,5 @@ public final class WatchSession: NSObject, WCSessionDelegate, Sendable {
 public extension Notification.Name {
     /// Posted when the Apple Watch requests that a habit be logged.
     /// `userInfo["habitID"]` contains the `UUID`.
-    static let watchDidRequestLogHabit = Notification.Name("com.habitkit.watchDidRequestLogHabit")
+    static let watchDidRequestLogHabit = Notification.Name("com.habitnook.watchDidRequestLogHabit")
 }

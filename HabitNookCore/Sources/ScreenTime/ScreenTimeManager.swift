@@ -59,7 +59,7 @@ public actor ScreenTimeManager {
         )
         let center = DeviceActivityCenter()
         try? center.startMonitoring(
-            DeviceActivityName("com.habitkit.unblock"),
+            DeviceActivityName("com.habitnook.unblock"),
             during: schedule
         )
     }
@@ -69,7 +69,7 @@ public actor ScreenTimeManager {
         store.shield.applications = nil
         store.shield.applicationCategories = nil
         let center = DeviceActivityCenter()
-        center.stopMonitoring([DeviceActivityName("com.habitkit.unblock")])
+        center.stopMonitoring([DeviceActivityName("com.habitnook.unblock")])
     }
 
     // MARK: - Usage observation

@@ -21,7 +21,7 @@ public struct VisualIntelligenceIntent: AppIntent {
     /// The raw string payload from the scanned QR code or NFC tag.
     @Parameter(
         title: "Habit Identifier",
-        description: "Raw habitkit:// URL or UUID from a scanned QR code or NFC tag."
+        description: "Raw habitnook:// URL or UUID from a scanned QR code or NFC tag."
     )
     public var habitIdentifier: String
 
@@ -35,10 +35,10 @@ public struct VisualIntelligenceIntent: AppIntent {
     // MARK: - Perform
 
     public func perform() async throws -> some IntentResult & ReturnsValue<HabitEntity> {
-        // Parse habitkit:// URL or bare UUID.
+        // Parse habitnook:// URL or bare UUID.
         let habitID: UUID
         if let url = URL(string: habitIdentifier),
-           url.scheme == "habitkit",
+           url.scheme == "habitnook",
            url.host == "habit",
            let idString = url.pathComponents.dropFirst().first,
            let id = UUID(uuidString: idString) {

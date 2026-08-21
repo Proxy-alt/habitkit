@@ -2,7 +2,7 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN"
     "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <!--
-    PrivacyInfo.xcprivacy — HabitKit Privacy Manifest
+    PrivacyInfo.xcprivacy — HabitNook Privacy Manifest
     ─────────────────────────────────────────────────
     Required by App Store Connect for apps using certain APIs.
     Submitted alongside the main app bundle; Xcode includes it
@@ -182,7 +182,7 @@
 
     <!-- ═══════════════════════════════════════════════════════════
          TRACKING
-         HabitKit does not track users across apps or websites.
+         HabitNook does not track users across apps or websites.
     ═══════════════════════════════════════════════════════════ -->
 
     <key>NSPrivacyTracking</key>

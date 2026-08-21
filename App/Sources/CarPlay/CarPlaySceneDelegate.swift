@@ -149,5 +149,5 @@ public struct CarPlayHabitItem: Codable, Sendable {
 
 public extension Notification.Name {
     /// Posted when the CarPlay UI requests a habit be logged.
-    static let carPlayDidRequestLogHabit = Notification.Name("com.habitkit.carPlayDidRequestLogHabit")
+    static let carPlayDidRequestLogHabit = Notification.Name("com.habitnook.carPlayDidRequestLogHabit")
 }

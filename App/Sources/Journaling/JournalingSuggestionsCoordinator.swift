@@ -106,5 +106,5 @@ public enum MilestoneKind: Sendable {
 
 public extension Notification.Name {
     /// Posted when the user selects a journaling suggestion.
-    static let journalSuggestionSelected = Notification.Name("com.habitkit.journalSuggestionSelected")
+    static let journalSuggestionSelected = Notification.Name("com.habitnook.journalSuggestionSelected")
 }

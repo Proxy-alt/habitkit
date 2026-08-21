@@ -16,7 +16,7 @@ public actor ShareManager {
 
     // MARK: - Private state
 
-    private let container = CKContainer(identifier: "iCloud.com.habitkit.app")
+    private let container = CKContainer(identifier: "iCloud.com.habitnook.app")
     private var activeShares: [UUID: CKShare] = [:]
 
     // MARK: - Init

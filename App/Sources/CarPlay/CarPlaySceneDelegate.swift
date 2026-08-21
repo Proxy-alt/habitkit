@@ -1,5 +1,6 @@
 import CarPlay
 import Foundation
+import HabitNookCore
 import UIKit
 
 // MARK: - CarPlaySceneDelegate
@@ -108,7 +109,7 @@ public final class CarPlaySceneDelegate: UIResponder, CPTemplateApplicationScene
 
     private func loadTodayHabits() -> [CarPlayHabitItem] {
         // Read from shared UserDefaults — written by the main app on each completion.
-        let defaults = UserDefaults(suiteName: "group.com.habitkit.app")
+        let defaults = UserDefaults(suiteName: AppGroupIdentifier.value)
         guard let data = defaults?.data(forKey: "carplay.todayHabits"),
               let habits = try? JSONDecoder().decode([CarPlayHabitItem].self, from: data) else {
             return []

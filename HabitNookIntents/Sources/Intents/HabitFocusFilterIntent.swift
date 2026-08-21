@@ -74,7 +74,7 @@ public struct HabitFocusFilterIntent: SetFocusFilterIntent {
     public func perform() async throws -> some IntentResult {
         // Persist the configuration to shared UserDefaults so the Today view
         // and widget can read it without invoking the intent again.
-        let defaults = UserDefaults(suiteName: "group.com.habitkit.app")
+        let defaults = UserDefaults(suiteName: AppGroupIdentifier.value)
         defaults?.set(habitGroup, forKey: "focus.habitGroup")
         defaults?.set(hideSensitiveHabits, forKey: "focus.hideSensitive")
         defaults?.set(silenceNotifications, forKey: "focus.silenceNotifications")
@@ -110,7 +110,7 @@ public struct FocusFilterConfiguration: Sendable {
 
     /// Loads the current configuration from shared UserDefaults.
     public static func current() -> FocusFilterConfiguration {
-        let defaults = UserDefaults(suiteName: "group.com.habitkit.app")
+        let defaults = UserDefaults(suiteName: AppGroupIdentifier.value)
         return FocusFilterConfiguration(
             habitGroup: defaults?.string(forKey: "focus.habitGroup"),
             hideSensitiveHabits: defaults?.bool(forKey: "focus.hideSensitive") ?? false,

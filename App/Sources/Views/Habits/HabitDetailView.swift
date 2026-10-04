@@ -301,6 +301,7 @@ struct HabitDetailView: View {
             updateGeofenceToCurrentLocation()
         } else {
             habit.schedule.geofence = nil
+            try? modelContext.save()
             let habitID = habit.id
             Task { await geofenceMonitor.removeGeofence(for: habitID) }
         }
@@ -310,6 +311,9 @@ struct HabitDetailView: View {
         guard var geofence = habit.schedule.geofence else { return }
         geofence.radiusMeters = radius
         habit.schedule.geofence = geofence
+        // registerAllGeofences reads from a fresh ModelContext, so unsaved
+        // changes on this one would be invisible to it.
+        try? modelContext.save()
         Task { await geofenceMonitor.registerAllGeofences() }
     }
 
@@ -324,6 +328,7 @@ struct HabitDetailView: View {
                 longitude: coordinate.longitude,
                 radiusMeters: existingRadius
             )
+            try? modelContext.save()
             await geofenceMonitor.registerAllGeofences()
         }
     }

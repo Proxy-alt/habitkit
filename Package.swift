@@ -16,14 +16,7 @@ let package = Package(
     targets: [
         .target(
             name: "HabitNookCore",
-            path: "HabitNookCore/Sources",
-            exclude: [
-                // Coded against a speculative EnergyKit API shape (ElectricityGuidance.shared,
-                // .lowCarbonWindows, .currentCarbonIntensity) that does not match the real,
-                // venue/query-based ElectricityGuidance.Service AsyncSequence API.
-                // Needs a rewrite before re-enabling.
-                "EnergyKit/EnergyScheduler.swift",
-            ]
+            path: "HabitNookCore/Sources"
         ),
         .target(
             name: "HabitNookUI",

@@ -6,9 +6,10 @@ import UIKit
 
 /// Presents the PaperKit markup canvas for annotating habit completion photos (§8.42).
 ///
-/// When a user long-presses a completion photo in the detail view, the
-/// coordinator presents `PaperMarkupViewController`. On dismissal the
-/// serialised `PaperMarkup` data is stored in `HabitCompletion.paperMarkup`.
+/// `PaperMarkupViewController.Delegate` only reports live editing interactions
+/// (drawing/selection/adornment changes) — it has no finish/cancel callback, so
+/// this coordinator supplies its own Done/Cancel bar buttons and reads the
+/// `PaperMarkup` back from the view controller directly when the user taps Done.
 @MainActor
 public final class PaperMarkupCoordinator: NSObject, ObservableObject {
 
@@ -23,8 +24,9 @@ public final class PaperMarkupCoordinator: NSObject, ObservableObject {
 
     // MARK: - Private state
 
-    private var completionID: UUID?
     private var onSave: ((Data) -> Void)?
+    private weak var markupViewController: PaperMarkupViewController?
+    private weak var presentingViewController: UIViewController?
 
     // MARK: - Init
 
@@ -48,42 +50,60 @@ public final class PaperMarkupCoordinator: NSObject, ObservableObject {
         onSave: @escaping (Data) -> Void,
         from presentingViewController: UIViewController
     ) {
-        self.completionID = completionID
+        guard let image = UIImage(data: imageData), let cgImage = image.cgImage else { return }
+
         self.onSave = onSave
+        self.presentingViewController = presentingViewController
 
-        let markupVC = PaperMarkupViewController()
-        markupVC.delegate = self
-
-        if let existingMarkup,
-           let markup = try? PaperMarkup(data: existingMarkup) {
-            markupVC.markup = markup
+        var markup: PaperMarkup
+        if let existingMarkup, let loaded = try? PaperMarkup(dataRepresentation: existingMarkup) {
+            markup = loaded
+        } else {
+            let bounds = CGRect(origin: .zero, size: image.size)
+            markup = PaperMarkup(bounds: bounds)
+            markup.insertNewImage(cgImage, frame: bounds)
         }
 
-        if let image = UIImage(data: imageData) {
-            markupVC.backgroundImage = image
-        }
+        let markupVC = PaperMarkupViewController(markup: markup, supportedFeatureSet: .latest)
+        markupVC.navigationItem.leftBarButtonItem = UIBarButtonItem(
+            barButtonSystemItem: .cancel, target: self, action: #selector(cancelTapped)
+        )
+        markupVC.navigationItem.rightBarButtonItem = UIBarButtonItem(
+            barButtonSystemItem: .done, target: self, action: #selector(doneTapped)
+        )
+        self.markupViewController = markupVC
 
         let nav = UINavigationController(rootViewController: markupVC)
         nav.modalPresentationStyle = .fullScreen
         presentingViewController.present(nav, animated: true)
         isPresentingMarkup = true
     }
-}
 
-// MARK: - PaperMarkupViewControllerDelegate
+    // MARK: - Bar button actions
 
-extension PaperMarkupCoordinator: PaperMarkupViewControllerDelegate {
-    public func markupViewControllerDidFinish(
-        _ controller: PaperMarkupViewController,
-        markup: PaperMarkup
-    ) {
-        isPresentingMarkup = false
-        guard let data = try? markup.serialisedData() else { return }
-        lastMarkupData = data
-        onSave?(data)
+    @objc private func doneTapped() {
+        guard let markup = markupViewController?.markup else {
+            dismiss()
+            return
+        }
+        Task {
+            if let data = try? await markup.dataRepresentation() {
+                lastMarkupData = data
+                onSave?(data)
+            }
+            dismiss()
+        }
     }
 
-    public func markupViewControllerDidCancel(_ controller: PaperMarkupViewController) {
+    @objc private func cancelTapped() {
+        dismiss()
+    }
+
+    private func dismiss() {
+        presentingViewController?.dismiss(animated: true)
         isPresentingMarkup = false
+        markupViewController = nil
+        presentingViewController = nil
+        onSave = nil
     }
 }

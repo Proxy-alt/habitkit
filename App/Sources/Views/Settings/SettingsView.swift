@@ -102,7 +102,7 @@ struct SettingsView: View {
                         }
                         .accessibilityLabel("Version \(appVersion)")
 
-                        if let githubURL = URL(string: "https://github.com/habitkit/habitkit") {
+                        if let githubURL = URL(string: "https://github.com/Proxy-alt/habitkit") {
                             Link(destination: githubURL) {
                                 Label("GitHub", systemImage: NookSymbol.link)
                                     .foregroundStyle(themes.current.primaryColor)

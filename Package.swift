@@ -32,5 +32,10 @@ let package = Package(
             dependencies: ["HabitNookCore"],
             path: "HabitNookIntents/Sources"
         ),
+        .testTarget(
+            name: "HabitNookCoreTests",
+            dependencies: ["HabitNookCore"],
+            path: "HabitNookCore/Tests/HabitNookCoreTests"
+        ),
     ]
 )

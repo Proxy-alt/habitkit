@@ -173,7 +173,7 @@ jobs:
   # so a bare `swift build` (macOS host) can't compile it. Build for the iOS
   # Simulator from the root Package.swift instead, which is what the app links.
   build:
-    name: Build Packages and App
+    name: Build App
     runs-on: macos-26
     steps:
       - uses: actions/checkout@v4
@@ -181,13 +181,6 @@ jobs:
       - uses: maxim-lobanov/setup-xcode@v1
         with:
           xcode-version: latest-stable
-
-      - name: Build packages
-        run: |
-          xcodebuild build \
-            -scheme HabitNook-Package \
-            -destination 'generic/platform=iOS Simulator' \
-            CODE_SIGNING_ALLOWED=NO
 
       - name: Build app
         run: |
@@ -211,6 +204,9 @@ jobs:
 
       - name: Test HabitNookCore
         run: |
+          # With HabitNook.xcodeproj present, xcodebuild ignores Package.swift and
+          # can't see the package's test scheme. Move it aside for this job.
+          mv HabitNook.xcodeproj "$RUNNER_TEMP/"
           SIM_ID=$(xcrun simctl list devices available -j | python3 -c "
           import sys, json
           devices = json.load(sys.stdin)['devices']

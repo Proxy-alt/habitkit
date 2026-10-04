@@ -60,7 +60,7 @@ public final class HabitDirectoryPresenter: NSObject, NSFilePresenter, Sendable 
         )
     }
 
-    public func accommodatePresentedItemDeletion(completionHandler: @escaping (any Error?) -> Void) {
+    public func accommodatePresentedItemDeletion(completionHandler: @escaping ((any Error)?) -> Void) {
         completionHandler(nil)
     }
 }

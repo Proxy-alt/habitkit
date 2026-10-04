@@ -17,6 +17,10 @@ public actor LocationManager: NSObject {
     // MARK: - Private state
 
     private var monitor: CLMonitor?
+    private var monitorCreation: Task<CLMonitor, Never>?
+    /// Held for as long as geofences are monitored. Without an `.always`
+    /// session, `CLMonitor.events` stops delivering once the app isn't in use.
+    private var serviceSession: CLServiceSession?
     private var onEntryHandlers: [String: @Sendable () async -> Void] = [:]
 
     // MARK: - Init
@@ -107,6 +111,9 @@ public actor LocationManager: NSObject {
     ///
     /// This runs indefinitely until cancelled. Call from a long-lived `Task`.
     public func startMonitoring() async {
+        if serviceSession == nil {
+            serviceSession = CLServiceSession(authorization: .always)
+        }
         guard let monitor = try? await getOrCreateMonitor() else { return }
         do {
             for try await event in await monitor.events {
@@ -121,8 +128,13 @@ public actor LocationManager: NSObject {
 
     private func getOrCreateMonitor() async throws -> CLMonitor {
         if let existing = monitor { return existing }
+        // The `await` below lets other callers re-enter this actor, and creating
+        // a second CLMonitor with the same name throws. Share one creation task.
+        if let monitorCreation { return await monitorCreation.value }
         // CLMonitor names must be alphanumeric; a reverse-DNS name throws at runtime.
-        let newMonitor = await CLMonitor("HabitNookGeofence")
+        let creation = Task { await CLMonitor("HabitNookGeofence") }
+        monitorCreation = creation
+        let newMonitor = await creation.value
         self.monitor = newMonitor
         return newMonitor
     }

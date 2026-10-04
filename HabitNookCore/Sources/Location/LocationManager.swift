@@ -25,12 +25,31 @@ public actor LocationManager: NSObject {
 
     // MARK: - Authorization
 
-    /// Requests When-In-Use location authorization.
-    ///
-    /// Full accuracy is required for precise geofence delivery.
+    /// Requests Always location authorization, required for `CLMonitor` geofence
+    /// events to be delivered while HabitNook is backgrounded or not running.
     public func requestAuthorization() async {
         let locationManager = CLLocationManager()
-        locationManager.requestWhenInUseAuthorization()
+        locationManager.requestAlwaysAuthorization()
+    }
+
+    // MARK: - One-shot location
+
+    /// Returns the device's current location once, or `nil` if unavailable,
+    /// denied, or no fix could be obtained.
+    public func currentLocation() async -> CLLocationCoordinate2D? {
+        do {
+            for try await update in CLLocationUpdate.liveUpdates() {
+                if let location = update.location {
+                    return location.coordinate
+                }
+                if update.authorizationDenied {
+                    return nil
+                }
+            }
+        } catch {
+            return nil
+        }
+        return nil
     }
 
     // MARK: - Geofence management

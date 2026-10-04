@@ -1,6 +1,26 @@
 import Foundation
 import SwiftData
 
+/// A CoreLocation-based auto-completion trigger for a habit (§8.8).
+///
+/// Setting `HabitSchedule.geofence` does not by itself register a `CLMonitor`
+/// region — call `GeofenceHabitMonitor.registerAllGeofences()` after changing
+/// it so the running app picks up the change.
+public struct HabitGeofence: Codable, Equatable, Sendable {
+    /// Latitude of the geofence center.
+    public var latitude: Double
+    /// Longitude of the geofence center.
+    public var longitude: Double
+    /// Radius in meters. `LocationManager.addGeofence` clamps this to `CLMonitor`'s 50–1000m range.
+    public var radiusMeters: Double
+
+    public init(latitude: Double, longitude: Double, radiusMeters: Double = 150) {
+        self.latitude = latitude
+        self.longitude = longitude
+        self.radiusMeters = radiusMeters
+    }
+}
+
 /// Stores the scheduling rule and reminder configuration for a habit.
 @Model
 public class HabitSchedule {
@@ -12,6 +32,10 @@ public class HabitSchedule {
     /// JSON-encoded `[HabitReminder]`. Stored as `Data` for the same reason:
     /// Array<HabitReminder> also uses Builtin.BridgeObject for its CoW storage buffer.
     private var remindersData: Data = Data()
+
+    /// JSON-encoded `HabitGeofence?`. Stored as `Data` for the same reason as
+    /// `frequencyData`/`remindersData`. Empty `Data` means "no geofence set".
+    private var geofenceData: Data = Data()
 
     /// The habit this schedule belongs to. `nil` only during object-graph
     /// construction (e.g. previews and tests); always non-`nil` in production.
@@ -44,6 +68,18 @@ public class HabitSchedule {
     public var reminderTimes: [Date] {
         get { reminders.map(\.time) }
         set { reminders = newValue.map { HabitReminder(time: $0) } }
+    }
+
+    /// The location-based auto-completion trigger for this habit, if any (§8.8).
+    /// Computed over `geofenceData`.
+    public var geofence: HabitGeofence? {
+        get {
+            guard !geofenceData.isEmpty else { return nil }
+            return try? JSONDecoder().decode(HabitGeofence.self, from: geofenceData)
+        }
+        set {
+            geofenceData = newValue.flatMap { try? JSONEncoder().encode($0) } ?? Data()
+        }
     }
 
     public init(

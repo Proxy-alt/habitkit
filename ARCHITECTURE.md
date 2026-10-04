@@ -2,7 +2,7 @@
 
 **Maintained by the Open Nook Foundation** (nonprofit; revenue funds developers and server costs).
 
-This document defines the monorepo structure, package boundaries, shared infrastructure, and cross-app integration model for the Nook suite. It is the **single canonical reference** for suite architecture: where any other document (including `habitkit-design-doc.md`) conflicts with this one, this document wins. Suite-architecture content must not be duplicated elsewhere — other docs link here. See `DECISIONS.md` for the decision record behind this document.
+This document defines the monorepo structure, package boundaries, shared infrastructure, and cross-app integration model for the Nook suite. It is the **single canonical reference** for suite architecture: where any other document (including `habitnook-design-doc.md`) conflicts with this one, this document wins. Suite-architecture content must not be duplicated elsewhere — other docs link here. See `DECISIONS.md` for the decision record behind this document.
 
 The HabitNook design doc (`habitnook-design-doc.md`) covers HabitNook-specific features. This document covers the infrastructure that all suite apps share.
 
@@ -156,7 +156,7 @@ nook/
 
 This table is the single source of truth for the suite roster. 24 apps. Any planned-apps table elsewhere is superseded.
 
-Status — **Active**: shipping or in build phase. **Planned**: design doc exists or phase assigned. **Incubating**: architecture notes exist (habitkit-design-doc.md or §21–§22 here) but no design doc and no phase; requires further development before entering the phase plan.
+Status — **Active**: shipping or in build phase. **Planned**: design doc exists or phase assigned. **Incubating**: architecture notes exist (habitnook-design-doc.md or §21–§22 here) but no design doc and no phase; requires further development before entering the phase plan.
 
 OS support tier — **Rolling**: current iOS minus one (default). **Elderly-3**: three iOS generations (apps targeting elderly users). **Org-5**: up to five iOS generations (apps sold to institutions).
 
@@ -187,7 +187,7 @@ OS support tier — **Rolling**: current iOS minus one (default). **Elderly-3**:
 | 23 | MailNook | — | Incubating | Rolling |
 | 24 | WatchNook | — | Incubating | Rolling |
 
-Android is out of scope for v1–v2 (see §15.5). Mac Catalyst is rejected; macOS presence is SwiftUI multiplatform for non-health apps and MenuBarExtra for health apps (see §15 and habitkit-design-doc.md §20.19).
+Android is out of scope for v1–v2 (see §15.5). Mac Catalyst is rejected; macOS presence is SwiftUI multiplatform for non-health apps and MenuBarExtra for health apps (see §15 and habitnook-design-doc.md §20.19).
 
 ---
 
@@ -645,7 +645,7 @@ Declared secondary writers:
 |---|---|---|---|
 | Dietary quantity types | NutriNook | AcademicNook | Confirmed school-lunch items only (§9.3 of the AcademicNook design doc) |
 | `stateOfMind` | MindNook | CareNook | Care-recipient wellbeing check-ins only |
-| Medication dose events | MedNook | CareNook | Adherence confirmations only. **[MUST VERIFY]** third-party dose-event *writability* under the iOS 26 Medications API before phases 7/18 — see habitkit-design-doc.md §8.26; if writes are impossible, this row and CareNook §7 need redesign around Health-app-logged doses. |
+| Medication dose events | MedNook | CareNook | Adherence confirmations only. **[MUST VERIFY]** third-party dose-event *writability* under the iOS 26 Medications API before phases 7/18 — see habitnook-design-doc.md §8.26; if writes are impossible, this row and CareNook §7 need redesign around Health-app-logged doses. |
 
 Primary ownership:
 
@@ -4723,11 +4723,11 @@ Violations are caught by the no_cross_app_imports SwiftLint rule.
 
 ## 21. WatchNook Architecture
 
-Per the canonical-source rule (§ header): this document owns *suite* architecture; per-app design content lives in the design-doc layer. WatchNook's design — API layer split, quota management, feed composition, NookPlayer, SponsorBlock/DeArrow, FairPlay position, Safari extension, macOS scripting — is maintained in **habitkit-design-doc.md §34** (including its [LEGAL REVIEW REQUIRED] gate on the InnerTube and FairPlay layers) until a standalone WatchNook design doc exists. An earlier duplicate of that content lived here and had already drifted from the fuller copy; it has been removed.
+Per the canonical-source rule (§ header): this document owns *suite* architecture; per-app design content lives in the design-doc layer. WatchNook's design — API layer split, quota management, feed composition, NookPlayer, SponsorBlock/DeArrow, FairPlay position, Safari extension, macOS scripting — is maintained in **habitnook-design-doc.md §34** (including its [LEGAL REVIEW REQUIRED] gate on the InnerTube and FairPlay layers) until a standalone WatchNook design doc exists. An earlier duplicate of that content lived here and had already drifted from the fuller copy; it has been removed.
 
 ## 22. MailNook Architecture
 
-Same rule: MailNook's design — account adapters and their corrected authentication table (iCloud app-specific passwords; ProtonMail unsupported on iOS), subscription detection, unified inbox, suite integrations, privacy architecture — is maintained in **habitkit-design-doc.md §35** until a standalone MailNook design doc exists. The duplicate formerly here has been removed.
+Same rule: MailNook's design — account adapters and their corrected authentication table (iCloud app-specific passwords; ProtonMail unsupported on iOS), subscription detection, unified inbox, suite integrations, privacy architecture — is maintained in **habitnook-design-doc.md §35** until a standalone MailNook design doc exists. The duplicate formerly here has been removed.
 
 ## Revision History
 

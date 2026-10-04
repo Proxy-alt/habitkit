@@ -11,3 +11,9 @@ HabitNook.xcodeproj/
 xcuserdata/
 DerivedData/
 
+# macOS
+.DS_Store
+
+# graphify
+graphify-out/
+

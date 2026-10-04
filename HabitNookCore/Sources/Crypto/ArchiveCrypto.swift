@@ -32,8 +32,9 @@ public enum ArchiveCrypto {
         var item: CFTypeRef?
         let status = SecItemCopyMatching(query as CFDictionary, &item)
 
-        if status == errSecSuccess, let keyRef = item {
-            let secKey = keyRef as! SecKey
+        if status == errSecSuccess, let keyRef = item, CFGetTypeID(keyRef) == SecKeyGetTypeID() {
+            // CF types can't be conditionally cast; the type ID check above makes this safe.
+            let secKey = unsafeBitCast(keyRef, to: SecKey.self)
             if let data = SecKeyCopyExternalRepresentation(secKey, nil) as Data? {
                 if let key = try? SecureEnclave.P256.KeyAgreement.PrivateKey(
                     dataRepresentation: data

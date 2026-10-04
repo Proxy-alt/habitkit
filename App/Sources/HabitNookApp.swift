@@ -9,6 +9,7 @@ struct HabitNookApp: App {
     @State private var themeManager = NookThemeManager()
     @State private var navigator = AppNavigator()
     @State private var alarmMonitor = InAppAlarmMonitor()
+    @State private var geofenceMonitor = GeofenceHabitMonitor()
     @AppStorage(DefaultsKeys.iCloudSync) private var icloudSyncEnabled = true
 
     private let modelContainer: ModelContainer = {
@@ -47,6 +48,7 @@ struct HabitNookApp: App {
                 .environment(themeManager)
                 .environment(navigator)
                 .environment(alarmMonitor)
+                .environment(geofenceMonitor)
                 .modelContainer(modelContainer)
                 .preferredColorScheme(themeManager.current.isDark ? .dark : .light)
                 .onAppear {
@@ -54,6 +56,7 @@ struct HabitNookApp: App {
                     AppDependencyManager.shared.add(dependency: navigator as any TimerLaunching)
                     AppDependencyManager.shared.add(dependency: modelContainer)
                     alarmMonitor.start(modelContainer: modelContainer)
+                    geofenceMonitor.start(modelContainer: modelContainer)
                     Task { await HabitCoach.shared.prewarm() }
                 }
         }

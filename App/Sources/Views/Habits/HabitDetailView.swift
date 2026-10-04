@@ -1,3 +1,4 @@
+import CoreLocation
 import SwiftUI
 import SwiftData
 import HabitNookCore
@@ -6,10 +7,12 @@ import HabitNookUI
 
 struct HabitDetailView: View {
     @Environment(NookThemeManager.self) private var themes
+    @Environment(GeofenceHabitMonitor.self) private var geofenceMonitor
     @Environment(\.modelContext) private var modelContext
     @Environment(\.dismiss) private var dismiss
     @Bindable var habit: Habit
     @State private var showDeleteConfirm = false
+    @State private var isLocatingForGeofence = false
 
     private var completionRate30Days: Double {
         let calendar = Calendar.current
@@ -38,6 +41,7 @@ struct HabitDetailView: View {
                     headerCard
                     statsRow
                     remindersSection
+                    locationSection
                     heatmapSection
                     recentCompletions
                     dangerZone
@@ -157,6 +161,53 @@ struct HabitDetailView: View {
         }
     }
 
+    private var locationSection: some View {
+        NookCard {
+            VStack(alignment: .leading, spacing: NookSpacing.sm) {
+                Text("Location")
+                    .font(.nookHeadline)
+                    .foregroundStyle(themes.current.textColor)
+
+                Toggle(
+                    "Auto-complete on arrival",
+                    isOn: Binding(
+                        get: { habit.schedule.geofence != nil },
+                        set: { setGeofenceEnabled($0) }
+                    )
+                )
+                .tint(themes.current.primaryColor)
+                .foregroundStyle(themes.current.textColor)
+
+                if let geofence = habit.schedule.geofence {
+                    Stepper(
+                        "Radius: \(Int(geofence.radiusMeters))m",
+                        value: Binding(
+                            get: { geofence.radiusMeters },
+                            set: { updateGeofenceRadius(to: $0) }
+                        ),
+                        in: 50...1000,
+                        step: 50
+                    )
+                    .foregroundStyle(themes.current.textColor)
+
+                    HStack {
+                        Button("Update to Current Location") {
+                            updateGeofenceToCurrentLocation()
+                        }
+                        .foregroundStyle(themes.current.primaryColor)
+                        .font(.nookBody)
+                        .disabled(isLocatingForGeofence)
+
+                        if isLocatingForGeofence {
+                            ProgressView()
+                                .tint(themes.current.primaryColor)
+                        }
+                    }
+                }
+            }
+        }
+    }
+
     private var heatmapSection: some View {
         NookCard {
             VStack(alignment: .leading, spacing: NookSpacing.sm) {
@@ -242,6 +293,38 @@ struct HabitDetailView: View {
                 tintColor: tintColor,
                 stopIntent: CompleteHabitAlarmIntent(habit: HabitEntity(id: habitID, name: habitName, icon: icon))
             )
+        }
+    }
+
+    private func setGeofenceEnabled(_ enabled: Bool) {
+        if enabled {
+            updateGeofenceToCurrentLocation()
+        } else {
+            habit.schedule.geofence = nil
+            let habitID = habit.id
+            Task { await geofenceMonitor.removeGeofence(for: habitID) }
+        }
+    }
+
+    private func updateGeofenceRadius(to radius: Double) {
+        guard var geofence = habit.schedule.geofence else { return }
+        geofence.radiusMeters = radius
+        habit.schedule.geofence = geofence
+        Task { await geofenceMonitor.registerAllGeofences() }
+    }
+
+    private func updateGeofenceToCurrentLocation() {
+        isLocatingForGeofence = true
+        let existingRadius = habit.schedule.geofence?.radiusMeters ?? 150
+        Task {
+            defer { isLocatingForGeofence = false }
+            guard let coordinate = await LocationManager.shared.currentLocation() else { return }
+            habit.schedule.geofence = HabitGeofence(
+                latitude: coordinate.latitude,
+                longitude: coordinate.longitude,
+                radiusMeters: existingRadius
+            )
+            await geofenceMonitor.registerAllGeofences()
         }
     }
 

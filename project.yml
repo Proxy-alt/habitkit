@@ -20,13 +20,6 @@ targets:
           - Info.plist
           - HabitNook.entitlements
           - PrivacyInfo.xcprivacy
-          # Coded against a "finish/cancel" delegate flow that PaperKit's real
-          # PaperMarkupViewController.Delegate does not have (it only reports
-          # live editing interactions: drawing/selection/adornment changes,
-          # not a save/cancel lifecycle). Needs a rewrite — the app should
-          # supply its own Done/Cancel bar buttons and call
-          # PaperMarkup.dataRepresentation() directly — before re-enabling.
-          - PaperKit/PaperMarkupCoordinator.swift
     resources:
       - path: App/Sources/PrivacyInfo.xcprivacy
     settings:

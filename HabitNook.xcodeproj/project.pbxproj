@@ -8,10 +8,12 @@
 
 /* Begin PBXBuildFile section */
 		0ECFD03C20096991D397315B /* LiveSessionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B7D2B3D950F563E3441C6444 /* LiveSessionView.swift */; };
+		167844F1E8DC1804689786DE /* PaperMarkupCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC4185D12A0270588F95B979 /* PaperMarkupCoordinator.swift */; };
 		1C1379C226E4736A4D29CD64 /* AppNavigator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86632886671DBD8960FE148E /* AppNavigator.swift */; };
 		22A6AD5E03974C883029C9B4 /* TodayViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C6C64133780EA1103C4F2293 /* TodayViewModel.swift */; };
 		2E1A9DE064C97CA7BC5D61A0 /* HabitsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04F3A08D2A1C733EFE653E84 /* HabitsViewModel.swift */; };
 		3001871127044065BCC28CAF /* HabitRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 473B5FAB40A1FCC903860C42 /* HabitRow.swift */; };
+		340FADF6F5E53B492A9E913E /* GeofenceHabitMonitor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AD20C3CD66C4763FD34C2CE /* GeofenceHabitMonitor.swift */; };
 		40AED35D8FB98C20491179A4 /* HabitDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A19DF29D002986FE2DA776A1 /* HabitDetailView.swift */; };
 		47CE252B41B55412146EF43C /* HabitsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C943A8CDDAA3C842CF6B12C /* HabitsView.swift */; };
 		51F85BC6A9BD1D98F73B16CC /* TranslationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 69C4D7A0E5E6AB27C174DC8A /* TranslationService.swift */; };
@@ -71,6 +73,7 @@
 		06C5A0D0AB17A2098620B31C /* AddHabitView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddHabitView.swift; sourceTree = "<group>"; };
 		0DD40F2A12F3C214F22D989B /* HabitNook.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = HabitNook.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		197B63816F95C99AC6F629F5 /* HabitNookTips.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HabitNookTips.swift; sourceTree = "<group>"; };
+		2AD20C3CD66C4763FD34C2CE /* GeofenceHabitMonitor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GeofenceHabitMonitor.swift; sourceTree = "<group>"; };
 		473B5FAB40A1FCC903860C42 /* HabitRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HabitRow.swift; sourceTree = "<group>"; };
 		478C1607AB59F647026FF784 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		496C2E7CBA8C55D0940C7FB3 /* TodayView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodayView.swift; sourceTree = "<group>"; };
@@ -92,6 +95,7 @@
 		C6C64133780EA1103C4F2293 /* TodayViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodayViewModel.swift; sourceTree = "<group>"; };
 		D77682873A00EA12C5380E28 /* HabitNookWidgetsBundle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HabitNookWidgetsBundle.swift; sourceTree = "<group>"; };
 		D7A0A50B503E0760EE5152EC /* HeatmapView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HeatmapView.swift; sourceTree = "<group>"; };
+		DC4185D12A0270588F95B979 /* PaperMarkupCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaperMarkupCoordinator.swift; sourceTree = "<group>"; };
 		E73BE2B2C106BB26FEAEA5E8 /* SharedWithYouCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SharedWithYouCoordinator.swift; sourceTree = "<group>"; };
 		E8D99056758715AD4F0E0AFA /* ThemePickerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThemePickerView.swift; sourceTree = "<group>"; };
 		F12AF6AC65653A790F86DA61 /* HabitNookApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HabitNookApp.swift; sourceTree = "<group>"; };
@@ -128,6 +132,14 @@
 				B3A46F07FAF92EBC50BB4934 /* Sources */,
 			);
 			path = App;
+			sourceTree = "<group>";
+		};
+		131809AB936515E8CE1A10AB /* PaperKit */ = {
+			isa = PBXGroup;
+			children = (
+				DC4185D12A0270588F95B979 /* PaperMarkupCoordinator.swift */,
+			);
+			path = PaperKit;
 			sourceTree = "<group>";
 		};
 		184ACE6AC2967AB92CA7A828 /* Settings */ = {
@@ -235,6 +247,14 @@
 			path = Widgets;
 			sourceTree = "<group>";
 		};
+		AE7A7858B7267F8200DDAEDA /* Location */ = {
+			isa = PBXGroup;
+			children = (
+				2AD20C3CD66C4763FD34C2CE /* GeofenceHabitMonitor.swift */,
+			);
+			path = Location;
+			sourceTree = "<group>";
+		};
 		B3A46F07FAF92EBC50BB4934 /* Sources */ = {
 			isa = PBXGroup;
 			children = (
@@ -245,7 +265,9 @@
 				B8E6EAB31E17C3D40511F18B /* Handoff */,
 				51A193C920ABEBFE2752F640 /* Journaling */,
 				9A286BEB39EECA59FB7E3BF2 /* LinkPresentation */,
+				AE7A7858B7267F8200DDAEDA /* Location */,
 				6911D23DF104B24B20A55F9F /* Navigation */,
+				131809AB936515E8CE1A10AB /* PaperKit */,
 				5D753225CDEAE5145D36D7D9 /* SharedWithYou */,
 				6DA59694B8AB82DDEDB51B57 /* Tips */,
 				C0AF992655F06AE2EEA9D141 /* Translation */,
@@ -315,7 +337,7 @@
 			children = (
 				BC8EEC36E113B1D1430A26FF /* habitkit */,
 			);
-			name = Packages;
+			path = Packages;
 			sourceTree = "<group>";
 		};
 		F00E628361B7D5F9CB6C5131 /* Alarms */ = {
@@ -440,6 +462,7 @@
 				1C1379C226E4736A4D29CD64 /* AppNavigator.swift in Sources */,
 				ED67EDE5619B6FD17657B1A4 /* CarPlaySceneDelegate.swift in Sources */,
 				57BA430DB1FC04D021FA0EA8 /* ContentView.swift in Sources */,
+				340FADF6F5E53B492A9E913E /* GeofenceHabitMonitor.swift in Sources */,
 				40AED35D8FB98C20491179A4 /* HabitDetailView.swift in Sources */,
 				911858DDDDEF0CC6BCFC9BF8 /* HabitLinkPresenter.swift in Sources */,
 				674270759FB5AC496382BE1E /* HabitNookApp.swift in Sources */,
@@ -453,6 +476,7 @@
 				96E46BD58506F042F9FAE99E /* InAppAlarmMonitor.swift in Sources */,
 				A8F31D429127ACDC77EA76F4 /* JournalingSuggestionsCoordinator.swift in Sources */,
 				0ECFD03C20096991D397315B /* LiveSessionView.swift in Sources */,
+				167844F1E8DC1804689786DE /* PaperMarkupCoordinator.swift in Sources */,
 				C8B7CB82D819C17498B386E1 /* SettingsView.swift in Sources */,
 				5ED5A03EEB0A3EA7EC9CDBE7 /* SharedWithYouCoordinator.swift in Sources */,
 				ECA67CD061E30A55407EE4E4 /* ThemePickerView.swift in Sources */,

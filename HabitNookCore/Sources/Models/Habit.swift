@@ -43,14 +43,17 @@ public class Habit {
 
     /// Backing storage for `schedule`. CloudKit requires to-one relationships
     /// to be Optional; every `Habit` is always constructed with a schedule,
-    /// so `schedule` below force-unwraps rather than pushing `nil`-handling
+    /// so `schedule` below traps on `nil` rather than pushing `nil`-handling
     /// onto every call site.
     @Relationship(deleteRule: .cascade)
     var scheduleStorage: HabitSchedule?
 
     /// The scheduling rule and reminder configuration for this habit.
     public var schedule: HabitSchedule {
-        get { scheduleStorage! }
+        get {
+            guard let scheduleStorage else { preconditionFailure("Habit has no schedule") }
+            return scheduleStorage
+        }
         set { scheduleStorage = newValue }
     }
 

@@ -59,8 +59,8 @@ public final class NFCManager: NSObject, NFCNDEFReaderSessionDelegate, @unchecke
     ///   - habitName: Display name for the NDEF record title.
     public func writeHabitTag(habitID: UUID, habitName: String) {
         guard NFCNDEFReaderSession.readingAvailable else { return }
-        let url = URL(string: "habitnook://habit/\(habitID.uuidString)")
-        let uriPayload = NFCNDEFPayload.wellKnownTypeURIPayload(url: url ?? URL(string: "habitnook://")!)
+        guard let url = URL(string: "habitnook://habit/\(habitID.uuidString)") else { return }
+        let uriPayload = NFCNDEFPayload.wellKnownTypeURIPayload(url: url)
         let message = NFCNDEFMessage(records: [uriPayload].compactMap { $0 })
         pendingWritePayload = message
 

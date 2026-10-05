@@ -8,7 +8,7 @@ import NookUI
 
 @main
 struct HabitNookApp: App {
-    @State private var themeManager = NookThemeManager()
+    @State private var themeManager = NookThemeManager.habitNook()
     @State private var navigator = AppNavigator()
     @State private var alarmMonitor = InAppAlarmMonitor()
     @State private var geofenceMonitor = GeofenceHabitMonitor()

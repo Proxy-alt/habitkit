@@ -54,7 +54,7 @@ struct HabitLiveActivityWidget: Widget {
                 // The extension is a separate process from the app, so it never
                 // gets the theme applied at the app root. Without this the
                 // ring falls back to the Mocha default instead of the saved theme.
-                .nookTheme(NookThemeManager().current)
+                .nookTheme(NookThemeManager.habitNook().current)
         } dynamicIsland: { context in
             DynamicIsland {
                 DynamicIslandExpandedRegion(.leading) {

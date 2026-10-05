@@ -297,6 +297,8 @@ Move `NookButton`, `NookCard`, `NookTextField`, `NookProgressRing` and `NookComp
 
 **Phase 3 — theme manager.** Move `NookThemeManager` into NookUI and mark it `@MainActor`. Load themes through `decodeCollection`, which fixes community themes (F3). Migrate the `hk_selected_theme` key to `nook.theme.selected`, reading the old key once and then deleting it. Cache the manual-selection flag instead of reading `UserDefaults` on every `theme(for:)` call.
 
+*Status: done.* `NookUI/Theme/NookThemeManager.swift` always offers the compiled-in built-ins and takes community themes through `additionalThemes`. HabitNookUI's `NookThemeManager.habitNook()` passes its bundled `themes.json`, which now loads (F3). The old key is migrated only when it names a known theme, because `DefaultsKeys` used to register `"system"` under it, and that isn't a choice. `DefaultsKeys.selectedTheme` now names the new key and no longer registers a default. `catppuccin.json` is no longer read at runtime; it stays as the reference copy that `NookThemeTests` checks (Q3).
+
 **Phase 4 — remove.** Once no call sites use the deprecated forwards, delete them and `HabitNookUI/Sources/Tokens/`.
 
 ---

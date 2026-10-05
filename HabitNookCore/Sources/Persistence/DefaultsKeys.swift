@@ -11,8 +11,10 @@ public enum DefaultsKeys {
     /// Whether haptic feedback is enabled throughout the app. Default: `true`.
     public static let hapticsEnabled = "hk_haptics_enabled"
 
-    /// The identifier of the selected colour theme. Default: `"system"`.
-    public static let selectedTheme = "hk_selected_theme"
+    /// The identifier of the selected colour theme. No default: when unset,
+    /// the theme follows the system appearance. Owned by NookUI's
+    /// `NookThemeManager`, which migrates the old `hk_selected_theme` key.
+    public static let selectedTheme = "nook.theme.selected"
 
     /// The notification sound identifier. Default: `"default"`.
     public static let notificationSound = "hk_notification_sound"
@@ -28,7 +30,6 @@ public enum DefaultsKeys {
         UserDefaults.standard.register(defaults: [
             iCloudSync: true,
             hapticsEnabled: true,
-            selectedTheme: "system",
             notificationSound: "default"
         ])
     }

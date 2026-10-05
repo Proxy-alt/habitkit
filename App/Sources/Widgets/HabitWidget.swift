@@ -32,7 +32,7 @@ struct HabitWidgetProvider: AppIntentTimelineProvider {
     typealias Entry = HabitWidgetEntry
 
     func placeholder(in context: Context) -> HabitWidgetEntry {
-        .init(date: .now, completedCount: 3, totalCount: 5, nextIncomplete: "Meditation", currentStreak: 7, theme: NookThemeManager().current)
+        .init(date: .now, completedCount: 3, totalCount: 5, nextIncomplete: "Meditation", currentStreak: 7, theme: .mocha)
     }
 
     func snapshot(for configuration: HabitWidgetConfigurationIntent, in context: Context) async -> HabitWidgetEntry {
@@ -46,9 +46,9 @@ struct HabitWidgetProvider: AppIntentTimelineProvider {
     }
 
     private func makeEntry() async -> HabitWidgetEntry {
-        let themes = NookThemeManager()
+        let theme = await MainActor.run { NookThemeManager.habitNook().current }
         // In a real extension, load from shared ModelContainer
-        return .init(date: .now, completedCount: 0, totalCount: 0, nextIncomplete: nil, currentStreak: 0, theme: themes.current)
+        return .init(date: .now, completedCount: 0, totalCount: 0, nextIncomplete: nil, currentStreak: 0, theme: theme)
     }
 }
 

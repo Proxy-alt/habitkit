@@ -130,7 +130,7 @@ Measured against the current palette:
 | success on surface0 | 2.17 | 3.0 | (same) | 3.04 |
 | warning on base | 2.64 | 3.0 | `#fe640b` → `#ec5d0a` | 3.03 |
 
-Each proposed colour is the original with the least darkening that passes, so it stays visibly Catppuccin. The alternative was lightening the surfaces, but `success` on `surface0` still fails even with surfaces 55% lighter, so darkening the foregrounds is the only single-step fix. Until the owner rules on this (§10 Q2), the Latte test runs inside `withKnownIssue`. When the fix lands, Swift Testing will report the known issue as resolved, which is the signal to remove the wrapper.
+Each proposed colour is the original with the least darkening that passes, so it stays visibly Catppuccin. The alternative was lightening the surfaces, but `success` on `surface0` still fails even with surfaces 55% lighter, so darkening the foregrounds is the only single-step fix. *Status: applied* in `NookTheme+BuiltIn.swift` and `catppuccin.json`, following the §10 Q2 recommendation. The `withKnownIssue` wrapper is gone, so all four built-ins now run through the same contrast test. This change has its own commit and can be reverted if the owner declines Q2.
 
 ### 4.3 Typography
 

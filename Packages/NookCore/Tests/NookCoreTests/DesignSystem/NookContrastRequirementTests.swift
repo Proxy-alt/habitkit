@@ -18,20 +18,11 @@ struct NookContrastRequirementTests {
         #expect(abs(failure.measuredRatio - 1) < 0.0001)
     }
 
-    @Test("dark built-in themes meet the suite requirements", arguments: [NookTheme.frappe, .macchiato, .mocha])
-    func darkBuiltInsPass(theme: NookTheme) {
+    // Latte's text, subtext, success and warning are darkened from upstream
+    // Catppuccin to pass; see nookui-design-doc.md 4.2.
+    @Test("built-in themes meet the suite requirements", arguments: NookTheme.builtIn)
+    func builtInsPass(theme: NookTheme) {
         expectNoFailures(in: theme)
-    }
-
-    // Latte fails text on surface1, subtext on surface0, success on base and
-    // surface0, and warning on base. Proposed palette fix: nookui-design-doc.md 4.2.
-    // Remove withKnownIssue once the fix lands; Swift Testing will then flag
-    // the known issue as unexpectedly resolved.
-    @Test("Latte meets the suite requirements")
-    func lattePasses() {
-        withKnownIssue("Latte contrast shortfalls, nookui-design-doc.md 4.2") {
-            expectNoFailures(in: .latte)
-        }
     }
 
     private func expectNoFailures(in theme: NookTheme) {

@@ -6,6 +6,9 @@
 public extension NookTheme {
 
     /// Catppuccin Latte, light.
+    ///
+    /// `text`, `subtext`, `success` and `warning` are darkened slightly from
+    /// upstream Catppuccin to meet WCAG contrast (nookui-design-doc.md 4.2).
     static let latte = NookTheme(
         id: "catppuccin-latte",
         name: "Latte",
@@ -16,11 +19,11 @@ public extension NookTheme {
             surface1: NookRGBA(rgb: 0xBCC0CC),
             surface2: NookRGBA(rgb: 0xACB0BE),
             overlay0: NookRGBA(rgb: 0x9CA0B0),
-            text: NookRGBA(rgb: 0x4C4F69),
-            subtext: NookRGBA(rgb: 0x5C5F77),
+            text: NookRGBA(rgb: 0x4A4D66),
+            subtext: NookRGBA(rgb: 0x55586E),
             primary: NookRGBA(rgb: 0x8839EF),
-            success: NookRGBA(rgb: 0x40A02B),
-            warning: NookRGBA(rgb: 0xFE640B),
+            success: NookRGBA(rgb: 0x358423),
+            warning: NookRGBA(rgb: 0xEC5D0A),
             danger: NookRGBA(rgb: 0xD20F39)
         )
     )

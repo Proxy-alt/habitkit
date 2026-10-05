@@ -1,3 +1,5 @@
+import NookCore
+import NookUI
 import SwiftUI
 
 // MARK: - NookThemeManager
@@ -13,7 +15,7 @@ import SwiftUI
 /// WindowGroup {
 ///     ContentView()
 ///         .environment(themeManager)
-///         .environment(\.nookTheme, themeManager.current)
+///         .nookTheme(themeManager.current)
 /// }
 /// ```
 @Observable

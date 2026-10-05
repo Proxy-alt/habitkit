@@ -2,6 +2,8 @@ import SwiftUI
 import SwiftData
 import HabitNookCore
 import HabitNookUI
+import NookCore
+import NookUI
 
 private func cancelReminderAlarms(for habit: Habit) {
     for reminder in habit.schedule.reminders {
@@ -10,7 +12,6 @@ private func cancelReminderAlarms(for habit: Habit) {
 }
 
 struct HabitsView: View {
-    @Environment(NookThemeManager.self) private var themes
     @Environment(\.modelContext) private var modelContext
     @Query(sort: \Habit.sortOrder) private var habits: [Habit]
     @State private var showAddHabit = false
@@ -22,7 +23,7 @@ struct HabitsView: View {
     var body: some View {
         NavigationStack {
             ZStack {
-                themes.current.baseColor.ignoresSafeArea()
+                Rectangle().fill(.nook(.base)).ignoresSafeArea()
 
                 List {
                     ForEach(activeHabits) { habit in
@@ -42,10 +43,10 @@ struct HabitsView: View {
                                     viewModel.showArchived
                                         ? "Hide Archived"
                                         : "Show Archived (\(archivedHabits.count))",
-                                    systemImage: NookSymbol.archivebox
+                                    nookSymbol: .archivebox
                                 )
-                                .foregroundStyle(themes.current.subtextColor)
-                                .font(.nookBody)
+                                .foregroundStyle(.nook(.subtext))
+                                .font(.nook(.body))
                             }
                             .accessibilityLabel(
                                 viewModel.showArchived
@@ -70,14 +71,14 @@ struct HabitsView: View {
             .toolbar {
                 ToolbarItem(placement: .topBarTrailing) {
                     Button { showAddHabit = true } label: {
-                        Image(systemName: NookSymbol.plus)
-                            .foregroundStyle(themes.current.primaryColor)
+                        Image(nookSymbol: .plus)
+                            .foregroundStyle(.nook(.primary))
                     }
                     .accessibilityLabel("Add habit")
                 }
                 ToolbarItem(placement: .topBarLeading) {
                     EditButton()
-                        .foregroundStyle(themes.current.primaryColor)
+                        .foregroundStyle(.nook(.primary))
                         .accessibilityLabel("Edit habits")
                 }
             }
@@ -105,15 +106,15 @@ struct HabitsView: View {
 }
 
 private struct HabitListRow: View {
-    @Environment(NookThemeManager.self) private var themes
+    @Environment(\.nookTheme) private var theme
     let habit: Habit
     let viewModel: HabitsViewModel
     var archived: Bool = false
 
     var body: some View {
-        HStack(spacing: NookSpacing.md) {
+        HStack(spacing: NookSpacing.md.value) {
             ZStack {
-                RoundedRectangle(cornerRadius: NookRadius.sm)
+                RoundedRectangle.nook(.sm)
                     .fill(accentColor.opacity(0.15))
                     .frame(width: 36, height: 36)
                 Image(systemName: habit.icon)
@@ -122,26 +123,26 @@ private struct HabitListRow: View {
 
             VStack(alignment: .leading, spacing: 2) {
                 Text(habit.name)
-                    .font(.nookHeadline)
-                    .foregroundStyle(archived ? themes.current.subtextColor : themes.current.textColor)
+                    .font(.nook(.headline))
+                    .foregroundStyle(archived ? .nook(.subtext) : .nook(.text))
 
                 Text(viewModel.scheduleDescription(for: habit))
-                    .font(.nookCaption)
-                    .foregroundStyle(themes.current.subtextColor)
+                    .font(.nook(.caption))
+                    .foregroundStyle(.nook(.subtext))
             }
 
             Spacer()
 
             if archived {
-                Image(systemName: NookSymbol.archivebox)
-                    .font(.nookCaption)
-                    .foregroundStyle(themes.current.overlay0Color)
+                Image(nookSymbol: .archivebox)
+                    .font(.nook(.caption))
+                    .foregroundStyle(.nook(.overlay0))
             }
         }
-        .padding(.vertical, NookSpacing.xs)
+        .padding(.vertical, .xs)
     }
 
     private var accentColor: Color {
-        Color(hex: habit.colorHex) ?? themes.current.primaryColor
+        Color(hex: habit.colorHex) ?? theme.color(.primary)
     }
 }

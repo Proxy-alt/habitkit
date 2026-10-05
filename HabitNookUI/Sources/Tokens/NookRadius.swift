@@ -1,27 +1,7 @@
-import CoreFoundation
-
-// MARK: - NookRadius
-
-/// Standardised corner-radius tokens for HabitNookUI.
-///
-/// Use these constants wherever a corner radius is needed:
-/// ```swift
-/// RoundedRectangle(cornerRadius: NookRadius.card, style: .continuous)
-/// ```
-public enum NookRadius {
-
-    /// 6 pt — small elements such as tags and chips.
-    public static let sm: CGFloat = 6
-
-    /// 10 pt — medium elements such as text fields and input controls.
-    public static let md: CGFloat = 10
-
-    /// 12 pt — cards and modal sheets.
-    public static let card: CGFloat = 12
-
-    /// 16 pt — large surfaces and bottom sheets.
-    public static let lg: CGFloat = 16
-
-    /// 999 pt — pill / fully-rounded shape.
-    public static let pill: CGFloat = 999
-}
+// MARK: - NookRadius (moved)
+//
+// NookRadius moved to NookCore. Use `RoundedRectangle.nook(.card)`, `.clipShape(.nook(.card))`
+// or `.background(_:in: .nook(.card))` from NookUI, or `NookRadius.card.value` for a CGFloat.
+//
+// This file has no declarations so the name does not clash with the NookCore
+// type. Delete it in Phase 4 of nookui-design-doc.md 9.

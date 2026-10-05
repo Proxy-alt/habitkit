@@ -1,3 +1,4 @@
+import NookCore
 import SwiftUI
 
 // MARK: - NookProgressRing
@@ -7,14 +8,10 @@ import SwiftUI
 /// Usage:
 /// ```swift
 /// NookProgressRing(progress: 0.72) {
-///     Text("72%").font(NookFont.mono)
+///     Text("72%").font(.nook(.mono))
 /// }
 /// ```
 public struct NookProgressRing<Center: View>: View {
-
-    // MARK: Dependencies
-
-    @Environment(NookThemeManager.self) private var themeManager
 
     // MARK: Properties
 
@@ -30,7 +27,7 @@ public struct NookProgressRing<Center: View>: View {
     /// Optional view rendered in the centre of the ring.
     private let center: Center
 
-    // MARK: Init — with centre content
+    // MARK: Init -- with centre content
 
     /// Creates a progress ring with custom centre content.
     ///
@@ -58,7 +55,7 @@ public struct NookProgressRing<Center: View>: View {
             // Track
             Circle()
                 .stroke(
-                    themeManager.current.overlay0Color.opacity(0.3),
+                    .nook(.overlay0).opacity(0.3),
                     style: StrokeStyle(lineWidth: lineWidth, lineCap: .round)
                 )
 
@@ -66,11 +63,11 @@ public struct NookProgressRing<Center: View>: View {
             Circle()
                 .trim(from: 0, to: progress)
                 .stroke(
-                    themeManager.current.primaryColor,
+                    .nook(.primary),
                     style: StrokeStyle(lineWidth: lineWidth, lineCap: .round)
                 )
                 .rotationEffect(.degrees(-90))
-                .animation(NookAnimation.slow, value: progress)
+                .nookAnimation(.slow, value: progress)
 
             // Centre content
             center
@@ -102,28 +99,26 @@ public extension NookProgressRing where Center == EmptyView {
 
 // MARK: - Preview
 
-#Preview("NookProgressRing — 0%, 50%, 100%") {
-    @Previewable @State var themeManager = NookThemeManager()
-
-    HStack(spacing: NookSpacing.xl) {
+#Preview("NookProgressRing -- 0%, 50%, 100%") {
+    HStack(spacing: NookSpacing.xl.value) {
         NookProgressRing(progress: 0.0, size: 70) {
             Text("0%")
-                .font(NookFont.caption)
-                .foregroundStyle(themeManager.current.subtextColor)
+                .font(.nook(.caption))
+                .foregroundStyle(.nook(.subtext))
         }
 
         NookProgressRing(progress: 0.5, size: 70) {
             Text("50%")
-                .font(NookFont.caption)
-                .foregroundStyle(themeManager.current.textColor)
+                .font(.nook(.caption))
+                .foregroundStyle(.nook(.text))
         }
 
         NookProgressRing(progress: 1.0, size: 70) {
-            Image(systemName: NookSymbol.checkmark)
-                .foregroundStyle(themeManager.current.successColor)
+            Image(nookSymbol: .checkmark)
+                .foregroundStyle(.nook(.success))
         }
     }
-    .padding(NookSpacing.lg)
-    .background(themeManager.current.baseColor)
-    .environment(themeManager)
+    .padding(.lg)
+    .background(.nook(.base))
+    .nookTheme(.mocha)
 }

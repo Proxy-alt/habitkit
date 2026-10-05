@@ -241,10 +241,10 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Verify #Preview in HabitNookUI component files
+      - name: Verify #Preview in NookUI component files
         run: |
           MISSING=""
-          for f in HabitNookUI/Sources/Components/*.swift; do
+          for f in Packages/NookUI/Sources/NookUI/Atomic/*.swift; do
             if ! grep -q '#Preview' "$f"; then
               MISSING="$MISSING\n  $f"
             fi

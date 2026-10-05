@@ -4,9 +4,11 @@ import SwiftData
 import HabitNookCore
 import HabitNookIntents
 import HabitNookUI
+import NookCore
+import NookUI
 
 struct HabitDetailView: View {
-    @Environment(NookThemeManager.self) private var themes
+    @Environment(\.nookTheme) private var theme
     @Environment(GeofenceHabitMonitor.self) private var geofenceMonitor
     @Environment(\.modelContext) private var modelContext
     @Environment(\.dismiss) private var dismiss
@@ -34,10 +36,10 @@ struct HabitDetailView: View {
 
     var body: some View {
         ZStack {
-            themes.current.baseColor.ignoresSafeArea()
+            Rectangle().fill(.nook(.base)).ignoresSafeArea()
 
             ScrollView {
-                VStack(spacing: NookSpacing.lg) {
+                VStack(spacing: NookSpacing.lg.value) {
                     headerCard
                     statsRow
                     remindersSection
@@ -46,7 +48,7 @@ struct HabitDetailView: View {
                     recentCompletions
                     dangerZone
                 }
-                .padding(NookSpacing.md)
+                .padding(.md)
             }
         }
         .navigationTitle(habit.name)
@@ -68,23 +70,23 @@ struct HabitDetailView: View {
 
     private var headerCard: some View {
         NookCard {
-            HStack(spacing: NookSpacing.md) {
+            HStack(spacing: NookSpacing.md.value) {
                 ZStack {
                     Circle()
                         .fill(accentColor.opacity(0.2))
                         .frame(width: 64, height: 64)
                     Image(systemName: habit.icon)
-                        .font(NookIconSize.md)
+                        .nookIconSize(.md)
                         .foregroundStyle(accentColor)
                 }
 
-                VStack(alignment: .leading, spacing: NookSpacing.xs) {
+                VStack(alignment: .leading, spacing: NookSpacing.xs.value) {
                     Text(habit.name)
-                        .font(.nookTitle)
-                        .foregroundStyle(themes.current.textColor)
+                        .font(.nook(.title))
+                        .foregroundStyle(.nook(.text))
                     Text(habitTypeLabel)
-                        .font(.nookCaption)
-                        .foregroundStyle(themes.current.subtextColor)
+                        .font(.nook(.caption))
+                        .foregroundStyle(.nook(.subtext))
                 }
 
                 Spacer()
@@ -95,24 +97,24 @@ struct HabitDetailView: View {
     }
 
     private var statsRow: some View {
-        HStack(spacing: NookSpacing.md) {
-            statCell(value: "\(currentStreak)", label: "Current Streak", icon: NookSymbol.flame, color: themes.current.warningColor)
-            statCell(value: "\(longestStreak)", label: "Longest Streak", icon: NookSymbol.trophy, color: themes.current.primaryColor)
-            statCell(value: "\(Int(completionRate30Days * 100))%", label: "30-Day Rate", icon: NookSymbol.chartBar, color: themes.current.successColor)
+        HStack(spacing: NookSpacing.md.value) {
+            statCell(value: "\(currentStreak)", label: "Current Streak", icon: .flame, color: .warning)
+            statCell(value: "\(longestStreak)", label: "Longest Streak", icon: .trophy, color: .primary)
+            statCell(value: "\(Int(completionRate30Days * 100))%", label: "30-Day Rate", icon: .chartBar, color: .success)
         }
     }
 
-    private func statCell(value: String, label: String, icon: String, color: Color) -> some View {
+    private func statCell(value: String, label: String, icon: NookSymbol, color: NookColour) -> some View {
         NookCard {
-            VStack(spacing: NookSpacing.xs) {
-                Image(systemName: icon)
-                    .foregroundStyle(color)
+            VStack(spacing: NookSpacing.xs.value) {
+                Image(nookSymbol: icon)
+                    .foregroundStyle(.nook(color))
                 Text(value)
-                    .font(.nookTitle)
-                    .foregroundStyle(themes.current.textColor)
+                    .font(.nook(.title))
+                    .foregroundStyle(.nook(.text))
                 Text(label)
-                    .font(.nookCaption)
-                    .foregroundStyle(themes.current.subtextColor)
+                    .font(.nook(.caption))
+                    .foregroundStyle(.nook(.subtext))
                     .multilineTextAlignment(.center)
             }
             .frame(maxWidth: .infinity)
@@ -121,10 +123,10 @@ struct HabitDetailView: View {
 
     private var remindersSection: some View {
         NookCard {
-            VStack(alignment: .leading, spacing: NookSpacing.sm) {
+            VStack(alignment: .leading, spacing: NookSpacing.sm.value) {
                 Text("Reminders")
-                    .font(.nookHeadline)
-                    .foregroundStyle(themes.current.textColor)
+                    .font(.nook(.headline))
+                    .foregroundStyle(.nook(.text))
 
                 ForEach(habit.schedule.reminders) { reminder in
                     HStack {
@@ -137,7 +139,7 @@ struct HabitDetailView: View {
                             displayedComponents: .hourAndMinute
                         )
                         .labelsHidden()
-                        .foregroundStyle(themes.current.textColor)
+                        .foregroundStyle(.nook(.text))
 
                         Spacer()
 
@@ -145,7 +147,7 @@ struct HabitDetailView: View {
                             removeReminder(reminder)
                         } label: {
                             Image(systemName: "minus.circle.fill")
-                                .foregroundStyle(themes.current.dangerColor)
+                                .foregroundStyle(.nook(.danger))
                         }
                         .buttonStyle(.borderless)
                         .accessibilityLabel("Remove reminder")
@@ -155,18 +157,18 @@ struct HabitDetailView: View {
                 Button("Add Reminder") {
                     addReminder()
                 }
-                .foregroundStyle(themes.current.primaryColor)
-                .font(.nookBody)
+                .foregroundStyle(.nook(.primary))
+                .font(.nook(.body))
             }
         }
     }
 
     private var locationSection: some View {
         NookCard {
-            VStack(alignment: .leading, spacing: NookSpacing.sm) {
+            VStack(alignment: .leading, spacing: NookSpacing.sm.value) {
                 Text("Location")
-                    .font(.nookHeadline)
-                    .foregroundStyle(themes.current.textColor)
+                    .font(.nook(.headline))
+                    .foregroundStyle(.nook(.text))
 
                 Toggle(
                     "Auto-complete on arrival",
@@ -175,8 +177,8 @@ struct HabitDetailView: View {
                         set: { setGeofenceEnabled($0) }
                     )
                 )
-                .tint(themes.current.primaryColor)
-                .foregroundStyle(themes.current.textColor)
+                .tint(NookColourStyle(.primary))
+                .foregroundStyle(.nook(.text))
 
                 if let geofence = habit.schedule.geofence {
                     Stepper(
@@ -188,19 +190,19 @@ struct HabitDetailView: View {
                         in: 50...1000,
                         step: 50
                     )
-                    .foregroundStyle(themes.current.textColor)
+                    .foregroundStyle(.nook(.text))
 
                     HStack {
                         Button("Update to Current Location") {
                             updateGeofenceToCurrentLocation()
                         }
-                        .foregroundStyle(themes.current.primaryColor)
-                        .font(.nookBody)
+                        .foregroundStyle(.nook(.primary))
+                        .font(.nook(.body))
                         .disabled(isLocatingForGeofence)
 
                         if isLocatingForGeofence {
                             ProgressView()
-                                .tint(themes.current.primaryColor)
+                                .tint(NookColourStyle(.primary))
                         }
                     }
                 }
@@ -210,10 +212,10 @@ struct HabitDetailView: View {
 
     private var heatmapSection: some View {
         NookCard {
-            VStack(alignment: .leading, spacing: NookSpacing.sm) {
+            VStack(alignment: .leading, spacing: NookSpacing.sm.value) {
                 Text("Activity")
-                    .font(.nookHeadline)
-                    .foregroundStyle(themes.current.textColor)
+                    .font(.nook(.headline))
+                    .foregroundStyle(.nook(.text))
                 HeatmapView(habit: habit)
             }
         }
@@ -225,15 +227,15 @@ struct HabitDetailView: View {
             .prefix(10)
 
         return NookCard {
-            VStack(alignment: .leading, spacing: NookSpacing.sm) {
+            VStack(alignment: .leading, spacing: NookSpacing.sm.value) {
                 Text("Recent Completions")
-                    .font(.nookHeadline)
-                    .foregroundStyle(themes.current.textColor)
+                    .font(.nook(.headline))
+                    .foregroundStyle(.nook(.text))
 
                 if recent.isEmpty {
                     Text("No completions yet.")
-                        .font(.nookBody)
-                        .foregroundStyle(themes.current.subtextColor)
+                        .font(.nook(.body))
+                        .foregroundStyle(.nook(.subtext))
                 } else {
                     ForEach(Array(recent)) { completion in
                         CompletionRow(completion: completion)
@@ -244,7 +246,7 @@ struct HabitDetailView: View {
     }
 
     private var dangerZone: some View {
-        VStack(spacing: NookSpacing.sm) {
+        VStack(spacing: NookSpacing.sm.value) {
             NookButton("Archive Habit", variant: .secondary) {
                 cancelAllReminderAlarms()
                 habit.isArchived = true
@@ -257,7 +259,7 @@ struct HabitDetailView: View {
     }
 
     private var accentColor: Color {
-        Color(hex: habit.colorHex) ?? themes.current.primaryColor
+        Color(hex: habit.colorHex) ?? theme.color(.primary)
     }
 
     private func addReminder() {
@@ -351,45 +353,44 @@ struct HabitDetailView: View {
 }
 
 private struct CompletionRow: View {
-    @Environment(NookThemeManager.self) private var themes
     let completion: HabitCompletion
 
     var body: some View {
-        VStack(alignment: .leading, spacing: NookSpacing.xs) {
+        VStack(alignment: .leading, spacing: NookSpacing.xs.value) {
             HStack {
-                Image(systemName: NookSymbol.checkmark)
-                    .foregroundStyle(themes.current.successColor)
+                Image(nookSymbol: .checkmark)
+                    .foregroundStyle(.nook(.success))
 
                 Text(completion.completedAt, style: .date)
-                    .font(.nookBody)
-                    .foregroundStyle(themes.current.textColor)
+                    .font(.nook(.body))
+                    .foregroundStyle(.nook(.text))
 
                 Spacer()
 
                 Text(completion.completedAt, style: .time)
-                    .font(.nookCaption)
-                    .foregroundStyle(themes.current.subtextColor)
+                    .font(.nook(.caption))
+                    .foregroundStyle(.nook(.subtext))
             }
 
             if let note = completion.note, !note.isEmpty {
                 Text(note)
-                    .font(.nookCaption)
-                    .foregroundStyle(themes.current.subtextColor)
-                    .padding(.leading, NookSpacing.lg)
+                    .font(.nook(.caption))
+                    .foregroundStyle(.nook(.subtext))
+                    .padding(.leading, .lg)
             }
 
             if !completion.tags.isEmpty {
-                HStack(spacing: NookSpacing.xs) {
+                HStack(spacing: NookSpacing.xs.value) {
                     ForEach(completion.tags, id: \.self) { tag in
                         Text(tag)
-                            .font(.nookCaption)
-                            .foregroundStyle(themes.current.primaryColor)
-                            .padding(.horizontal, NookSpacing.sm)
+                            .font(.nook(.caption))
+                            .foregroundStyle(.nook(.primary))
+                            .padding(.horizontal, .sm)
                             .padding(.vertical, 2)
-                            .background(themes.current.primaryColor.opacity(0.12), in: Capsule())
+                            .background(.nook(.primary).opacity(0.12), in: Capsule())
                     }
                 }
-                .padding(.leading, NookSpacing.lg)
+                .padding(.leading, .lg)
             }
         }
         .padding(.vertical, 2)

@@ -2,9 +2,10 @@ import SwiftUI
 import SwiftData
 import HabitNookCore
 import HabitNookUI
+import NookCore
+import NookUI
 
 struct TodayView: View {
-    @Environment(NookThemeManager.self) private var themes
     @Query private var habits: [Habit]
     @State private var showAddHabit = false
     @State private var viewModel = TodayViewModel()
@@ -12,7 +13,7 @@ struct TodayView: View {
     var body: some View {
         NavigationStack {
             ZStack {
-                themes.current.baseColor.ignoresSafeArea()
+                Rectangle().fill(.nook(.base)).ignoresSafeArea()
 
                 if viewModel.todayHabits.isEmpty {
                     EmptyTodayView(showAddHabit: $showAddHabit)
@@ -29,8 +30,8 @@ struct TodayView: View {
                     Button {
                         showAddHabit = true
                     } label: {
-                        Image(systemName: NookSymbol.plus)
-                            .foregroundStyle(themes.current.primaryColor)
+                        Image(nookSymbol: .plus)
+                            .foregroundStyle(.nook(.primary))
                     }
                     .accessibilityLabel("Add habit")
                 }
@@ -70,57 +71,60 @@ struct TodayView: View {
 }
 
 private struct EmptyTodayView: View {
-    @Environment(NookThemeManager.self) private var themes
     @Binding var showAddHabit: Bool
 
     var body: some View {
-        VStack(spacing: NookSpacing.lg) {
-            Image(systemName: NookSymbol.sparkles)
-                .font(NookIconSize.xxl)
-                .foregroundStyle(themes.current.primaryColor)
+        VStack(spacing: NookSpacing.lg.value) {
+            Image(nookSymbol: .sparkles)
+                .nookIconSize(.xxl)
+                .foregroundStyle(.nook(.primary))
 
             Text("No habits yet")
-                .font(.nookTitle)
-                .foregroundStyle(themes.current.textColor)
+                .font(.nook(.title))
+                .foregroundStyle(.nook(.text))
 
             Text("Add your first habit to get started.")
-                .font(.nookBody)
-                .foregroundStyle(themes.current.subtextColor)
+                .font(.nook(.body))
+                .foregroundStyle(.nook(.subtext))
                 .multilineTextAlignment(.center)
 
             NookButton("Add a Habit", variant: .primary) {
                 showAddHabit = true
             }
         }
-        .padding(NookSpacing.xl)
+        .padding(.xl)
     }
 }
 
 private struct AllCompleteView: View {
-    @Environment(NookThemeManager.self) private var themes
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
     @State private var animating = false
 
     var body: some View {
-        VStack(spacing: NookSpacing.lg) {
-            Image(systemName: NookSymbol.checkmarkSeal)
-                .font(NookIconSize.hero)
-                .foregroundStyle(themes.current.successColor)
+        VStack(spacing: NookSpacing.lg.value) {
+            Image(nookSymbol: .checkmarkSeal)
+                .nookIconSize(.hero)
+                .foregroundStyle(.nook(.success))
                 .scaleEffect(animating ? 1.05 : 1.0)
                 .onAppear {
-                    withAnimation(NookAnimation.slow.repeatForever(autoreverses: true)) {
+                    // A looping pulse is decorative motion; skip it entirely
+                    // under Reduce Motion rather than crossfading forever.
+                    guard !reduceMotion else { return }
+                    let pulse = NookAnimation.slow.swiftUIAnimation(reduceMotion: false)
+                    withAnimation(pulse.repeatForever(autoreverses: true)) {
                         animating = true
                     }
                 }
 
             Text("All done!")
-                .font(.nookLargeTitle)
-                .foregroundStyle(themes.current.textColor)
+                .font(.nook(.largeTitle))
+                .foregroundStyle(.nook(.text))
 
             Text("Every habit complete for today. Come back tomorrow.")
-                .font(.nookBody)
-                .foregroundStyle(themes.current.subtextColor)
+                .font(.nook(.body))
+                .foregroundStyle(.nook(.subtext))
                 .multilineTextAlignment(.center)
         }
-        .padding(NookSpacing.xl)
+        .padding(.xl)
     }
 }

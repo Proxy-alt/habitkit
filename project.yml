@@ -8,6 +8,10 @@ options:
 packages:
   HabitNook:
     path: .
+  NookCore:
+    path: Packages/NookCore
+  NookUI:
+    path: Packages/NookUI
 
 targets:
   HabitNook:
@@ -42,6 +46,8 @@ targets:
         product: HabitNookCore
       - package: HabitNook
         product: HabitNookUI
+      - package: NookCore
+      - package: NookUI
       - package: HabitNook
         product: HabitNookIntents
       - target: HabitNookWidgets
@@ -72,3 +78,5 @@ targets:
         product: HabitNookCore
       - package: HabitNook
         product: HabitNookUI
+      - package: NookCore
+      - package: NookUI

@@ -1,8 +1,9 @@
 import SwiftUI
 import HabitNookUI
+import NookCore
+import NookUI
 
 struct ContentView: View {
-    @Environment(NookThemeManager.self) private var themes
     @Environment(\.colorScheme) private var colorScheme
     @Environment(AppNavigator.self) private var navigator
     @Environment(InAppAlarmMonitor.self) private var alarmMonitor
@@ -12,27 +13,27 @@ struct ContentView: View {
 
         TabView(selection: $navigator.selectedTab) {
             TodayView()
-                .tabItem { Label("Today", systemImage: NookSymbol.checkmark) }
+                .tabItem { Label("Today", nookSymbol: .checkmark) }
                 .tag(AppTab.today)
 
             HabitsView()
-                .tabItem { Label("Habits", systemImage: NookSymbol.list) }
+                .tabItem { Label("Habits", nookSymbol: .list) }
                 .tag(AppTab.habits)
 
             AnalyticsView()
-                .tabItem { Label("Analytics", systemImage: NookSymbol.chartBar) }
+                .tabItem { Label("Analytics", nookSymbol: .chartBar) }
                 .tag(AppTab.analytics)
 
             LiveSessionView()
-                .tabItem { Label("Live", systemImage: NookSymbol.timer) }
+                .tabItem { Label("Live", nookSymbol: .timer) }
                 .tag(AppTab.live)
 
             SettingsView()
-                .tabItem { Label("Settings", systemImage: NookSymbol.gear) }
+                .tabItem { Label("Settings", nookSymbol: .gear) }
                 .tag(AppTab.settings)
         }
-        .tint(themes.current.primaryColor)
-        .background(themes.current.baseColor)
+        .tint(NookColourStyle(.primary))
+        .background(.nook(.base))
         .alert(
             alarmMonitor.alertingHabit?.habitName ?? "",
             isPresented: Binding(

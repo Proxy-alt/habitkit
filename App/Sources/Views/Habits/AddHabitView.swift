@@ -3,9 +3,11 @@ import SwiftData
 import HabitNookCore
 import HabitNookIntents
 import HabitNookUI
+import NookCore
+import NookUI
 
 struct AddHabitView: View {
-    @Environment(NookThemeManager.self) private var themes
+    @Environment(\.nookTheme) private var theme
     @Environment(\.modelContext) private var modelContext
     @Environment(\.dismiss) private var dismiss
     @Query(sort: \Habit.sortOrder) private var existingHabits: [Habit]
@@ -41,7 +43,7 @@ struct AddHabitView: View {
     var body: some View {
         NavigationStack {
             ZStack {
-                themes.current.baseColor.ignoresSafeArea()
+                Rectangle().fill(.nook(.base)).ignoresSafeArea()
 
                 Form {
                     Section("Name") {
@@ -50,14 +52,14 @@ struct AddHabitView: View {
                         Button {
                             showSuggestions = true
                         } label: {
-                            Label("Suggest a Habit", systemImage: NookSymbol.sparkles)
+                            Label("Suggest a Habit", nookSymbol: .sparkles)
                         }
                         .buttonStyle(.borderless)
-                        .foregroundStyle(themes.current.primaryColor)
+                        .foregroundStyle(.nook(.primary))
                     }
 
                     Section("Icon") {
-                        LazyVGrid(columns: Array(repeating: GridItem(.flexible()), count: 6), spacing: NookSpacing.sm) {
+                        LazyVGrid(columns: Array(repeating: GridItem(.flexible()), count: 6), spacing: NookSpacing.sm.value) {
                             ForEach(iconOptions, id: \.self) { icon in
                                 Button {
                                     selectedIcon = icon
@@ -66,21 +68,19 @@ struct AddHabitView: View {
                                         .font(.title2)
                                         .foregroundStyle(
                                             selectedIcon == icon
-                                            ? themes.current.primaryColor
-                                            : themes.current.subtextColor
+                                            ? .nook(.primary)
+                                            : .nook(.subtext)
                                         )
                                         .frame(width: 44, height: 44)
                                         .background(
-                                            selectedIcon == icon
-                                            ? themes.current.primaryColor.opacity(0.15)
-                                            : Color.clear,
-                                            in: RoundedRectangle(cornerRadius: NookRadius.sm)
+                                            .nook(.primary).opacity(selectedIcon == icon ? 0.15 : 0),
+                                            in: RoundedRectangle.nook(.sm)
                                         )
                                 }
                                 .buttonStyle(.borderless)
                             }
                         }
-                        .padding(.vertical, NookSpacing.sm)
+                        .padding(.vertical, .sm)
                     }
 
                     Section("Type") {
@@ -109,11 +109,11 @@ struct AddHabitView: View {
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
                     Button("Cancel") { dismiss() }
-                        .foregroundStyle(themes.current.subtextColor)
+                        .foregroundStyle(.nook(.subtext))
                 }
                 ToolbarItem(placement: .confirmationAction) {
                     Button("Add") { saveHabit() }
-                        .foregroundStyle(themes.current.primaryColor)
+                        .foregroundStyle(.nook(.primary))
                         .disabled(name.trimmingCharacters(in: .whitespaces).isEmpty)
                 }
             }
@@ -134,7 +134,7 @@ struct AddHabitView: View {
         switch selectedType {
         case .timed:
             Stepper("Duration: \(targetDuration / 60) min", value: $targetDuration, in: 60...7200, step: 60)
-                .foregroundStyle(themes.current.textColor)
+                .foregroundStyle(.nook(.text))
         case .quantity:
             HStack {
                 NookTextField("Unit (pages, glasses…)", text: $unit)
@@ -145,8 +145,8 @@ struct AddHabitView: View {
                 NookTextField("Step \(i + 1)", text: $steps[i])
             }
             Button("Add Step") { steps.append("") }
-                .foregroundStyle(themes.current.primaryColor)
-                .font(.nookBody)
+                .foregroundStyle(.nook(.primary))
+                .font(.nook(.body))
         case .yesNo, .negative:
             EmptyView()
         }
@@ -155,7 +155,7 @@ struct AddHabitView: View {
     @ViewBuilder
     private var scheduleFields: some View {
         let days = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"]
-        HStack(spacing: NookSpacing.xs) {
+        HStack(spacing: NookSpacing.xs.value) {
             ForEach(0..<7, id: \.self) { i in
                 Button {
                     if selectedDays.contains(i) {
@@ -165,19 +165,19 @@ struct AddHabitView: View {
                     }
                 } label: {
                     Text(days[i])
-                        .font(.nookCaption)
+                        .font(.nook(.caption))
                         .foregroundStyle(
                             selectedDays.contains(i)
-                            ? themes.current.baseColor
-                            : themes.current.subtextColor
+                            ? .nook(.base)
+                            : .nook(.subtext)
                         )
                         .frame(maxWidth: .infinity)
-                        .padding(.vertical, NookSpacing.xs)
+                        .padding(.vertical, .xs)
                         .background(
                             selectedDays.contains(i)
-                            ? themes.current.primaryColor
-                            : themes.current.surface1Color,
-                            in: RoundedRectangle(cornerRadius: NookRadius.sm)
+                            ? .nook(.primary)
+                            : .nook(.surface1),
+                            in: RoundedRectangle.nook(.sm)
                         )
                 }
                 .buttonStyle(.borderless)
@@ -191,13 +191,13 @@ struct AddHabitView: View {
             HStack {
                 DatePicker("Reminder time", selection: $reminder.time, displayedComponents: .hourAndMinute)
                     .labelsHidden()
-                    .foregroundStyle(themes.current.textColor)
+                    .foregroundStyle(.nook(.text))
                 Spacer()
                 Button {
                     reminders.removeAll { $0.id == reminder.id }
                 } label: {
                     Image(systemName: "minus.circle.fill")
-                        .foregroundStyle(themes.current.dangerColor)
+                        .foregroundStyle(.nook(.danger))
                 }
                 .buttonStyle(.borderless)
                 .accessibilityLabel("Remove reminder")
@@ -206,8 +206,8 @@ struct AddHabitView: View {
         Button("Add Reminder") {
             reminders.append(HabitReminder(time: Date()))
         }
-        .foregroundStyle(themes.current.primaryColor)
-        .font(.nookBody)
+        .foregroundStyle(.nook(.primary))
+        .font(.nook(.body))
     }
 
     private func saveHabit() {
@@ -256,7 +256,7 @@ struct AddHabitView: View {
         let habitID = habit.id
         let habitName = habit.name
         let icon = habit.icon
-        let tintColor = Color(hex: habit.colorHex) ?? themes.current.primaryColor
+        let tintColor = Color(hex: habit.colorHex) ?? theme.color(.primary)
         Task {
             for reminder in reminders {
                 try? await HabitAlarmScheduler.scheduleAlarm(
@@ -277,7 +277,6 @@ struct AddHabitView: View {
 /// Presents habit suggestions generated on-device by `HabitCoach`, based on
 /// what the user already tracks.
 private struct HabitSuggestionsSheet: View {
-    @Environment(NookThemeManager.self) private var themes
     @Environment(\.dismiss) private var dismiss
 
     let existingHabitNames: [String]
@@ -289,15 +288,15 @@ private struct HabitSuggestionsSheet: View {
     var body: some View {
         NavigationStack {
             ZStack {
-                themes.current.baseColor.ignoresSafeArea()
+                Rectangle().fill(.nook(.base)).ignoresSafeArea()
 
                 if isLoading {
                     ProgressView("Thinking of ideas…")
-                        .tint(themes.current.primaryColor)
+                        .tint(NookColourStyle(.primary))
                 } else if suggestions.isEmpty {
                     ContentUnavailableView(
                         "No Suggestions",
-                        systemImage: NookSymbol.sparkles,
+                        systemImage: NookSymbol.sparkles.rawValue,
                         description: Text("Couldn't come up with anything right now. Try again later.")
                     )
                 } else {
@@ -307,17 +306,17 @@ private struct HabitSuggestionsSheet: View {
                             Button {
                                 onSelect(suggestion)
                             } label: {
-                                HStack(alignment: .top, spacing: NookSpacing.md) {
+                                HStack(alignment: .top, spacing: NookSpacing.md.value) {
                                     Image(systemName: suggestion.sfSymbol)
-                                        .foregroundStyle(themes.current.primaryColor)
+                                        .foregroundStyle(.nook(.primary))
                                         .frame(width: 24)
-                                    VStack(alignment: .leading, spacing: NookSpacing.xs) {
+                                    VStack(alignment: .leading, spacing: NookSpacing.xs.value) {
                                         Text(suggestion.name)
-                                            .font(.nookHeadline)
-                                            .foregroundStyle(themes.current.textColor)
+                                            .font(.nook(.headline))
+                                            .foregroundStyle(.nook(.text))
                                         Text(suggestion.rationale)
-                                            .font(.nookCaption)
-                                            .foregroundStyle(themes.current.subtextColor)
+                                            .font(.nook(.caption))
+                                            .foregroundStyle(.nook(.subtext))
                                     }
                                 }
                             }
@@ -332,7 +331,7 @@ private struct HabitSuggestionsSheet: View {
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
                     Button("Cancel") { dismiss() }
-                        .foregroundStyle(themes.current.subtextColor)
+                        .foregroundStyle(.nook(.subtext))
                 }
             }
             .task {

@@ -1,9 +1,10 @@
+import NookCore
 import SwiftUI
 
 // MARK: - NookCompletionBadge
 
 /// A tappable checkmark badge that toggles between completed and incomplete
-/// states with a spring scale animation.
+/// states with a spring scale animation, or a crossfade under Reduce Motion.
 ///
 /// Usage:
 /// ```swift
@@ -15,7 +16,7 @@ public struct NookCompletionBadge: View {
 
     // MARK: Dependencies
 
-    @Environment(NookThemeManager.self) private var themeManager
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
 
     // MARK: Properties
 
@@ -50,39 +51,33 @@ public struct NookCompletionBadge: View {
 
     public var body: some View {
         Button(action: {
-            withAnimation(NookAnimation.quick) {
+            withNookAnimation(.quick, reduceMotion: reduceMotion) {
                 onTap()
             }
         }) {
             ZStack {
                 Circle()
-                    .fill(isCompleted
-                          ? themeManager.current.successColor
-                          : Color.clear)
+                    .fill(.nook(.success))
+                    .opacity(isCompleted ? 1 : 0)
                     .frame(width: size, height: size)
 
                 Circle()
-                    .stroke(
-                        isCompleted
-                            ? themeManager.current.successColor
-                            : themeManager.current.overlay0Color,
-                        lineWidth: 2
-                    )
+                    .stroke(.nook(isCompleted ? .success : .overlay0), lineWidth: 2)
                     .frame(width: size, height: size)
 
                 if isCompleted {
                     Image(systemName: "checkmark")
                         .font(.system(.body, weight: .bold))
                         .scaleEffect(size / 28)
-                        .foregroundStyle(themeManager.current.baseColor)
-                        .transition(.scale.combined(with: .opacity))
+                        .foregroundStyle(.nook(.base))
+                        .transition(reduceMotion ? .opacity : .scale.combined(with: .opacity))
                 }
             }
-            .animation(NookAnimation.quick, value: isCompleted)
+            .nookAnimation(.quick, value: isCompleted)
         }
         .buttonStyle(.borderless)
         .scaleEffect(isCompleted ? 1.0 : 0.95)
-        .animation(NookAnimation.quick, value: isCompleted)
+        .nookAnimation(.quick, value: isCompleted)
         .accessibilityLabel(isCompleted ? "Completed" : "Not completed")
         .accessibilityHint("Double tap to toggle")
         .accessibilityAddTraits(.isButton)
@@ -91,35 +86,34 @@ public struct NookCompletionBadge: View {
 
 // MARK: - Preview
 
-#Preview("NookCompletionBadge — complete and incomplete") {
-    @Previewable @State var themeManager = NookThemeManager()
+#Preview("NookCompletionBadge -- complete and incomplete") {
     @Previewable @State var isCompleted = false
 
-    HStack(spacing: NookSpacing.xl) {
-        VStack(spacing: NookSpacing.sm) {
+    HStack(spacing: NookSpacing.xl.value) {
+        VStack(spacing: NookSpacing.sm.value) {
             NookCompletionBadge(isCompleted: false, size: 36) {}
             Text("Incomplete")
-                .font(NookFont.caption)
-                .foregroundStyle(themeManager.current.subtextColor)
+                .font(.nook(.caption))
+                .foregroundStyle(.nook(.subtext))
         }
 
-        VStack(spacing: NookSpacing.sm) {
+        VStack(spacing: NookSpacing.sm.value) {
             NookCompletionBadge(isCompleted: true, size: 36) {}
             Text("Complete")
-                .font(NookFont.caption)
-                .foregroundStyle(themeManager.current.subtextColor)
+                .font(.nook(.caption))
+                .foregroundStyle(.nook(.subtext))
         }
 
-        VStack(spacing: NookSpacing.sm) {
+        VStack(spacing: NookSpacing.sm.value) {
             NookCompletionBadge(isCompleted: isCompleted, size: 36) {
                 isCompleted.toggle()
             }
             Text("Tap me")
-                .font(NookFont.caption)
-                .foregroundStyle(themeManager.current.subtextColor)
+                .font(.nook(.caption))
+                .foregroundStyle(.nook(.subtext))
         }
     }
-    .padding(NookSpacing.lg)
-    .background(themeManager.current.baseColor)
-    .environment(themeManager)
+    .padding(.lg)
+    .background(.nook(.base))
+    .nookTheme(.mocha)
 }

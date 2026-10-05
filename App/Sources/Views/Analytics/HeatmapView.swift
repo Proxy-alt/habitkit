@@ -1,9 +1,10 @@
 import SwiftUI
 import HabitNookCore
 import HabitNookUI
+import NookCore
+import NookUI
 
 struct HeatmapView: View {
-    @Environment(NookThemeManager.self) private var themes
     let habit: Habit
 
     private let calendar = Calendar.current
@@ -28,9 +29,9 @@ struct HeatmapView: View {
         return completionDates.contains(components)
     }
 
-    private func cellColor(for date: Date) -> Color {
-        guard date <= Date() else { return themes.current.surface0Color }
-        return isCompleted(date) ? themes.current.primaryColor : themes.current.surface1Color
+    private func cellRole(for date: Date) -> NookColour {
+        guard date <= Date() else { return .surface0 }
+        return isCompleted(date) ? .primary : .surface1
     }
 
     var body: some View {
@@ -41,7 +42,7 @@ struct HeatmapView: View {
                         ForEach(0..<7, id: \.self) { day in
                             let date = dateFor(week: week, day: day)
                             RoundedRectangle(cornerRadius: 2)
-                                .fill(cellColor(for: date))
+                                .fill(.nook(cellRole(for: date)))
                                 .frame(width: cellSize, height: cellSize)
                         }
                     }

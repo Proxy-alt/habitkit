@@ -1,3 +1,4 @@
+import NookCore
 import SwiftUI
 
 // MARK: - NookButtonVariant
@@ -6,17 +7,17 @@ import SwiftUI
 public enum NookButtonVariant: Sendable {
     /// Filled background using the theme's primary colour.
     case primary
-    /// Filled background using the theme's surface1 colour — subdued action.
+    /// Filled background using the theme's surface1 colour -- subdued action.
     case secondary
-    /// Filled background using the theme's danger colour — destructive action.
+    /// Filled background using the theme's danger colour -- destructive action.
     case danger
-    /// No background — label only with primary tint.
+    /// No background -- label only with primary tint.
     case ghost
 }
 
 // MARK: - NookButton
 
-/// A themed button that adapts to the active ``NookThemeManager``.
+/// A themed button that resolves its colours from the theme in the environment.
 ///
 /// Usage:
 /// ```swift
@@ -24,10 +25,6 @@ public enum NookButtonVariant: Sendable {
 /// NookButton("Delete", variant: .danger, fullWidth: true) { delete() }
 /// ```
 public struct NookButton: View {
-
-    // MARK: Dependencies
-
-    @Environment(NookThemeManager.self) private var themeManager
 
     // MARK: Properties
 
@@ -62,47 +59,45 @@ public struct NookButton: View {
     public var body: some View {
         Button(action: action) {
             Text(label)
-                .font(NookFont.headline)
-                .foregroundStyle(foregroundColor)
-                .padding(.vertical, NookSpacing.sm)
-                .padding(.horizontal, NookSpacing.md)
+                .font(.nook(.headline))
+                .foregroundStyle(.nook(foregroundRole))
+                .padding(.vertical, .sm)
+                .padding(.horizontal, .md)
                 .frame(maxWidth: isFullWidth ? .infinity : nil)
-                .background(backgroundColor, in: RoundedRectangle(cornerRadius: NookRadius.card, style: .continuous))
+                .background(backgroundStyle, in: .nook(.card))
                 .overlay(
-                    RoundedRectangle(cornerRadius: NookRadius.card, style: .continuous)
-                        .stroke(borderColor, lineWidth: borderWidth)
+                    RoundedRectangle.nook(.card)
+                        .stroke(borderStyle, lineWidth: borderWidth)
                 )
         }
         .buttonStyle(.plain)
         .accessibilityLabel(label)
     }
 
-    // MARK: Computed colours
+    // MARK: Computed styles
 
-    private var theme: NookTheme { themeManager.current }
-
-    private var foregroundColor: Color {
+    private var foregroundRole: NookColour {
         switch variant {
-        case .primary:   return theme.baseColor
-        case .secondary: return theme.textColor
-        case .danger:    return theme.baseColor
-        case .ghost:     return theme.primaryColor
+        case .primary:   return .base
+        case .secondary: return .text
+        case .danger:    return .base
+        case .ghost:     return .primary
         }
     }
 
-    private var backgroundColor: Color {
+    private var backgroundStyle: AnyShapeStyle {
         switch variant {
-        case .primary:   return theme.primaryColor
-        case .secondary: return theme.surface1Color
-        case .danger:    return theme.dangerColor
-        case .ghost:     return .clear
+        case .primary:   return AnyShapeStyle(.nook(.primary))
+        case .secondary: return AnyShapeStyle(.nook(.surface1))
+        case .danger:    return AnyShapeStyle(.nook(.danger))
+        case .ghost:     return AnyShapeStyle(.clear)
         }
     }
 
-    private var borderColor: Color {
+    private var borderStyle: AnyShapeStyle {
         switch variant {
-        case .ghost:  return theme.primaryColor.opacity(0.6)
-        default:      return .clear
+        case .ghost:  return AnyShapeStyle(.nook(.primary).opacity(0.6))
+        default:      return AnyShapeStyle(.clear)
         }
     }
 
@@ -117,8 +112,6 @@ public struct NookButton: View {
 // MARK: - Disabled state modifier
 
 private struct NookButtonDisabledModifier: ViewModifier {
-    @Environment(NookThemeManager.self) private var themeManager
-
     /// When `true` the button is visually dimmed and interaction is blocked.
     let isDisabled: Bool
 
@@ -127,8 +120,8 @@ private struct NookButtonDisabledModifier: ViewModifier {
             .disabled(isDisabled)
             .overlay(
                 isDisabled
-                    ? RoundedRectangle(cornerRadius: NookRadius.card, style: .continuous)
-                        .fill(themeManager.current.overlay0Color.opacity(0.5))
+                    ? RoundedRectangle.nook(.card)
+                        .fill(.nook(.overlay0).opacity(0.5))
                     : nil
             )
             .allowsHitTesting(!isDisabled)
@@ -146,10 +139,8 @@ public extension NookButton {
 
 // MARK: - Preview
 
-#Preview("NookButton — all variants") {
-    @Previewable @State var themeManager = NookThemeManager()
-
-    VStack(spacing: NookSpacing.md) {
+#Preview("NookButton -- all variants") {
+    VStack(spacing: NookSpacing.md.value) {
         NookButton("Primary Action", variant: .primary) {}
         NookButton("Secondary Action", variant: .secondary) {}
         NookButton("Danger Action", variant: .danger) {}
@@ -158,7 +149,7 @@ public extension NookButton {
         NookButton("Disabled", variant: .primary) {}
             .nookDisabled()
     }
-    .padding(NookSpacing.md)
-    .background(themeManager.current.baseColor)
-    .environment(themeManager)
+    .padding(.md)
+    .background(.nook(.base))
+    .nookTheme(.mocha)
 }

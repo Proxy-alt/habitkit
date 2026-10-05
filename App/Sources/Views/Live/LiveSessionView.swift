@@ -4,9 +4,11 @@ import ActivityKit
 import HabitNookCore
 import HabitNookIntents
 import HabitNookUI
+import NookCore
+import NookUI
 
 struct LiveSessionView: View {
-    @Environment(NookThemeManager.self) private var themes
+    @Environment(\.nookTheme) private var theme
     @Environment(\.modelContext) private var modelContext
     @Environment(AppNavigator.self) private var navigator
     @Query(sort: \Habit.sortOrder) private var habits: [Habit]
@@ -43,7 +45,7 @@ struct LiveSessionView: View {
     var body: some View {
         NavigationStack {
             ZStack {
-                themes.current.baseColor.ignoresSafeArea()
+                Rectangle().fill(.nook(.base)).ignoresSafeArea()
 
                 if let habit = activeHabit {
                     activeSession(for: habit)
@@ -65,30 +67,30 @@ struct LiveSessionView: View {
     }
 
     private func activeSession(for habit: TimedHabit) -> some View {
-        VStack(spacing: NookSpacing.xl) {
+        VStack(spacing: NookSpacing.xl.value) {
             Spacer()
 
             Text(habit.name)
-                .font(.nookLargeTitle)
-                .foregroundStyle(themes.current.textColor)
+                .font(.nook(.largeTitle))
+                .foregroundStyle(.nook(.text))
 
             ZStack {
                 NookProgressRing(progress: progress, lineWidth: 16, size: 240) {
-                    VStack(spacing: NookSpacing.xs) {
+                    VStack(spacing: NookSpacing.xs.value) {
                         Text(timeString(remaining))
                             .font(.system(.largeTitle, design: .monospaced, weight: .bold))
-                            .foregroundStyle(themes.current.textColor)
+                            .foregroundStyle(.nook(.text))
                         Text("remaining")
-                            .font(.nookCaption)
-                            .foregroundStyle(themes.current.subtextColor)
+                            .font(.nook(.caption))
+                            .foregroundStyle(.nook(.subtext))
                     }
                 }
             }
 
             NookTextField("Add a note…", text: $note)
-                .padding(.horizontal, NookSpacing.lg)
+                .padding(.horizontal, .lg)
 
-            HStack(spacing: NookSpacing.md) {
+            HStack(spacing: NookSpacing.md.value) {
                 NookButton("Abandon", variant: .secondary) {
                     stopSession()
                 }
@@ -103,7 +105,7 @@ struct LiveSessionView: View {
                     completeSession(for: habit)
                 }
             }
-            .padding(.horizontal, NookSpacing.lg)
+            .padding(.horizontal, .lg)
 
             Spacer()
         }
@@ -112,28 +114,28 @@ struct LiveSessionView: View {
     }
 
     private var habitPicker: some View {
-        VStack(spacing: NookSpacing.lg) {
+        VStack(spacing: NookSpacing.lg.value) {
             if activeTimedHabits.isEmpty {
-                VStack(spacing: NookSpacing.md) {
-                    Image(systemName: NookSymbol.timer)
-                        .font(NookIconSize.xl)
-                        .foregroundStyle(themes.current.subtextColor)
+                VStack(spacing: NookSpacing.md.value) {
+                    Image(nookSymbol: .timer)
+                        .nookIconSize(.xl)
+                        .foregroundStyle(.nook(.subtext))
                     Text("No Timed Habits")
-                        .font(.nookTitle)
-                        .foregroundStyle(themes.current.textColor)
+                        .font(.nook(.title))
+                        .foregroundStyle(.nook(.text))
                     Text("Create a timed habit to use the Live session view.")
-                        .font(.nookBody)
-                        .foregroundStyle(themes.current.subtextColor)
+                        .font(.nook(.body))
+                        .foregroundStyle(.nook(.subtext))
                         .multilineTextAlignment(.center)
                 }
-                .padding(NookSpacing.xl)
+                .padding(.xl)
             } else {
                 Text("Choose a habit to start")
-                    .font(.nookTitle)
-                    .foregroundStyle(themes.current.textColor)
+                    .font(.nook(.title))
+                    .foregroundStyle(.nook(.text))
 
                 ScrollView {
-                    VStack(spacing: NookSpacing.sm) {
+                    VStack(spacing: NookSpacing.sm.value) {
                         ForEach(activeTimedHabits) { habit in
                             Button {
                                 startSession(for: habit)
@@ -141,20 +143,20 @@ struct LiveSessionView: View {
                                 NookCard {
                                     HStack {
                                         Image(systemName: habit.icon)
-                                            .font(.nookHeadline)
-                                            .foregroundStyle(themes.current.primaryColor)
+                                            .font(.nook(.headline))
+                                            .foregroundStyle(.nook(.primary))
                                         VStack(alignment: .leading) {
                                             Text(habit.name)
-                                                .font(.nookHeadline)
-                                                .foregroundStyle(themes.current.textColor)
+                                                .font(.nook(.headline))
+                                                .foregroundStyle(.nook(.text))
                                             Text("\(habit.targetDurationSeconds / 60) min")
-                                                .font(.nookCaption)
-                                                .foregroundStyle(themes.current.subtextColor)
+                                                .font(.nook(.caption))
+                                                .foregroundStyle(.nook(.subtext))
                                         }
                                         Spacer()
-                                        Image(systemName: NookSymbol.play)
+                                        Image(nookSymbol: .play)
                                             .font(.title)
-                                            .foregroundStyle(themes.current.primaryColor)
+                                            .foregroundStyle(.nook(.primary))
                                     }
                                 }
                             }
@@ -162,7 +164,7 @@ struct LiveSessionView: View {
                             .accessibilityLabel("Start \(habit.name) session, \(habit.targetDurationSeconds / 60) minutes")
                         }
                     }
-                    .padding(NookSpacing.md)
+                    .padding(.md)
                 }
             }
         }
@@ -232,7 +234,7 @@ struct LiveSessionView: View {
         let habitID = habit.id
         let habitName = habit.name
         let icon = habit.icon
-        let tintColor = Color(hex: habit.colorHex) ?? themes.current.primaryColor
+        let tintColor = Color(hex: habit.colorHex) ?? theme.color(.primary)
         let duration = TimeInterval(habit.targetDurationSeconds)
         Task {
             try? await HabitAlarmScheduler.startCountdownTimer(

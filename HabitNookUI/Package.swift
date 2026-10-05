@@ -14,9 +14,17 @@ let package = Package(
             targets: ["HabitNookUI"]
         ),
     ],
+    dependencies: [
+        .package(path: "../Packages/NookCore"),
+        .package(path: "../Packages/NookUI"),
+    ],
     targets: [
         .target(
             name: "HabitNookUI",
+            dependencies: [
+                .product(name: "NookCore", package: "NookCore"),
+                .product(name: "NookUI", package: "NookUI"),
+            ],
             path: "Sources",
             resources: [
                 .process("Themes/Built-in/"),

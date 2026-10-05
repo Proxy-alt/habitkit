@@ -1,12 +1,7 @@
-import SwiftUI
-
-// MARK: - HabitNook Typography (migration notice)
+// MARK: - NookTypography (moved)
 //
-// The canonical typography tokens have moved to ``NookFont``.
-// Deprecated `Font` extension aliases (`nookLargeTitle`, `nookTitle`, etc.)
-// are now defined in NookFont.swift alongside the ``NookFont`` enum.
+// Typography tokens moved to NookCore's `NookFont`. Use `.font(.nook(.headline))`
+// from NookUI. The deprecated `Font.nookHeadline` forwards live in NookFont.swift.
 //
-// Update all call sites from:
-//   `.font(.nookHeadline)`  →  `.font(NookFont.headline)`
-//   `.font(.nookBody)`      →  `.font(NookFont.body)`
-//   etc.
+// This file has no declarations so the name does not clash with the NookCore
+// type. Delete it in Phase 4 of nookui-design-doc.md 9.

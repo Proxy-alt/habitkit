@@ -3,6 +3,8 @@ import SwiftData
 import AppIntents
 import HabitNookCore
 import HabitNookUI
+import NookCore
+import NookUI
 
 @main
 struct HabitNookApp: App {
@@ -46,6 +48,7 @@ struct HabitNookApp: App {
         WindowGroup {
             ContentView()
                 .environment(themeManager)
+                .nookTheme(themeManager.current)
                 .environment(navigator)
                 .environment(alarmMonitor)
                 .environment(geofenceMonitor)

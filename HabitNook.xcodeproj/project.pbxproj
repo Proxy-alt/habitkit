@@ -11,9 +11,11 @@
 		167844F1E8DC1804689786DE /* PaperMarkupCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC4185D12A0270588F95B979 /* PaperMarkupCoordinator.swift */; };
 		1C1379C226E4736A4D29CD64 /* AppNavigator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86632886671DBD8960FE148E /* AppNavigator.swift */; };
 		22A6AD5E03974C883029C9B4 /* TodayViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C6C64133780EA1103C4F2293 /* TodayViewModel.swift */; };
+		27A20BE80B55FA71BFB07E18 /* NookCore in Frameworks */ = {isa = PBXBuildFile; productRef = AC7B89D1416E7E679B62F32E /* NookCore */; };
 		2E1A9DE064C97CA7BC5D61A0 /* HabitsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04F3A08D2A1C733EFE653E84 /* HabitsViewModel.swift */; };
 		3001871127044065BCC28CAF /* HabitRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 473B5FAB40A1FCC903860C42 /* HabitRow.swift */; };
 		340FADF6F5E53B492A9E913E /* GeofenceHabitMonitor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AD20C3CD66C4763FD34C2CE /* GeofenceHabitMonitor.swift */; };
+		3C407EB531B7E3859F1809AB /* NookUI in Frameworks */ = {isa = PBXBuildFile; productRef = C8921F8FDDE77337B1EC3BB3 /* NookUI */; };
 		40AED35D8FB98C20491179A4 /* HabitDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A19DF29D002986FE2DA776A1 /* HabitDetailView.swift */; };
 		47CE252B41B55412146EF43C /* HabitsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C943A8CDDAA3C842CF6B12C /* HabitsView.swift */; };
 		51F85BC6A9BD1D98F73B16CC /* TranslationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 69C4D7A0E5E6AB27C174DC8A /* TranslationService.swift */; };
@@ -27,17 +29,19 @@
 		96E46BD58506F042F9FAE99E /* InAppAlarmMonitor.swift in Sources */ = {isa = PBXBuildFile; fileRef = ACEEA68C155958519DAC84DA /* InAppAlarmMonitor.swift */; };
 		99C9A711D9D206913D90EB8C /* AddHabitView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 06C5A0D0AB17A2098620B31C /* AddHabitView.swift */; };
 		A4D3185592BAD9EEDE811373 /* HeatmapView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7A0A50B503E0760EE5152EC /* HeatmapView.swift */; };
-		A8DBB15CC67E354EDD560285 /* HabitNookIntents in Frameworks */ = {isa = PBXBuildFile; productRef = 68410699DD68755BB1DCC517 /* HabitNookIntents */; };
+		A8DBB15CC67E354EDD560285 /* NookCore in Frameworks */ = {isa = PBXBuildFile; productRef = E07A7BFBC8F7B6EFEA744529 /* NookCore */; };
 		A8F31D429127ACDC77EA76F4 /* JournalingSuggestionsCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 69332541BD55290FEF1E7D2B /* JournalingSuggestionsCoordinator.swift */; };
 		AA4DD07A3E5A970958D418A3 /* HabitNookUI in Frameworks */ = {isa = PBXBuildFile; productRef = 9EAEF156F4457DF6099C0F52 /* HabitNookUI */; };
 		AB1CE1CF3656B31C0E7BEBF2 /* HabitNookTips.swift in Sources */ = {isa = PBXBuildFile; fileRef = 197B63816F95C99AC6F629F5 /* HabitNookTips.swift */; };
 		B0630AF0252501EFCEC5A0F6 /* HabitNookWidgetsBundle.swift in Sources */ = {isa = PBXBuildFile; fileRef = D77682873A00EA12C5380E28 /* HabitNookWidgetsBundle.swift */; };
 		B21EA85CDA763C16FDB3ED0A /* HandoffManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB8BCCAF34FD526439A03D9D /* HandoffManager.swift */; };
+		B7D2267AE097F5E4F8CA312D /* NookUI in Frameworks */ = {isa = PBXBuildFile; productRef = 87ABE57E7A3F0F55CE4E7909 /* NookUI */; };
 		B979089274CBFED106E57F15 /* HabitLiveActivityWidget.swift in Sources */ = {isa = PBXBuildFile; fileRef = F342E441B1E7D0690313C876 /* HabitLiveActivityWidget.swift */; };
 		BEDA55189AE4AB11B28B290E /* HabitNookWidgets.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = F2B286183E57CD5F0D4926AD /* HabitNookWidgets.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		C815B4454EABB8CD25A7B962 /* AnalyticsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA715C43D431DAD0EDD52DD7 /* AnalyticsView.swift */; };
 		C8B7CB82D819C17498B386E1 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F35857FAB67FE82B1FF448A /* SettingsView.swift */; };
 		CF52ADB57A91EFFE7BD836CF /* AnalyticsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A76EDD3BB25795D295245C16 /* AnalyticsViewModel.swift */; };
+		D01FBA27A8416455264AC729 /* HabitNookIntents in Frameworks */ = {isa = PBXBuildFile; productRef = 68410699DD68755BB1DCC517 /* HabitNookIntents */; };
 		D110E893FB12F5862587C213 /* HabitNookCore in Frameworks */ = {isa = PBXBuildFile; productRef = 87506979D7320B65302D8AA3 /* HabitNookCore */; };
 		ECA67CD061E30A55407EE4E4 /* ThemePickerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8D99056758715AD4F0E0AFA /* ThemePickerView.swift */; };
 		ED67EDE5619B6FD17657B1A4 /* CarPlaySceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFFCBAF34206193A0B77BDB8 /* CarPlaySceneDelegate.swift */; };
@@ -93,6 +97,8 @@
 		B7D2B3D950F563E3441C6444 /* LiveSessionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LiveSessionView.swift; sourceTree = "<group>"; };
 		BC8EEC36E113B1D1430A26FF /* habitkit */ = {isa = PBXFileReference; lastKnownFileType = folder; name = habitkit; path = .; sourceTree = SOURCE_ROOT; };
 		C6C64133780EA1103C4F2293 /* TodayViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodayViewModel.swift; sourceTree = "<group>"; };
+		C83B0FC7289E5A320742DEB6 /* NookCore */ = {isa = PBXFileReference; lastKnownFileType = folder; name = NookCore; path = Packages/NookCore; sourceTree = SOURCE_ROOT; };
+		CE200F5FE27E6729F308C61C /* NookUI */ = {isa = PBXFileReference; lastKnownFileType = folder; name = NookUI; path = Packages/NookUI; sourceTree = SOURCE_ROOT; };
 		D77682873A00EA12C5380E28 /* HabitNookWidgetsBundle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HabitNookWidgetsBundle.swift; sourceTree = "<group>"; };
 		D7A0A50B503E0760EE5152EC /* HeatmapView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HeatmapView.swift; sourceTree = "<group>"; };
 		DC4185D12A0270588F95B979 /* PaperMarkupCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaperMarkupCoordinator.swift; sourceTree = "<group>"; };
@@ -110,7 +116,9 @@
 			files = (
 				D110E893FB12F5862587C213 /* HabitNookCore in Frameworks */,
 				577E6CCBEFD16FB449F45061 /* HabitNookUI in Frameworks */,
-				A8DBB15CC67E354EDD560285 /* HabitNookIntents in Frameworks */,
+				A8DBB15CC67E354EDD560285 /* NookCore in Frameworks */,
+				B7D2267AE097F5E4F8CA312D /* NookUI in Frameworks */,
+				D01FBA27A8416455264AC729 /* HabitNookIntents in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -120,6 +128,8 @@
 			files = (
 				81FCF4A042BDF64C8EBDCAA1 /* HabitNookCore in Frameworks */,
 				AA4DD07A3E5A970958D418A3 /* HabitNookUI in Frameworks */,
+				27A20BE80B55FA71BFB07E18 /* NookCore in Frameworks */,
+				3C407EB531B7E3859F1809AB /* NookUI in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -336,6 +346,8 @@
 			isa = PBXGroup;
 			children = (
 				BC8EEC36E113B1D1430A26FF /* habitkit */,
+				C83B0FC7289E5A320742DEB6 /* NookCore */,
+				CE200F5FE27E6729F308C61C /* NookUI */,
 			);
 			path = Packages;
 			sourceTree = "<group>";
@@ -376,6 +388,8 @@
 			packageProductDependencies = (
 				87506979D7320B65302D8AA3 /* HabitNookCore */,
 				59B96E624BCD8CE5BDDDC5F9 /* HabitNookUI */,
+				E07A7BFBC8F7B6EFEA744529 /* NookCore */,
+				87ABE57E7A3F0F55CE4E7909 /* NookUI */,
 				68410699DD68755BB1DCC517 /* HabitNookIntents */,
 			);
 			productName = HabitNook;
@@ -397,6 +411,8 @@
 			packageProductDependencies = (
 				6217452F8B1A26C265EB5E50 /* HabitNookCore */,
 				9EAEF156F4457DF6099C0F52 /* HabitNookUI */,
+				AC7B89D1416E7E679B62F32E /* NookCore */,
+				C8921F8FDDE77337B1EC3BB3 /* NookUI */,
 			);
 			productName = HabitNookWidgets;
 			productReference = F2B286183E57CD5F0D4926AD /* HabitNookWidgets.appex */;
@@ -430,6 +446,8 @@
 			minimizedProjectReferenceProxies = 1;
 			packageReferences = (
 				114616F381031AD846E85F27 /* XCLocalSwiftPackageReference "." */,
+				5CCC029C72F282473367F3C2 /* XCLocalSwiftPackageReference "Packages/NookCore" */,
+				FE9342E21BD19C6C2AABFC42 /* XCLocalSwiftPackageReference "Packages/NookUI" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 8DA24E0F12AF2959A179DCE1 /* Products */;
@@ -757,6 +775,14 @@
 			isa = XCLocalSwiftPackageReference;
 			relativePath = .;
 		};
+		5CCC029C72F282473367F3C2 /* XCLocalSwiftPackageReference "Packages/NookCore" */ = {
+			isa = XCLocalSwiftPackageReference;
+			relativePath = Packages/NookCore;
+		};
+		FE9342E21BD19C6C2AABFC42 /* XCLocalSwiftPackageReference "Packages/NookUI" */ = {
+			isa = XCLocalSwiftPackageReference;
+			relativePath = Packages/NookUI;
+		};
 /* End XCLocalSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -776,9 +802,25 @@
 			isa = XCSwiftPackageProductDependency;
 			productName = HabitNookCore;
 		};
+		87ABE57E7A3F0F55CE4E7909 /* NookUI */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = NookUI;
+		};
 		9EAEF156F4457DF6099C0F52 /* HabitNookUI */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = HabitNookUI;
+		};
+		AC7B89D1416E7E679B62F32E /* NookCore */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = NookCore;
+		};
+		C8921F8FDDE77337B1EC3BB3 /* NookUI */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = NookUI;
+		};
+		E07A7BFBC8F7B6EFEA744529 /* NookCore */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = NookCore;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

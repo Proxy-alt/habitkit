@@ -2,9 +2,10 @@ import SwiftUI
 import SwiftData
 import HabitNookCore
 import HabitNookUI
+import NookCore
+import NookUI
 
 struct AnalyticsView: View {
-    @Environment(NookThemeManager.self) private var themes
     @Query(sort: \Habit.sortOrder) private var habits: [Habit]
     @State private var viewModel = AnalyticsViewModel()
 
@@ -20,13 +21,13 @@ struct AnalyticsView: View {
     var body: some View {
         NavigationStack {
             ZStack {
-                themes.current.baseColor.ignoresSafeArea()
+                Rectangle().fill(.nook(.base)).ignoresSafeArea()
 
                 if activeHabits.isEmpty {
                     emptyState
                 } else {
                     ScrollView {
-                        VStack(spacing: NookSpacing.lg) {
+                        VStack(spacing: NookSpacing.lg.value) {
                             coachingSection
                             periodPicker
                             overviewSection
@@ -36,7 +37,7 @@ struct AnalyticsView: View {
                             }
                             correlationSection
                         }
-                        .padding(NookSpacing.md)
+                        .padding(.md)
                     }
                 }
             }
@@ -47,41 +48,41 @@ struct AnalyticsView: View {
 
     private var coachingSection: some View {
         NookCard {
-            VStack(alignment: .leading, spacing: NookSpacing.sm) {
+            VStack(alignment: .leading, spacing: NookSpacing.sm.value) {
                 HStack {
-                    Image(systemName: NookSymbol.sparkles)
-                        .foregroundStyle(themes.current.primaryColor)
+                    Image(nookSymbol: .sparkles)
+                        .foregroundStyle(.nook(.primary))
                     Text("Your Week")
-                        .font(.nookHeadline)
-                        .foregroundStyle(themes.current.textColor)
+                        .font(.nook(.headline))
+                        .foregroundStyle(.nook(.text))
                 }
 
                 if viewModel.isLoadingCoachingSummary {
                     ProgressView()
-                        .tint(themes.current.primaryColor)
+                        .tint(NookColourStyle(.primary))
                 } else if !viewModel.coachingSummary.isEmpty {
                     Text(viewModel.coachingSummary)
-                        .font(.nookBody)
-                        .foregroundStyle(themes.current.textColor)
+                        .font(.nook(.body))
+                        .foregroundStyle(.nook(.text))
                 }
             }
         }
     }
 
     private var emptyState: some View {
-        VStack(spacing: NookSpacing.lg) {
-            Image(systemName: NookSymbol.chartBarX)
-                .font(NookIconSize.xl)
-                .foregroundStyle(themes.current.subtextColor)
+        VStack(spacing: NookSpacing.lg.value) {
+            Image(nookSymbol: .chartBarX)
+                .nookIconSize(.xl)
+                .foregroundStyle(.nook(.subtext))
             Text("No data yet")
-                .font(.nookTitle)
-                .foregroundStyle(themes.current.textColor)
+                .font(.nook(.title))
+                .foregroundStyle(.nook(.text))
             Text("Complete some habits to see your analytics.")
-                .font(.nookBody)
-                .foregroundStyle(themes.current.subtextColor)
+                .font(.nook(.body))
+                .foregroundStyle(.nook(.subtext))
                 .multilineTextAlignment(.center)
         }
-        .padding(NookSpacing.xl)
+        .padding(.xl)
     }
 
     private var periodPicker: some View {
@@ -95,22 +96,22 @@ struct AnalyticsView: View {
 
     private var overviewSection: some View {
         NookCard {
-            VStack(alignment: .leading, spacing: NookSpacing.md) {
+            VStack(alignment: .leading, spacing: NookSpacing.md.value) {
                 Text("Overview")
-                    .font(.nookHeadline)
-                    .foregroundStyle(themes.current.textColor)
+                    .font(.nook(.headline))
+                    .foregroundStyle(.nook(.text))
 
-                HStack(spacing: NookSpacing.md) {
+                HStack(spacing: NookSpacing.md.value) {
                     ForEach(activeHabits.prefix(4)) { habit in
-                        VStack(spacing: NookSpacing.xs) {
+                        VStack(spacing: NookSpacing.xs.value) {
                             NookProgressRing(
                                 progress: viewModel.completionRate(for: habit, period: viewModel.selectedPeriod),
                                 lineWidth: 6,
                                 size: 52
                             )
                             Text(habit.name)
-                                .font(.nookCaption)
-                                .foregroundStyle(themes.current.subtextColor)
+                                .font(.nook(.caption))
+                                .foregroundStyle(.nook(.subtext))
                                 .lineLimit(1)
                                 .frame(width: 60)
                         }
@@ -123,27 +124,27 @@ struct AnalyticsView: View {
 
     private var habitPicker: some View {
         ScrollView(.horizontal, showsIndicators: false) {
-            HStack(spacing: NookSpacing.sm) {
+            HStack(spacing: NookSpacing.sm.value) {
                 ForEach(activeHabits) { habit in
                     Button {
                         viewModel.selectedHabitID = habit.id
                     } label: {
-                        HStack(spacing: NookSpacing.xs) {
+                        HStack(spacing: NookSpacing.xs.value) {
                             Image(systemName: habit.icon)
                             Text(habit.name)
-                                .font(.nookBody)
+                                .font(.nook(.body))
                         }
                         .foregroundStyle(
                             (viewModel.selectedHabitID ?? activeHabits.first?.id) == habit.id
-                            ? themes.current.baseColor
-                            : themes.current.textColor
+                            ? .nook(.base)
+                            : .nook(.text)
                         )
-                        .padding(.horizontal, NookSpacing.md)
-                        .padding(.vertical, NookSpacing.sm)
+                        .padding(.horizontal, .md)
+                        .padding(.vertical, .sm)
                         .background(
                             (viewModel.selectedHabitID ?? activeHabits.first?.id) == habit.id
-                            ? themes.current.primaryColor
-                            : themes.current.surface1Color,
+                            ? .nook(.primary)
+                            : .nook(.surface1),
                             in: Capsule()
                         )
                     }
@@ -155,63 +156,63 @@ struct AnalyticsView: View {
     }
 
     private func habitAnalytics(for habit: Habit) -> some View {
-        VStack(spacing: NookSpacing.md) {
+        VStack(spacing: NookSpacing.md.value) {
             NookCard {
-                VStack(alignment: .leading, spacing: NookSpacing.sm) {
+                VStack(alignment: .leading, spacing: NookSpacing.sm.value) {
                     HStack {
                         Image(systemName: habit.icon)
-                            .foregroundStyle(themes.current.primaryColor)
+                            .foregroundStyle(.nook(.primary))
                         Text(habit.name)
-                            .font(.nookHeadline)
-                            .foregroundStyle(themes.current.textColor)
+                            .font(.nook(.headline))
+                            .foregroundStyle(.nook(.text))
                     }
 
-                    HStack(spacing: NookSpacing.lg) {
+                    HStack(spacing: NookSpacing.lg.value) {
                         VStack {
                             Text("\(StreakCalculator.currentStreak(completions: habit.completions, schedule: habit.schedule))")
-                                .font(.nookLargeTitle)
-                                .foregroundStyle(themes.current.warningColor)
+                                .font(.nook(.largeTitle))
+                                .foregroundStyle(.nook(.warning))
                             Text("Current Streak")
-                                .font(.nookCaption)
-                                .foregroundStyle(themes.current.subtextColor)
+                                .font(.nook(.caption))
+                                .foregroundStyle(.nook(.subtext))
                         }
                         VStack {
                             Text("\(StreakCalculator.longestStreak(completions: habit.completions, schedule: habit.schedule))")
-                                .font(.nookLargeTitle)
-                                .foregroundStyle(themes.current.primaryColor)
+                                .font(.nook(.largeTitle))
+                                .foregroundStyle(.nook(.primary))
                             Text("Best Streak")
-                                .font(.nookCaption)
-                                .foregroundStyle(themes.current.subtextColor)
+                                .font(.nook(.caption))
+                                .foregroundStyle(.nook(.subtext))
                         }
                         VStack {
                             Text("\(Int(viewModel.completionRate(for: habit, period: viewModel.selectedPeriod) * 100))%")
-                                .font(.nookLargeTitle)
-                                .foregroundStyle(themes.current.successColor)
+                                .font(.nook(.largeTitle))
+                                .foregroundStyle(.nook(.success))
                             Text("Rate")
-                                .font(.nookCaption)
-                                .foregroundStyle(themes.current.subtextColor)
+                                .font(.nook(.caption))
+                                .foregroundStyle(.nook(.subtext))
                         }
                     }
                 }
             }
 
             NookCard {
-                VStack(alignment: .leading, spacing: NookSpacing.sm) {
+                VStack(alignment: .leading, spacing: NookSpacing.sm.value) {
                     Text("Activity Heatmap")
-                        .font(.nookHeadline)
-                        .foregroundStyle(themes.current.textColor)
+                        .font(.nook(.headline))
+                        .foregroundStyle(.nook(.text))
                     HeatmapView(habit: habit)
                 }
             }
 
             if let insight = viewModel.clusterInsights[habit.id] {
                 NookCard {
-                    HStack(alignment: .top, spacing: NookSpacing.sm) {
+                    HStack(alignment: .top, spacing: NookSpacing.sm.value) {
                         Image(systemName: "wand.and.stars")
-                            .foregroundStyle(themes.current.primaryColor)
+                            .foregroundStyle(.nook(.primary))
                         Text(insight.insightText)
-                            .font(.nookBody)
-                            .foregroundStyle(themes.current.textColor)
+                            .font(.nook(.body))
+                            .foregroundStyle(.nook(.text))
                     }
                 }
             }
@@ -223,23 +224,23 @@ struct AnalyticsView: View {
         Group {
             if activeHabits.count >= 2 {
                 NookCard {
-                    VStack(alignment: .leading, spacing: NookSpacing.sm) {
+                    VStack(alignment: .leading, spacing: NookSpacing.sm.value) {
                         Text("Habit Correlations")
-                            .font(.nookHeadline)
-                            .foregroundStyle(themes.current.textColor)
+                            .font(.nook(.headline))
+                            .foregroundStyle(.nook(.text))
                         Text("Pairs that tend to be completed together (last 30 days)")
-                            .font(.nookCaption)
-                            .foregroundStyle(themes.current.subtextColor)
+                            .font(.nook(.caption))
+                            .foregroundStyle(.nook(.subtext))
 
                         ForEach(viewModel.correlationPairs(from: activeHabits).prefix(5), id: \.nameA) { pair in
                             HStack {
                                 Text("\(pair.nameA) & \(pair.nameB)")
-                                    .font(.nookBody)
-                                    .foregroundStyle(themes.current.textColor)
+                                    .font(.nook(.body))
+                                    .foregroundStyle(.nook(.text))
                                 Spacer()
                                 Text(String(format: "%.0f%%", pair.correlation * 100))
-                                    .font(.nookMono)
-                                    .foregroundStyle(correlationColor(pair.correlation))
+                                    .font(.nook(.mono))
+                                    .foregroundStyle(.nook(correlationRole(pair.correlation)))
                             }
                         }
                     }
@@ -248,9 +249,9 @@ struct AnalyticsView: View {
         }
     }
 
-    private func correlationColor(_ r: Double) -> Color {
-        if r > 0.6 { return themes.current.successColor }
-        if r > 0.3 { return themes.current.warningColor }
-        return themes.current.subtextColor
+    private func correlationRole(_ r: Double) -> NookColour {
+        if r > 0.6 { return .success }
+        if r > 0.3 { return .warning }
+        return .subtext
     }
 }

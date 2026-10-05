@@ -2,9 +2,11 @@ import SwiftUI
 import SwiftData
 import HabitNookCore
 import HabitNookUI
+import NookCore
+import NookUI
 
 struct HabitRow: View {
-    @Environment(NookThemeManager.self) private var themes
+    @Environment(\.nookTheme) private var theme
     @Environment(\.modelContext) private var modelContext
     @Environment(AppNavigator.self) private var navigator
     let habit: Habit
@@ -15,21 +17,21 @@ struct HabitRow: View {
     }
 
     var body: some View {
-        HStack(spacing: NookSpacing.md) {
+        HStack(spacing: NookSpacing.md.value) {
             NookCompletionBadge(isCompleted: isCompletedToday) {
                 toggleCompletion()
             }
             .accessibilityLabel(isCompletedToday ? "Mark \(habit.name) incomplete" : "Mark \(habit.name) complete")
 
             Image(systemName: habit.icon)
-                .font(.nookHeadline)
+                .font(.nook(.headline))
                 .foregroundStyle(accentColor)
                 .frame(width: 28)
 
             VStack(alignment: .leading, spacing: 2) {
                 Text(habit.name)
-                    .font(.nookHeadline)
-                    .foregroundStyle(muted ? themes.current.subtextColor : themes.current.textColor)
+                    .font(.nook(.headline))
+                    .foregroundStyle(muted ? .nook(.subtext) : .nook(.text))
                     .strikethrough(muted)
 
                 streakLabel
@@ -41,15 +43,15 @@ struct HabitRow: View {
                 Button {
                     navigator.startTimer(for: timedHabit)
                 } label: {
-                    Image(systemName: NookSymbol.play)
+                    Image(nookSymbol: .play)
                         .font(.title2)
-                        .foregroundStyle(themes.current.primaryColor)
+                        .foregroundStyle(.nook(.primary))
                 }
                 .buttonStyle(.borderless)
                 .accessibilityLabel("Start \(habit.name) timer")
             }
         }
-        .padding(.vertical, NookSpacing.xs)
+        .padding(.vertical, .xs)
     }
 
     private var streakLabel: some View {
@@ -57,12 +59,12 @@ struct HabitRow: View {
         if streak > 0 {
             return AnyView(
                 HStack(spacing: 2) {
-                    Image(systemName: NookSymbol.flame)
-                        .font(.nookCaption)
-                        .foregroundStyle(themes.current.warningColor)
+                    Image(nookSymbol: .flame)
+                        .font(.nook(.caption))
+                        .foregroundStyle(.nook(.warning))
                     Text("\(streak) day streak")
-                        .font(.nookCaption)
-                        .foregroundStyle(themes.current.subtextColor)
+                        .font(.nook(.caption))
+                        .foregroundStyle(.nook(.subtext))
                 }
             )
         }
@@ -75,9 +77,9 @@ struct HabitRow: View {
 
     private var accentColor: Color {
         if habit.colorHex.isEmpty {
-            return themes.current.primaryColor
+            return theme.color(.primary)
         }
-        return Color(hex: habit.colorHex) ?? themes.current.primaryColor
+        return Color(hex: habit.colorHex) ?? theme.color(.primary)
     }
 
     private func toggleCompletion() {

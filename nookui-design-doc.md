@@ -293,6 +293,8 @@ public typealias NookColorRole = NookColour
 
 Move `NookButton`, `NookCard`, `NookTextField`, `NookProgressRing` and `NookCompletionBadge` into `NookUI/Atomic/`. They're already suite-generic.
 
+*Status: done.* Token names that exist in both modules (`NookTheme`, `NookFont`, `NookSpacing`, `NookRadius`, `NookIconSize`, `NookSymbol`, `NookAnimation`) can't keep a forward, because importing HabitNookUI and NookCore together would make every use ambiguous. HabitNookUI now uses the NookCore types directly. Its token files are left as notes, ready to delete in Phase 4. Forwards remain for the names that don't clash: `NookColorRole`, `NookThemeColors`, `NookTheme.primaryColor` and the other `...Color` properties, and `Font.nookHeadline` and the other `Font.nook...` aliases. App and widget call sites no longer use any of them. The root `Package.swift` is the canonical manifest (F14). `HabitNookUI/Package.swift` gets the same dependencies so it still resolves.
+
 **Phase 3 — theme manager.** Move `NookThemeManager` into NookUI and mark it `@MainActor`. Load themes through `decodeCollection`, which fixes community themes (F3). Migrate the `hk_selected_theme` key to `nook.theme.selected`, reading the old key once and then deleting it. Cache the manual-selection flag instead of reading `UserDefaults` on every `theme(for:)` call.
 
 **Phase 4 — remove.** Once no call sites use the deprecated forwards, delete them and `HabitNookUI/Sources/Tokens/`.

@@ -1,50 +1,35 @@
 /// HabitNookUI
 /// ==========
-/// A SwiftUI design-system package for HabitNook, an open-source iOS habit tracker.
+/// App-specific SwiftUI support for HabitNook, an open-source iOS habit tracker.
 ///
 /// ## Modules
 ///
+/// HabitNookUI is being migrated onto the suite packages (nookui-design-doc.md 9).
+/// Tokens, the theme model, and the shared components now live in
+/// `Packages/NookCore` and `Packages/NookUI`; import those directly.
+///
 /// ### Themes
-/// - ``NookTheme`` — value type representing a complete colour palette.
-/// - ``NookThemeColors`` — the semantic hex-string palette inside a theme.
-/// - ``NookThemeManager`` — observable class that owns theme selection and
-///   persistence. Inject it as an environment object at the app root:
+/// - ``NookThemeManager`` -- observable class that owns theme selection and
+///   persistence. Inject it at the app root and apply its theme:
 ///   ```swift
 ///   @State private var themeManager = NookThemeManager()
 ///
 ///   WindowGroup {
 ///       ContentView()
 ///           .environment(themeManager)
-///           .environment(\.nookTheme, themeManager.current)
+///           .nookTheme(themeManager.current)
 ///   }
 ///   ```
-/// - ``NookColorRole`` — semantic color role resolved against any ``NookTheme``.
+/// - `Themes/Built-in/catppuccin.json` and `Themes/Community/themes.json` --
+///   the theme files the manager loads.
 ///
-/// ### Design Tokens
-/// - ``NookFont``: `largeTitle`, `title`, `headline`, `body`, `caption`, `mono`.
-/// - ``NookSpacing``: `xs` (4), `sm` (8), `md` (16), `lg` (24), `xl` (32), `xxl` (48).
-/// - ``NookRadius``: `sm` (6), `md` (10), `card` (12), `lg` (16), `pill` (999).
-/// - ``NookAnimation``: `standard`, `quick`, `slow`.
-/// - ``NookSymbol``: SF Symbol name constants for every symbol used in the codebase.
+/// ### Deprecated forwards
+/// - `NookColorRole` (now `NookColour`), `NookThemeColors` (now `NookPalette`).
+/// - `NookTheme.primaryColor` and the other `...Color` properties
+///   (now `.nook(.primary)` or `theme.color(.primary)`).
+/// - `Font.nookHeadline` and the other `Font.nook...` aliases (now `.nook(.headline)`).
 ///
-/// ### Components
-/// - ``NookButton`` — multi-variant themed button (primary / secondary / danger / ghost).
-/// - ``NookCard`` — surface-backed rounded card with optional shadow.
-/// - ``NookTextField`` — themed text field with label support and focus ring.
-/// - ``NookProgressRing`` — animated circular progress ring with optional centre slot.
-/// - ``NookCompletionBadge`` — tap-to-toggle completion indicator.
-///
-/// ## Built-in Themes (Catppuccin)
-/// Latte (light), Frappé, Macchiato, Mocha (dark) are bundled in
-/// `Sources/Themes/Built-in/catppuccin.json` and loaded automatically.
-/// Use `NookTheme.mocha` and `NookTheme.latte` for quick access to the default themes,
-/// especially in Xcode Previews:
-/// ```swift
-/// #Preview {
-///     MyView()
-///         .environment(\.nookTheme, .mocha)
-/// }
-/// ```
+/// These are removed in Phase 4, once no call sites use them.
 ///
 /// ## Swift 6 Concurrency
 /// All public types are `Sendable`. `NookThemeManager` is annotated with

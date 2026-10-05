@@ -1,3 +1,4 @@
+import NookCore
 import SwiftUI
 
 // MARK: - NookCard
@@ -15,7 +16,7 @@ public struct NookCard<Content: View>: View {
 
     // MARK: Dependencies
 
-    @Environment(NookThemeManager.self) private var themeManager
+    @Environment(\.nookTheme) private var theme
 
     // MARK: Properties
 
@@ -41,13 +42,13 @@ public struct NookCard<Content: View>: View {
 
     public var body: some View {
         content
-            .padding(NookSpacing.md)
+            .padding(.md)
             .background(
-                RoundedRectangle(cornerRadius: NookRadius.card, style: .continuous)
-                    .fill(themeManager.current.surface0Color)
+                RoundedRectangle.nook(.card)
+                    .fill(.nook(.surface0))
                     .shadow(
                         color: showShadow
-                            ? Color.black.opacity(themeManager.current.isDark ? 0.4 : 0.12)
+                            ? Color.black.opacity(theme.isDark ? 0.4 : 0.12)
                             : .clear,
                         radius: showShadow ? 8 : 0,
                         x: 0,
@@ -59,29 +60,27 @@ public struct NookCard<Content: View>: View {
 
 // MARK: - Preview
 
-#Preview("NookCard — with and without shadow") {
-    @Previewable @State var themeManager = NookThemeManager()
-
-    VStack(spacing: NookSpacing.lg) {
+#Preview("NookCard -- with and without shadow") {
+    VStack(spacing: NookSpacing.lg.value) {
         NookCard(shadow: true) {
-            VStack(alignment: .leading, spacing: NookSpacing.xs) {
+            VStack(alignment: .leading, spacing: NookSpacing.xs.value) {
                 Text("Card with Shadow")
-                    .font(NookFont.headline)
+                    .font(.nook(.headline))
                 Text("Supporting detail text goes here.")
-                    .font(NookFont.body)
+                    .font(.nook(.body))
             }
         }
 
         NookCard(shadow: false) {
-            VStack(alignment: .leading, spacing: NookSpacing.xs) {
+            VStack(alignment: .leading, spacing: NookSpacing.xs.value) {
                 Text("Card without Shadow")
-                    .font(NookFont.headline)
+                    .font(.nook(.headline))
                 Text("Supporting detail text goes here.")
-                    .font(NookFont.body)
+                    .font(.nook(.body))
             }
         }
     }
-    .padding(NookSpacing.md)
-    .background(themeManager.current.baseColor)
-    .environment(themeManager)
+    .padding(.md)
+    .background(.nook(.base))
+    .nookTheme(.mocha)
 }

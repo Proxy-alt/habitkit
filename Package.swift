@@ -13,6 +13,10 @@ let package = Package(
         .library(name: "HabitNookUI", targets: ["HabitNookUI"]),
         .library(name: "HabitNookIntents", targets: ["HabitNookIntents"]),
     ],
+    dependencies: [
+        .package(path: "Packages/NookCore"),
+        .package(path: "Packages/NookUI"),
+    ],
     targets: [
         .target(
             name: "HabitNookCore",
@@ -20,7 +24,11 @@ let package = Package(
         ),
         .target(
             name: "HabitNookUI",
-            dependencies: ["HabitNookCore"],
+            dependencies: [
+                "HabitNookCore",
+                .product(name: "NookCore", package: "NookCore"),
+                .product(name: "NookUI", package: "NookUI"),
+            ],
             path: "HabitNookUI/Sources",
             resources: [
                 .process("Themes/Built-in"),

@@ -1,3 +1,4 @@
+import NookCore
 import SwiftUI
 
 // MARK: - NookTextField
@@ -9,10 +10,6 @@ import SwiftUI
 /// NookTextField("Habit name", text: $name, label: "Name")
 /// ```
 public struct NookTextField: View {
-
-    // MARK: Dependencies
-
-    @Environment(NookThemeManager.self) private var themeManager
 
     // MARK: Properties
 
@@ -43,51 +40,50 @@ public struct NookTextField: View {
     // MARK: Body
 
     public var body: some View {
-        VStack(alignment: .leading, spacing: NookSpacing.xs) {
+        VStack(alignment: .leading, spacing: NookSpacing.xs.value) {
             if let label {
                 Text(label)
-                    .font(NookFont.caption)
-                    .foregroundStyle(themeManager.current.subtextColor)
+                    .font(.nook(.caption))
+                    .foregroundStyle(.nook(.subtext))
             }
 
             TextField(placeholder, text: $text)
-                .font(NookFont.body)
-                .foregroundStyle(themeManager.current.textColor)
-                .tint(themeManager.current.primaryColor)
+                .font(.nook(.body))
+                .foregroundStyle(.nook(.text))
+                .tint(NookColourStyle(.primary))
                 .focused($isFocused)
-                .padding(.vertical, NookSpacing.sm)
-                .padding(.horizontal, NookSpacing.md)
+                .padding(.vertical, .sm)
+                .padding(.horizontal, .md)
                 .background(
-                    RoundedRectangle(cornerRadius: NookRadius.md, style: .continuous)
-                        .fill(themeManager.current.surface2Color)
+                    RoundedRectangle.nook(.md)
+                        .fill(.nook(.surface2))
                 )
                 .overlay(
-                    RoundedRectangle(cornerRadius: NookRadius.md, style: .continuous)
+                    RoundedRectangle.nook(.md)
                         .stroke(
                             isFocused
-                                ? themeManager.current.primaryColor
-                                : themeManager.current.overlay0Color.opacity(0.5),
+                                ? AnyShapeStyle(.nook(.primary))
+                                : AnyShapeStyle(.nook(.overlay0).opacity(0.5)),
                             lineWidth: isFocused ? 2 : 1
                         )
                 )
-                .animation(NookAnimation.quick, value: isFocused)
+                .nookAnimation(.quick, value: isFocused)
         }
     }
 }
 
 // MARK: - Preview
 
-#Preview("NookTextField — empty and filled") {
-    @Previewable @State var themeManager = NookThemeManager()
+#Preview("NookTextField -- empty and filled") {
     @Previewable @State var emptyText = ""
     @Previewable @State var filledText = "Morning Run"
 
-    VStack(spacing: NookSpacing.lg) {
-        NookTextField("Enter habit name…", text: $emptyText, label: "Habit Name")
+    VStack(spacing: NookSpacing.lg.value) {
+        NookTextField("Enter habit name...", text: $emptyText, label: "Habit Name")
         NookTextField("No label, empty", text: $emptyText)
-        NookTextField("Enter habit name…", text: $filledText, label: "Filled Field")
+        NookTextField("Enter habit name...", text: $filledText, label: "Filled Field")
     }
-    .padding(NookSpacing.md)
-    .background(themeManager.current.baseColor)
-    .environment(themeManager)
+    .padding(.md)
+    .background(.nook(.base))
+    .nookTheme(.mocha)
 }

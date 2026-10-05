@@ -1,5 +1,7 @@
 import SwiftUI
 import HabitNookUI
+import NookCore
+import NookUI
 
 struct ThemePickerView: View {
     @Environment(NookThemeManager.self) private var themes
@@ -8,17 +10,17 @@ struct ThemePickerView: View {
     var body: some View {
         NavigationStack {
             ZStack {
-                themes.current.baseColor.ignoresSafeArea()
+                Rectangle().fill(.nook(.base)).ignoresSafeArea()
 
                 ScrollView {
-                    LazyVStack(spacing: NookSpacing.sm) {
+                    LazyVStack(spacing: NookSpacing.sm.value) {
                         ForEach(themes.available) { theme in
                             ThemeCard(theme: theme, isSelected: theme.id == themes.current.id) {
                                 themes.select(theme)
                             }
                         }
                     }
-                    .padding(NookSpacing.md)
+                    .padding(.md)
                 }
             }
             .navigationTitle("Choose Theme")
@@ -26,7 +28,7 @@ struct ThemePickerView: View {
             .toolbar {
                 ToolbarItem(placement: .confirmationAction) {
                     Button("Done") { dismiss() }
-                        .foregroundStyle(themes.current.primaryColor)
+                        .foregroundStyle(.nook(.primary))
                         .accessibilityLabel("Dismiss theme picker")
                 }
             }
@@ -35,53 +37,52 @@ struct ThemePickerView: View {
 }
 
 private struct ThemeCard: View {
-    @Environment(NookThemeManager.self) private var themes
     let theme: NookTheme
     let isSelected: Bool
     let onSelect: () -> Void
 
     var body: some View {
         Button(action: onSelect) {
-            HStack(spacing: NookSpacing.md) {
+            HStack(spacing: NookSpacing.md.value) {
                 ThemePreview(theme: theme)
                     .frame(width: 80, height: 60)
-                    .clipShape(RoundedRectangle(cornerRadius: NookRadius.sm))
+                    .clipShape(RoundedRectangle.nook(.sm))
 
-                VStack(alignment: .leading, spacing: NookSpacing.xs) {
+                VStack(alignment: .leading, spacing: NookSpacing.xs.value) {
                     Text(theme.name)
-                        .font(.nookHeadline)
-                        .foregroundStyle(themes.current.textColor)
+                        .font(.nook(.headline))
+                        .foregroundStyle(.nook(.text))
                     HStack(spacing: 4) {
-                        Image(systemName: theme.isDark ? NookSymbol.moon : NookSymbol.sun)
-                            .font(.nookCaption)
+                        Image(nookSymbol: theme.isDark ? .moon : .sun)
+                            .font(.nook(.caption))
                         Text(theme.isDark ? "Dark" : "Light")
-                            .font(.nookCaption)
+                            .font(.nook(.caption))
                     }
-                    .foregroundStyle(themes.current.subtextColor)
+                    .foregroundStyle(.nook(.subtext))
 
                     if let author = theme.author {
                         Text("@\(author)")
-                            .font(.nookCaption)
-                            .foregroundStyle(themes.current.subtextColor)
+                            .font(.nook(.caption))
+                            .foregroundStyle(.nook(.subtext))
                     }
                 }
 
                 Spacer()
 
                 if isSelected {
-                    Image(systemName: NookSymbol.checkmark)
-                        .foregroundStyle(themes.current.primaryColor)
+                    Image(nookSymbol: .checkmark)
+                        .foregroundStyle(.nook(.primary))
                         .font(.title2)
                 }
             }
-            .padding(NookSpacing.md)
+            .padding(.md)
             .background(
-                RoundedRectangle(cornerRadius: NookRadius.card)
-                    .fill(themes.current.surface0Color)
+                RoundedRectangle.nook(.card)
+                    .fill(.nook(.surface0))
                     .overlay(
-                        RoundedRectangle(cornerRadius: NookRadius.card)
+                        RoundedRectangle.nook(.card)
                             .strokeBorder(
-                                isSelected ? themes.current.primaryColor : Color.clear,
+                                .nook(.primary).opacity(isSelected ? 1 : 0),
                                 lineWidth: 2
                             )
                     )
@@ -97,26 +98,26 @@ private struct ThemePreview: View {
 
     var body: some View {
         ZStack {
-            theme.baseColor
+            theme.color(.base)
 
             VStack(spacing: 4) {
                 HStack(spacing: 4) {
                     RoundedRectangle(cornerRadius: 3)
-                        .fill(theme.surface0Color)
+                        .fill(theme.color(.surface0))
                         .frame(width: 30, height: 10)
                     Spacer()
                     Circle()
-                        .fill(theme.primaryColor)
+                        .fill(theme.color(.primary))
                         .frame(width: 10)
                 }
                 .padding(.horizontal, 6)
 
                 HStack(spacing: 4) {
                     RoundedRectangle(cornerRadius: 3)
-                        .fill(theme.successColor)
+                        .fill(theme.color(.success))
                         .frame(width: 8, height: 8)
                     RoundedRectangle(cornerRadius: 3)
-                        .fill(theme.surface0Color)
+                        .fill(theme.color(.surface0))
                         .frame(width: 40, height: 8)
                     Spacer()
                 }
@@ -124,10 +125,10 @@ private struct ThemePreview: View {
 
                 HStack(spacing: 4) {
                     RoundedRectangle(cornerRadius: 3)
-                        .fill(theme.warningColor)
+                        .fill(theme.color(.warning))
                         .frame(width: 8, height: 8)
                     RoundedRectangle(cornerRadius: 3)
-                        .fill(theme.surface0Color)
+                        .fill(theme.color(.surface0))
                         .frame(width: 32, height: 8)
                     Spacer()
                 }

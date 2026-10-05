@@ -3,6 +3,8 @@ import SwiftUI
 import WidgetKit
 import HabitNookCore
 import HabitNookUI
+import NookCore
+import NookUI
 
 struct HabitLiveActivityView: View {
     let context: ActivityViewContext<HabitLiveActivityAttributes>
@@ -20,14 +22,14 @@ struct HabitLiveActivityView: View {
 
             VStack(alignment: .leading, spacing: 2) {
                 Text(context.attributes.habitName)
-                    .font(NookFont.headline)
+                    .font(.nook(.headline))
                 if context.state.isComplete {
                     Text("Complete!")
-                        .font(NookFont.caption)
+                        .font(.nook(.caption))
                         .foregroundStyle(.green)
                 } else {
                     Text(timerString(context.state.remainingSeconds))
-                        .font(.nookMono)
+                        .font(.nook(.mono))
                         .monospacedDigit()
                 }
             }
@@ -50,9 +52,9 @@ struct HabitLiveActivityWidget: Widget {
             HabitLiveActivityView(context: context)
                 .background(.black.opacity(0.85))
                 // The extension is a separate process from the app, so it never
-                // gets the .environment(themeManager) injected at the app root —
-                // without this, NookProgressRing crashes looking for an ancestor.
-                .environment(NookThemeManager())
+                // gets the theme applied at the app root. Without this the
+                // ring falls back to the Mocha default instead of the saved theme.
+                .nookTheme(NookThemeManager().current)
         } dynamicIsland: { context in
             DynamicIsland {
                 DynamicIslandExpandedRegion(.leading) {
@@ -62,12 +64,12 @@ struct HabitLiveActivityWidget: Widget {
                 }
                 DynamicIslandExpandedRegion(.trailing) {
                     Text(timerString(context.state.remainingSeconds))
-                        .font(.nookMono)
+                        .font(.nook(.mono))
                         .monospacedDigit()
                 }
                 DynamicIslandExpandedRegion(.center) {
                     Text(context.attributes.habitName)
-                        .font(NookFont.headline)
+                        .font(.nook(.headline))
                 }
                 DynamicIslandExpandedRegion(.bottom) {
                     ProgressView(value: expandedProgress(context))
@@ -78,7 +80,7 @@ struct HabitLiveActivityWidget: Widget {
                     .foregroundStyle(.purple)
             } compactTrailing: {
                 Text(timerString(context.state.remainingSeconds))
-                    .font(NookFont.caption)
+                    .font(.nook(.caption))
                     .monospacedDigit()
             } minimal: {
                 Image(systemName: "timer")

@@ -29,13 +29,17 @@ public struct NookCompletionBadge: View {
     /// The closure invoked when the badge is tapped.
     private let onTap: () -> Void
 
+    /// HIG minimum hit target, independent of the drawn diameter.
+    private let minimumHitTarget: CGFloat = 44
+
     // MARK: Init
 
     /// Creates a new completion badge.
     ///
     /// - Parameters:
     ///   - isCompleted: The current completion state.
-    ///   - size: Diameter of the badge in points. Defaults to `28`.
+    ///   - size: Diameter of the badge in points. Defaults to `28`. The tappable
+    ///     area is never smaller than 44 x 44 pt.
     ///   - onTap: The closure invoked when the badge is tapped.
     public init(
         isCompleted: Bool,
@@ -74,6 +78,8 @@ public struct NookCompletionBadge: View {
                 }
             }
             .nookAnimation(.quick, value: isCompleted)
+            .frame(minWidth: minimumHitTarget, minHeight: minimumHitTarget)
+            .contentShape(Rectangle())
         }
         .buttonStyle(.borderless)
         .scaleEffect(isCompleted ? 1.0 : 0.95)

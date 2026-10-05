@@ -10,12 +10,12 @@
       "surface1": "#bcc0cc",
       "surface2": "#acb0be",
       "overlay0": "#9ca0b0",
-      "text":     "#4c4f69",
-      "subtext":  "#5c5f77",
+      "text":     "#4a4d66",
+      "subtext":  "#55586e",
       "primary":  "#8839ef",
       "danger":   "#d20f39",
-      "success":  "#40a02b",
-      "warning":  "#fe640b"
+      "success":  "#358423",
+      "warning":  "#ec5d0a"
     }
   },
   {
